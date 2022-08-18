@@ -13,7 +13,7 @@ use gamboamartin\errores\errores;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use gamboamartin\template\html;
-use html\gt_tipo_proveedor_html;
+use html\gt_proveedor_html;
 use models\gt_proveedor;
 use PDO;
 use stdClass;
@@ -23,7 +23,7 @@ class controlador_gt_proveedor extends system {
     public function __construct(PDO $link, stdClass $paths_conf = new stdClass()){
         $modelo = new gt_proveedor(link: $link);
         $html_base = new html();
-        $html = new gt_tipo_proveedor_html(html: $html_base);
+        $html = new gt_proveedor_html(html: $html_base);
         $obj_link = new links_menu($this->registro_id);
         $this->rows_lista[] = 'gt_tipo_proveedor_id';
         $this->rows_lista[] = 'dp_calle_pertenece_id';
