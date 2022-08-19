@@ -6,5 +6,5 @@ use gamboamartin\system\html_controler;
 use PDO;
 use stdClass;
 
-class gt_tipo_almacen_html extends html_controler {
+class al_tipo_almacen_html extends html_controler {
 }
