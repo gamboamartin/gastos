@@ -5,7 +5,7 @@ use gamboamartin\errores\errores;
 use PDO;
 use stdClass;
 
-class gt_almacenista extends modelo{
+class al_almacen extends modelo{
     public function __construct(PDO $link){
         $tabla = __CLASS__;
         $columnas = array($tabla=>false);

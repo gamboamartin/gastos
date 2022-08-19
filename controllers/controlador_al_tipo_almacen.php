@@ -13,21 +13,21 @@ use gamboamartin\errores\errores;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use gamboamartin\template\html;
-use html\gt_almacen_html;
-use models\gt_almacen;
+use html\al_tipo_almacen_html;
+use models\al_tipo_almacen;
 use PDO;
 use stdClass;
 
-class controlador_gt_almacen extends system {
+class controlador_al_tipo_almacen extends system {
 
     public function __construct(PDO $link, stdClass $paths_conf = new stdClass()){
-        $modelo = new gt_almacen(link: $link);
+        $modelo = new al_tipo_almacen(link: $link);
         $html_base = new html();
-        $html = new gt_almacen_html(html: $html_base);
+        $html = new al_tipo_almacen_html(html: $html_base);
         $obj_link = new links_menu($this->registro_id);
         parent::__construct(html:$html, link: $link,modelo:  $modelo, obj_link: $obj_link, paths_conf: $paths_conf);
 
-        $this->titulo_lista = 'Almacen';
+        $this->titulo_lista = 'Tipo Almacen';
 
     }
 }
