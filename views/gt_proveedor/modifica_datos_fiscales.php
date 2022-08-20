@@ -24,43 +24,7 @@
                         <h2>Datos Fiscales</h2>
                     </div>
                     <div>
-                        <table class="table">
-                            <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">RFC</th>
-                                <th scope="col">Regimen Fiscal</th>
-                                <th scope="col">Calle</th>
-                                <th scope="col">Exterior</th>
-                                <th scope="col">Interior</th>
-                                <th scope="col">Pagina Web</th>
-                                <th scope="col">Modifica</th>
-                                <th scope="col">Contactos</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td><?php echo $controlador->row_upd->gt_proveedor_rfc?></td>
-                                <td><?php echo $controlador->row_upd->gt_proveedor_cat_sat_regimen_fiscal_id?></td>
-                                <td><?php echo $controlador->row_upd->gt_proveedor_dp_calle_pertenece_id?></td>
-                                <td><?php echo $controlador->row_upd->gt_proveedor_exterior?></td>
-                                <td><?php echo $controlador->row_upd->gt_proveedor_interior?></td>
-                                <td><?php echo $controlador->row_upd->gt_proveedor_pagina_web?></td>
-                                <td>
-                                    <a href="./index.php?seccion=gt_proveedor&accion=modifica_datos_fiscales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class="glyphicon glyphicon-edit"></i>
-                                        Modificar
-                                    </a>
-                                </td>
-                                <td>
-                                    <a >
-                                        <button type="button" class="btn btn-default" style="color: cadetblue" data-toggle="modal" data-target="#dataInfo"><i class='glyphicon glyphicon-user' ></i>
-                                        Informacion</button>
-                                    </a>
-                                </td>
 
-
-                            </tr>
-                            </tbody>
-                        </table>
 
                     </div>
                 </div>
