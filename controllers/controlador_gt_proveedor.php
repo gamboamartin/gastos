@@ -63,6 +63,7 @@ class controlador_gt_proveedor extends system {
         if(!isset($this->row_upd->status)){
             $this->row_upd->status = '';
         }
+        $this->modifica(header: false, ws: false);
 
         $this->row_upd = (object)($this->modelo->registro(registro_id: $this->registro_id));
 
@@ -149,17 +150,31 @@ class controlador_gt_proveedor extends system {
         }
 
         $this->inputs->select = new stdClass();
-        $this->inputs->select->wt_proposito_id = $select;
+        $this->inputs->select->dp_calle_pertenece_id = $select;
 
-        $select = (new wt_tipo_inmueble_html(html: $this->html_base))->select_wt_tipo_inmueble_id(cols:12,con_registros:true,
-            id_selected:$this->row_upd->wt_tipo_inmueble_id, link: $this->link);
+        $select = (new gt_tipo_proveedor_html(html: $this->html_base))->select_gt_tipo_proveedor_id(cols:12,con_registros:true,
+            id_selected:$this->row_upd->gt_tipo_proveedor_id, link: $this->link);
         if(errores::$error){
             $error = $this->errores->error(mensaje: 'Error al generar select',data:  $select);
             print_r($error);
             die('Error');
         }
 
-        $this->inputs->select->wt_tipo_inmueble_id = $select;
+
+        $this->inputs->select->gt_tipo_proveedor_id = $select;
+
+
+        $select = (new cat_sat_regimen_fiscal_html(html: $this->html_base))->select_cat_sat_regimen_fiscal_id(cols:12,con_registros:true,
+            id_selected:$this->row_upd->cat_sat_regimen_fiscal_id, link: $this->link);
+        if(errores::$error){
+            $error = $this->errores->error(mensaje: 'Error al generar select',data:  $select);
+            print_r($error);
+            die('Error');
+        }
+
+
+        $this->inputs->select->cat_sat_regimen_fiscal_id = $select;
+
 
 
         return $r_modifica;
