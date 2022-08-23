@@ -9,142 +9,162 @@ use config\views;
 ?>
 
 
-<div class="row form-group">
-    <div class="col-md-12 mb-3 mb-md-0">
-        <h3>Generales</h3>
+<section class="ftco-section img bg-hero" >
+    <head>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <div class="container">
+        <form method="post" action="./index.php?seccion=gt_provedor&accion=ver_datos_fiscales&session_id=<?php echo $controlador->session_id; ?>&registro_id=<?php echo $controlador->registro_id; ?>" class="form-additional">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center mb-5">
+                <h2 class="heading-section"><?php echo $controlador->row_upd->gt_proveedor_descripcion?></h2>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-11">
+                <div class="wrapper">
+                    <div class="row no-gutters justify-content-between">
+                        <div class="col-lg-6 d-flex align-items-stretch">
+                            <div class="info-wrap w-100 p-5">
+                                <h3 class="mb-4">Datos Generales</h3>
+                                <div class="dbox w-100 d-flex align-items-start">
 
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="descripcion">Descripcion</label>
-    <div class="controls">
-        <input type="text" name="descripcion" value="<?php echo $controlador->row_upd->gt_proveedor_descripcion; ?>" class="form-control" required="" id="descripcion" placeholder="Descripcion">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="codigo">Codigo</label>
-    <div class="controls">
-        <input type="text" name="Codigo" value="<?php echo $controlador->row_upd->gt_proveedor_codigo; ?>" class="form-control" required="" id="codigo" placeholder="Codigo" readonly>
-    </div>
-</div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="descripcion_select">Descripcion Select</label>
-    <div class="controls">
-        <input type="text" name="descripcion_select" value="<?php echo $controlador->row_upd->gt_proveedor_descripcion_select; ?>" class="form-control" required="" id="descripcion_select" placeholder="Descripcion Select">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="alias">Alias</label>
-    <div class="controls">
-        <input type="text" name="codigo" value="<?php echo $controlador->row_upd->gt_proveedor_alias; ?>" class="form-control" required="" id="alias" placeholder="Alias">
-    </div>
-</div>
+                                    <div class="icon d-flex align-items-center justify-content-center">
+                                        <span class="fa fa-bandcamp"></span>
+                                    </div>
+                                    <div class="text pl-4">
+                                        <p><span>Descripcion:</span><?php echo $controlador->row_upd->gt_proveedor_descripcion; ?></p>
+                                    </div>
+                                </div>
+                                <div class="dbox w-100 d-flex align-items-start">
+                                    <div class="icon d-flex align-items-center justify-content-center">
+                                        <span class="fa fa-bandcamp"></span>
+                                    </div>
+                                    <div class="text pl-4">
+                                        <p><span>Codigo:</span><?php echo $controlador->row_upd->gt_proveedor_codigo; ?></p>
+                                    </div>
+                                </div>
+                                <div class="dbox w-100 d-flex align-items-start">
+                                    <div class="icon d-flex align-items-center justify-content-center">
+                                        <span class="fa fa-bandcamp"></span>
+                                    </div>
+                                    <div class="text pl-4">
+                                        <p><span>Descripcion select:</span><?php echo $controlador->row_upd->gt_proveedor_descripcion_select; ?></p>
+                                    </div>
+                                </div>
+                                <div class="dbox w-100 d-flex align-items-start">
+                                    <div class="icon d-flex align-items-center justify-content-center">
+                                        <span class="fa fa-bandcamp"></span>
+                                    </div>
+                                    <div class="text pl-4">
+                                        <p><span>Alias:</span><?php echo $controlador->row_upd->gt_proveedor_alias; ?></p>
+                                    </div>
+                                </div>
+                                <div class="dbox w-100 d-flex align-items-start">
+                                    <div class="icon d-flex align-items-center justify-content-center">
+                                        <span class="fa fa-bandcamp"></span>
+                                    </div>
+                                    <div class="text pl-4">
+                                        <p><span>Codigo bis:</span><?php echo $controlador->row_upd->gt_proveedor_codigo_bis; ?></p>
+                                    </div>
+                                </div>
+                                <div class="dbox w-100 d-flex align-items-start">
+                                    <div class="icon d-flex align-items-center justify-content-center">
+                                        <span class="fa fa-bandcamp"></span>
+                                    </div>
+                                    <div class="text pl-4">
+                                        <p><span>Pagina web:</span><?php echo $controlador->row_upd->gt_proveedor_pagina_web; ?></p>
+                                    </div>
+                                </div>
+                                <div class="dbox w-100 d-flex align-items-start">
+                                    <div class="icon d-flex align-items-center justify-content-center">
+                                        <span class="fa fa-bandcamp"></span>
+                                    </div>
+                                    <div class="text pl-4">
+                                        <p><span>Tipo proveedor:</span><?php echo $controlador->row_upd->gt_proveedor_gt_tipo_proveedor_id; ?></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="contact-wrap w-100 p-md-5 p-4">
+                                <h3 class="mb-4">Modifica</h3>
+                                <div id="form-message-warning" class="mb-4"></div>
+                                <div id="form-message-success" class="mb-4">
+                                    Your message was sent, thank you!
+                                </div>
+                                <form method="POST" id="contactForm" name="contactForm">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="control-label" for="descripcion">Descripcion</label>
+                                                <div class="controls">
+                                                    <input class="form-control input-lg" type="text" name="descripcion" value="<?php echo $controlador->row_upd->gt_proveedor_descripcion; ?>" class="form-control" required="" id="descripcion" placeholder="Descripcion">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="control-label" for="descripcion_select">Descripcion Select</label>
+                                                <div class="controls">
+                                                    <input class="form-control input-lg" type="text" name="descripcion_select" value="<?php echo $controlador->row_upd->gt_proveedor_descripcion_select; ?>" class="form-control" required="" id="descripcion_select" placeholder="Descripcion Select">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="control-label" for="alias">Alias</label>
+                                                <div class="controls">
+                                                    <input class="form-control input-lg" type="text" name="alias" value="<?php echo $controlador->row_upd->gt_proveedor_alias; ?>" class="form-control" required="" id="alias" placeholder="Alias">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="control-label" for="url">Codigo bis</label>
+                                                <div class="controls">
+                                                    <input class="form-control input-lg" type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->gt_proveedor_codigo_bis; ?>" class="form-control" required="" id="codigo_bis" placeholder="codigo bis">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="control-label" for="img_descripcion">Pagina Web</label>
+                                                <div class="controls">
+                                                    <input class="form-control input-lg" type="text" name="pagina_web" value="<?php echo $controlador->row_upd->gt_proveedor_pagina_web; ?>" class="form-control" required="" id="pagina_web" placeholder="pagina_web">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="control-label" for="gt_tipo_proveedor">Tipo proveedor</label>
+                                                <div class="controls" >
+                                                    <?php echo $controlador->inputs->select->gt_tipo_proveedor_id; ?>
+                                                </div>
+                                            </div>
+                                        </div>
 
-<div class="control-group col-sm-6">
-    <label class="control-label" for="url">Codigo bis</label>
-    <div class="controls">
-        <input type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->gt_proveedor_codigo_bis; ?>" class="form-control" required="" id="codigo_bis" placeholder="codigo bis">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="img_descripcion">Pagina Web</label>
-    <div class="controls">
-        <input type="text" name="pagina_web" value="<?php echo $controlador->row_upd->gt_proveedor_pagina_web; ?>" class="form-control" required="" id="pagina_web" placeholder="pagina_web">
-    </div>
-</div>
-<div class="control-group col-md-6">
-    <label class="control-label" for="gt_tipo_proveedor">Tipo proveedor</label>
-    <div class="controls">
-        <?php echo $controlador->inputs->select->gt_tipo_proveedor_id; ?>
-    </div>
-</div>
-<div class="row form-group">
-    <div class="col-md-12 mb-3 mb-md-0">
-        <h3>Datos Fiscales</h3>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div class="col-md-6 btn-ancho">
 
-    </div>
-</div>
+                                                    <button type="submit" class="btn btn-info btn-guarda col-md-12 " name="btn_action_next" value="modifica">Modifica</button>
+                                                </div>
+                                                <div class="col-md-6 btn-ancho">
+                                                    <button type="submit" class="btn btn-info btn-guarda col-md-12 " name="btn_action_next" value="ubicacion">Siguiente</button>
+                                                </div>
+                                                <div class="submitting"></div>
 
-
-
-<div class="control-group col-sm-6">
-    <label class="control-label" for="rfc">RFC</label>
-    <div class="controls">
-        <input type="text" name="rfc" value="<?php echo $controlador->row_upd->gt_proveedor_rfc; ?>" class="form-control" required="" id="rfc" placeholder="RFC">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
     </div>
-</div>
-<div class="control-group col-md-6">
-    <label class="control-label" for="cat_sat_regimen_fiscal">Regimen Fiscal</label>
-    <div class="controls">
-        <?php echo $controlador->inputs->select->cat_sat_regimen_fiscal_id; ?>
-    </div>
-
-</div>
-<div class="control-group col-md-6">
-    <label class="control-label" for="dp_calle_pertenece">Calle</label>
-    <div class="controls">
-        <?php echo $controlador->inputs->select->dp_calle_pertenece_id; ?>
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="exterior">Exterior</label>
-    <div class="controls">
-        <input type="text" name="exterior" value="<?php echo $controlador->row_upd->gt_proveedor_exterior; ?>" class="form-control" required="" id="exterior" placeholder="Exterior">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="interior">Interior</label>
-    <div class="controls">
-        <input type="text" name="interior" value="<?php echo $controlador->row_upd->gt_proveedor_interior; ?>" class="form-control" required="" id="interior" placeholder="Interior">
-    </div>
-</div>
-<div class="row form-group">
-    <div class="col-md-12 mb-3 mb-md-0">
-        <h3>Contacto</h3>
-
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="contacto_1">Contacto 1</label>
-    <div class="controls">
-        <input type="text" name="contacto_1" value="<?php echo $controlador->row_upd->gt_proveedor_contacto_1; ?>" class="form-control" required="" id="contacto_1" placeholder="Contacto 1">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="telefono_1">Telefono 1</label>
-    <div class="controls">
-        <input type="text" name="telefono_1" value="<?php echo $controlador->row_upd->gt_proveedor_telefono_1; ?>" class="form-control" required="" id="telefono_1" placeholder="Telefono 1">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="contacto_2">Contacto 2</label>
-    <div class="controls">
-        <input type="text" name="contacto_2" value="<?php echo $controlador->row_upd->gt_proveedor_contacto_2; ?>" class="form-control" required="" id="contacto_2" placeholder="Contacto 2">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="telefono_2">Telefono 2</label>
-    <div class="controls">
-        <input type="text" name="telefono_2" value="<?php echo $controlador->row_upd->gt_proveedor_telefono_2; ?>" class="form-control" required="" id="telefono_2" placeholder="Telefono 2">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="contacto_3">Contacto 3</label>
-    <div class="controls">
-        <input type="text" name="contacto_3" value="<?php echo $controlador->row_upd->gt_proveedor_contacto_3; ?>" class="form-control" required="" id="contacto_3" placeholder="Contacto 3">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="telefono_3">Telefono 3</label>
-    <div class="controls">
-        <input type="text" name="telefono_3" value="<?php echo $controlador->row_upd->gt_proveedor_telefono_1; ?>" class="form-control" required="" id="telefono_3" placeholder="Telefono 3">
-    </div>
-</div>
-<div class="control-group btn-alta">
-    <div class="controls">
-        <button type="submit" class="btn btn-success" name="guarda">Alta</button>
-        <button type="submit" class="btn btn-success" name="guarda_otro">Genero Otro</button>
-    </div>
-</div>
-
+</section>
