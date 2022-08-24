@@ -9,7 +9,9 @@ use config\views;
 ?>
 
 
-<section class="ftco-section img bg-hero" >
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<section class="ftco-section " >
 
 
     <div class="container">
@@ -28,7 +30,8 @@ use config\views;
                                 <div class="dbox w-100 d-flex align-items-start">
 
                                     <div class="icon d-flex align-items-center justify-content-center">
-                                        <span class="fa fa-bandcamp"></span>
+                                        <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="ver_datos_fiscales.php">  Datos Generales</a>
+
                                     </div>
                                     <div class="text pl-4">
                                         <p><span>Descripcion:</span><?php echo $controlador->row_upd->gt_proveedor_descripcion; ?></p>
@@ -88,70 +91,84 @@ use config\views;
 
                                 <div class="contact-wrap w-100 p-md-5 p-4">
                                     <h3 class="mb-4">Modifica</h3>
-                                    <div class="row">
-                                        <form method="post" action="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="form-additional" enctype="multipart/form-data">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label class="control-label" for="descripcion">Descripcion</label>
-                                                <div class="controls">
-                                                    <input class="form-control input-lg" type="text" name="descripcion" value="<?php echo $controlador->row_upd->gt_proveedor_descripcion; ?>" class="form-control" required="" id="descripcion" placeholder="Descripcion">
+                                    <form method="post" action="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="form-additional" enctype="multipart/form-data">
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label" for="descripcion">Descripcion</label>
+                                                    <div class="controls">
+                                                        <input class="form-control input-lg" type="text" name="descripcion" value="<?php echo $controlador->row_upd->gt_proveedor_descripcion; ?>" class="form-control" required="" id="descripcion" placeholder="Descripcion">
+                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label class="control-label" for="descripcion_select">Descripcion Select</label>
-                                                <div class="controls">
-                                                    <input class="form-control input-lg" type="text" name="descripcion_select" value="<?php echo $controlador->row_upd->gt_proveedor_descripcion_select; ?>" class="form-control" required="" id="descripcion_select" placeholder="Descripcion Select">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="descripcion">Codigo</label>
+                                                        <div class="controls">
+                                                            <input type="text" name="Codigo" value="<?php echo $controlador->row_upd->gt_proveedor_codigo; ?>" class="form-control" required="" id="codigo" placeholder="Codigo" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label" for="descripcion_select">Descripcion Select</label>
+                                                    <div class="controls">
+                                                        <input class="form-control input-lg" type="text" name="descripcion_select" value="<?php echo $controlador->row_upd->gt_proveedor_descripcion_select; ?>" class="form-control" required="" id="descripcion_select" placeholder="Descripcion Select">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label class="control-label" for="alias">Alias</label>
-                                                <div class="controls">
-                                                    <input class="form-control input-lg" type="text" name="alias" value="<?php echo $controlador->row_upd->gt_proveedor_alias; ?>" class="form-control" required="" id="alias" placeholder="Alias">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label" for="alias">Alias</label>
+                                                    <div class="controls">
+                                                        <input class="form-control input-lg" type="text" name="alias" value="<?php echo $controlador->row_upd->gt_proveedor_alias; ?>" class="form-control" required="" id="alias" placeholder="Alias">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label class="control-label" for="url">Codigo bis</label>
-                                                <div class="controls">
-                                                    <input class="form-control input-lg" type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->gt_proveedor_codigo_bis; ?>" class="form-control" required="" id="codigo_bis" placeholder="codigo bis">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label" for="url">Codigo bis</label>
+                                                    <div class="controls">
+                                                        <input class="form-control input-lg" type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->gt_proveedor_codigo_bis; ?>" class="form-control" required="" id="codigo_bis" placeholder="codigo bis">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label class="control-label" for="img_descripcion">Pagina Web</label>
-                                                <div class="controls">
-                                                    <input class="form-control input-lg" type="text" name="pagina_web" value="<?php echo $controlador->row_upd->gt_proveedor_pagina_web; ?>" class="form-control" required="" id="pagina_web" placeholder="pagina_web">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label" for="img_descripcion">Pagina Web</label>
+                                                    <div class="controls">
+                                                        <input class="form-control input-lg" type="text" name="pagina_web" value="<?php echo $controlador->row_upd->gt_proveedor_pagina_web; ?>" class="form-control" required="" id="pagina_web" placeholder="pagina_web">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label class="control-label" for="gt_tipo_proveedor">Tipo proveedor</label>
-                                                <div class="controls" >
-                                                    <?php echo $controlador->inputs->select->gt_tipo_proveedor_id; ?>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label" for="gt_tipo_proveedor">Tipo proveedor</label>
+                                                    <div class="controls" >
+                                                     <?php echo $controlador->inputs->select->gt_tipo_proveedor_id; ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label" for="img_descripcion">    </label>
+
+                                                </div>
+                                            </div>
+                                            <div class="buttons col-md-12">
+                                                <div class="col-md-6 btn-ancho">
+                                                    <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>
+                                                </div>
+                                                <div class="col-md-6 btn-ancho">
+                                                    <button type="submit" class="btn btn-info btn-guarda col-md-12 " name="btn_action_next" value="ubicacion">Siguiente</button>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="buttons col-md-12">
-                                            <div class="col-md-6 btn-ancho">
-                                                <button type="submit" class="btn btn-info btn-guarda col-md-12 " name="btn_action_next" value="modifica">Modifica</button>
-                                            </div>
-                                            <div class="col-md-6 btn-ancho">
-                                                <button type="submit" class="btn btn-info btn-guarda col-md-12 " name="btn_action_next" value="ubicacion">Siguiente</button>
-                                            </div>
-
-                                        </div>
+                                    </form>
 
 
-                                        </form>
-                                    </div>
                                 </div>
 
                             </div>
