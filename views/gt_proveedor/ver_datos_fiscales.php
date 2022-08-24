@@ -10,16 +10,14 @@ use config\views;
 
 
 <section class="ftco-section img bg-hero" >
-    <head>
-        <link rel="stylesheet" href="css/style.css">
-    </head>
+
+
     <div class="container">
-        <form method="post" action="./index.php?seccion=gt_provedor&accion=ver_datos_fiscales&session_id=<?php echo $controlador->session_id; ?>&registro_id=<?php echo $controlador->registro_id; ?>" class="form-additional">
-        <div class="row justify-content-center">
+       <div class="row justify-content-center">
             <div class="col-md-6 text-center mb-5">
-                <h2 class="heading-section"><?php echo $controlador->row_upd->gt_proveedor_descripcion?></h2>
+                <h1 class="heading-section"><?php echo $controlador->row_upd->gt_proveedor_descripcion?></h1>
             </div>
-        </div>
+       </div>
         <div class="row justify-content-center">
             <div class="col-lg-11">
                 <div class="wrapper">
@@ -86,15 +84,12 @@ use config\views;
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-5">
-                            <div class="contact-wrap w-100 p-md-5 p-4">
-                                <h3 class="mb-4">Modifica</h3>
-                                <div id="form-message-warning" class="mb-4"></div>
-                                <div id="form-message-success" class="mb-4">
-                                    Your message was sent, thank you!
-                                </div>
-                                <form method="POST" id="contactForm" name="contactForm">
+                            <div class="col-lg-5 bg-info " >
+
+                                <div class="contact-wrap w-100 p-md-5 p-4">
+                                    <h3 class="mb-4">Modifica</h3>
                                     <div class="row">
+                                        <form method="post" action="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="form-additional" enctype="multipart/form-data">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label class="control-label" for="descripcion">Descripcion</label>
@@ -144,27 +139,27 @@ use config\views;
                                             </div>
                                         </div>
 
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <div class="col-md-6 btn-ancho">
-
-                                                    <button type="submit" class="btn btn-info btn-guarda col-md-12 " name="btn_action_next" value="modifica">Modifica</button>
-                                                </div>
-                                                <div class="col-md-6 btn-ancho">
-                                                    <button type="submit" class="btn btn-info btn-guarda col-md-12 " name="btn_action_next" value="ubicacion">Siguiente</button>
-                                                </div>
-                                                <div class="submitting"></div>
-
+                                        <div class="buttons col-md-12">
+                                            <div class="col-md-6 btn-ancho">
+                                                <button type="submit" class="btn btn-info btn-guarda col-md-12 " name="btn_action_next" value="modifica">Modifica</button>
                                             </div>
+                                            <div class="col-md-6 btn-ancho">
+                                                <button type="submit" class="btn btn-info btn-guarda col-md-12 " name="btn_action_next" value="ubicacion">Siguiente</button>
+                                            </div>
+
                                         </div>
+
+
+                                        </form>
                                     </div>
-                                </form>
+                                </div>
+
                             </div>
-                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
-        </form>
+
     </div>
 </section>
