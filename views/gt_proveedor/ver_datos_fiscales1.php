@@ -13,7 +13,7 @@ use config\views;
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<section class="ftco-section " >
+<section class="ftco-section " style=" center;">
 
 
     <div class="container center">
@@ -28,7 +28,7 @@ use config\views;
                     <div class="row no-gutters justify-content-between">
                         <div class="col-lg-6 d-flex align-items-stretch">
                             <div class="info-wrap w-100 p-5">
-                                <h3 class="mb-4">Datos Fiscales</h3>
+
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="control-label" for="img_descripcion">    </label>
@@ -55,7 +55,7 @@ use config\views;
 
                                 <div class="dbox w-100 d-flex align-items-start">
                                     <div class="icon d-flex align-items-center justify-content-center">
-                                        <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales2&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>">  Datos De contacto</a>
+                                        <a class="fa fa-bandcamp" style="font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales2&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>">  Datos De contacto</a>
                                     </div>
 
                                 </div>
@@ -67,7 +67,7 @@ use config\views;
                                 </div>
                                 <div class="dbox w-100 d-flex align-items-start">
                                     <div class="icon d-flex align-items-center justify-content-center">
-                                        <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales2&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" >  Datos Generales</a>
+                                        <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" >  Datos Generales</a>
 
                                         </div>
 
@@ -129,21 +129,28 @@ use config\views;
 
                                             <label class="control-label" for="img_descripcion">    </label>
 
-
                                     <div class="buttons col-md-12" style="text-align: center;">
+                                        <p>
 
-                                        <div class="col-md-6 btn-ancho">
+
+                                            <a href="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class=""></i>
+                                                Anterior
+                                            </a>
+
 
                                             <a href="./index.php?seccion=gt_proveedor&accion=modifica_datos_fiscales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class=""></i>
                                                 Modifica
                                             </a>
-                                        </div>
-                                        <div class="col-md-6 btn-ancho">
+
+
                                             <a href="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales2&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class=""></i>
                                                 Siguiente
                                             </a>
-                                        </div>
+
+                                        </p>
                                     </div>
+
+
                                 </div>
 
 

@@ -28,7 +28,7 @@ use config\views;
                     <div class="row no-gutters justify-content-between">
                         <div class="col-lg-6 d-flex align-items-stretch">
                             <div class="info-wrap w-100 p-5">
-                                <h3 class="mb-4">Datos Generales</h3>
+
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="control-label" for="img_descripcion">    </label>
@@ -148,7 +148,7 @@ use config\views;
                                                     </a>
                                                 </div>
                                                 <div class="col-md-6 btn-ancho">
-                                                    <a href="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales2&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class=""></i>
+                                                    <a href="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales1&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class=""></i>
                                                         Siguiente
                                                     </a>
                                                 </div>
