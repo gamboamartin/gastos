@@ -78,7 +78,7 @@ class controlador_gt_proveedor extends system {
             return $this->retorno_error(mensaje: 'Error al generar template',data:  $r_modifica, header: $header,ws:$ws);
         }
 
-        $select = (new gt_tipo_proveedor_html(html: $this->html_base))->select_gt_tipo_proveedor_id(cols:12,con_registros: true,
+        $select = (new cat_sat_regimen_fiscal_html(html: $this->html_base))->select_cat_sat_regimen_fiscal_id(cols:12,con_registros: true,
             id_selected: -1, link: $this->link);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al generar select', data: $select);
@@ -86,9 +86,17 @@ class controlador_gt_proveedor extends system {
             die('Error');
         }
         $this->inputs->select = new stdClass();
-        $this->inputs->select->gt_tipo_proveedor_id = $select;
+        $this->inputs->select->cat_sat_regimen_fiscal_id = $select;
 
+        $select = (new dp_calle_pertenece_html(html: $this->html_base))->select_dp_calle_pertenece_id(cols:12,con_registros:true,
+            id_selected:$this->row_upd->dp_calle_pertenece_id, link: $this->link);
+        if(errores::$error){
+            $error = $this->errores->error(mensaje: 'Error al generar select',data:  $select);
+            print_r($error);
+            die('Error');
+        }
 
+        $this->inputs->select->dp_calle_pertenece_id = $select;
 
         return $r_modifica;
     }

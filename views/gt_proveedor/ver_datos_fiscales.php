@@ -90,7 +90,7 @@ use config\views;
                                             </div>
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <label class="control-label" for="descripcion">Codigo</label>
+                                                        <label class="control-label" for="codigo">Codigo</label>
                                                         <div class="controls">
                                                             <input type="text" name="Codigo" value="<?php echo $controlador->row_upd->codigo; ?>" class="form-control" required="" id="codigo" placeholder="Codigo" readonly>
                                                         </div>
@@ -105,7 +105,7 @@ use config\views;
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
-                                                <div class="form-group">
+                                                <div class="form-group " >
                                                     <label class="control-label" for="alias">Alias</label>
                                                     <div class="controls">
                                                         <input class="form-control input-lg" type="text" name="alias" value="<?php echo $controlador->row_upd->alias; ?>" class="form-control" required="" id="alias" placeholder="Alias">
@@ -136,13 +136,11 @@ use config\views;
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group">
+
                                                     <label class="control-label" for="img_descripcion">    </label>
 
-                                                </div>
-                                            </div>
-                                            <div class="buttons col-md-12">
+
+                                            <div class="buttons col-md-12" style="text-align: center;">
                                                 <div class="col-md-6 btn-ancho">
 
                                                     <a href="./index.php?seccion=gt_proveedor&accion=modifica_datos_fiscales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class=""></i>
