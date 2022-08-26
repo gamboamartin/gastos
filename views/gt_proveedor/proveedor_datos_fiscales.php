@@ -39,12 +39,7 @@ use config\views;
                                     <div class="icon d-flex align-items-center justify-content-center">
                                         <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_generales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" >  Datos Generales</a>
                                     </div>
-                                    <div class="text pl-4">
-                                        <h4><span>       Descripcion:  </span><?php echo $controlador->row_upd->descripcion; ?></h4>
-                                    </div>
-                                    <div class="text pl-4">
-                                        <h4><span>       Codigo:  </span><?php echo $controlador->row_upd->codigo; ?></h4>
-                                    </div>
+                                    
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
