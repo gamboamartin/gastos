@@ -233,4 +233,27 @@ class controlador_gt_proveedor extends system {
 
         return $r_modifica;
     }
+
+
+    public function alta_datos_generales(){
+
+
+        $_POST['gt_tipo_proveedor_id'] = 1;
+        $this->alta_bd(ws: false);
+        
+        
+
+        $this->rows_lista[] = 'dp_calle_pertenece_id';
+        $this->rows_lista[] = 'cat_sat_regimen_fiscal_id';
+        $this->rows_lista[] = 'rfc';
+        $this->rows_lista[] = 'exterior';
+        $this->rows_lista[] = 'interior';
+        $this->rows_lista[] = 'telefono_1';
+        $this->rows_lista[] = 'telefono_2';
+        $this->rows_lista[] = 'telefono_3';
+        $this->rows_lista[] = 'contacto_1';
+        $this->rows_lista[] = 'contacto_2';
+        $this->rows_lista[] = 'contacto_3';
+        $this->rows_lista[] = 'pagina_web';
+    }
 }

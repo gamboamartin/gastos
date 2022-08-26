@@ -28,7 +28,7 @@ use config\views;
                     <div class="row no-gutters justify-content-between">
                         <div class="col-lg-6 d-flex align-items-stretch">
                             <div class="info-wrap w-100 p-5">
-
+                                <h3 class="mb-4">Datos Fiscales</h3>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="control-label" for="img_descripcion">    </label>
@@ -37,7 +37,7 @@ use config\views;
                                 </div>
                                 <div class="dbox w-100 d-flex align-items-start">
                                     <div class="icon d-flex align-items-center justify-content-center">
-                                        <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales1&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>">  Datos Fiscales</a>
+                                        <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" >  Datos Generales</a>
                                     </div>
                                     <div class="text pl-4">
                                         <h4><span>       Descripcion:  </span><?php echo $controlador->row_upd->descripcion; ?></h4>
@@ -55,7 +55,7 @@ use config\views;
 
                                 <div class="dbox w-100 d-flex align-items-start">
                                     <div class="icon d-flex align-items-center justify-content-center">
-                                        <a class="fa fa-bandcamp" style="font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales2&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>">  Datos De contacto</a>
+                                        <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales1&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>">  Datos Fiscales</a>
                                     </div>
 
                                 </div>
@@ -75,7 +75,7 @@ use config\views;
 
                             </div>
                         </div>
-                        <div class="col-lg-5 bg-info " >
+                        <div class="col-lg-6 bg-info " >
 
                             <div class="contact-wrap w-100 p-md-5 p-4">
                                 <h3 class="mb-4">Modifica</h3>
