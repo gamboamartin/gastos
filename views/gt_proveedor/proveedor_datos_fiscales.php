@@ -37,7 +37,7 @@ use config\views;
                                 </div>
                                 <div class="dbox w-100 d-flex align-items-start">
                                     <div class="icon d-flex align-items-center justify-content-center">
-                                        <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" >  Datos Generales</a>
+                                        <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_generales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" >  Datos Generales</a>
                                     </div>
                                     <div class="text pl-4">
                                         <h4><span>       Descripcion:  </span><?php echo $controlador->row_upd->descripcion; ?></h4>
@@ -55,7 +55,7 @@ use config\views;
 
                                 <div class="dbox w-100 d-flex align-items-start">
                                     <div class="icon d-flex align-items-center justify-content-center">
-                                        <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales1&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>">  Datos Fiscales</a>
+                                        <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_fiscales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>">  Datos Fiscales</a>
                                     </div>
 
                                 </div>
@@ -67,9 +67,8 @@ use config\views;
                                 </div>
                                 <div class="dbox w-100 d-flex align-items-start">
                                     <div class="icon d-flex align-items-center justify-content-center">
-                                        <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" >  Datos Generales</a>
-
-                                        </div>
+                                        <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_generales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>">  Datos De contacto</a>
+                                    </div>
 
                                 </div>
 
@@ -133,7 +132,7 @@ use config\views;
                                         <p>
 
 
-                                            <a href="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class=""></i>
+                                            <a href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_generales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class=""></i>
                                                 Anterior
                                             </a>
 
@@ -143,7 +142,7 @@ use config\views;
                                             </a>
 
 
-                                            <a href="./index.php?seccion=gt_proveedor&accion=ver_datos_fiscales2&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class=""></i>
+                                            <a href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_contactos&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class=""></i>
                                                 Siguiente
                                             </a>
 
