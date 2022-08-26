@@ -71,7 +71,7 @@ use config\views;
 
                             </div>
                         </div>
-                        <div class="col-lg-6 bg-info " >
+                        <div class="col-lg-6 bg-info " style=" margin-bottom: 10%;" >
                             <form method="post" action="./index.php?seccion=gt_proveedor&accion=&accion=modifica_bd&session_id=<?php echo $controlador->session_id; ?>&registro_id=<?php echo $controlador->registro_id; ?>" class="form-additional">
 
                                 <h3 class="mb-4">Modifica</h3>
@@ -106,7 +106,7 @@ use config\views;
                                         <input type="text" name="contacto_3" value="<?php echo $controlador->row_upd->contacto_3; ?>" class="form-control" required="" id="contacto_3" placeholder="Contacto 3">
                                     </div>
                                 </div>
-                                <div class="control-group col-sm-6">
+                                <div class="control-group col-sm-6" style="margin-bottom: 2%;">
                                     <label class="control-label" for="telefono_3">Telefono 3</label>
                                     <div class="controls">
                                         <input type="text" name="telefono_3" value="<?php echo $controlador->row_upd->telefono_1; ?>" class="form-control" required="" id="telefono_3" placeholder="Telefono 3">
@@ -116,7 +116,7 @@ use config\views;
 
 
 
-                                <div class="buttons col-md-12" style="text-align: center;">
+                                <div class="buttons col-md-12" style="text-align: center; margin-bottom: 10%;" >
                                     <p></p>
                                     <label class="control-label" for="img_descripcion">    </label>
                                     <div class="col-md-6 btn-ancho">
@@ -131,7 +131,9 @@ use config\views;
                                     </div>
 
                                 </div>
+
                                 </div>
+
 
                             </form>
 

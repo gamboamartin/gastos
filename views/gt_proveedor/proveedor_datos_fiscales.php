@@ -111,7 +111,7 @@ use config\views;
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12">
+                                    <div class="col-md-12" style="margin-bottom: 2%;">
                                         <div class="form-group">
                                             <label class="control-label" for="interior">Interior</label>
                                             <div class="controls">
@@ -119,9 +119,6 @@ use config\views;
                                             </div>
                                         </div>
                                     </div>
-
-
-                                            <label class="control-label" for="img_descripcion">    </label>
 
                                     <div class="buttons col-md-12" style="text-align: center;">
                                         <p>

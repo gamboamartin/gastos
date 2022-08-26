@@ -69,7 +69,7 @@ use config\views;
 
                             </div>
                         </div>
-                            <div class="col-lg-6 bg-info " >
+                            <div class="col-lg-6 bg-info ">
                                 <form method="post" action="./index.php?seccion=gt_proveedor&accion=modifica_bd&session_id=<?php echo $controlador->session_id; ?>&registro_id=<?php echo $controlador->registro_id; ?>" class="form-additional">
 
 
@@ -132,7 +132,7 @@ use config\views;
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-12" style="margin-bottom: 2%;">
                                                 <div class="form-group">
                                                     <label class="control-label" for="gt_tipo_proveedor">Tipo proveedor</label>
                                                     <div class="controls" >
