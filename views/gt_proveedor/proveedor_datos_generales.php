@@ -62,7 +62,7 @@ use config\views;
                                 </div>
                                 <div class="dbox w-100 d-flex align-items-start">
                                     <div class="icon d-flex align-items-center justify-content-center">
-                                        <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_generales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>">  Datos De contacto</a>
+                                        <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_contactos&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>">  Datos De Contactos</a>
                                     </div>
 
                                 </div>
@@ -70,11 +70,20 @@ use config\views;
                             </div>
                         </div>
                             <div class="col-lg-6 bg-info " >
+                                <form method="post" action="./index.php?seccion=gt_proveedor&accion=modifica_bd&session_id=<?php echo $controlador->session_id; ?>&registro_id=<?php echo $controlador->registro_id; ?>" class="form-additional">
 
-                                <div class="contact-wrap w-100 p-md-5 p-4">
+
                                     <h3 class="mb-4">Modifica</h3>
 
                                         <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label" for="id">Id</label>
+                                                    <div class="controls">
+                                                        <input class="form-control input-lg" type="text" name="id" value="<?php echo $controlador->row_upd->id; ?>" class="form-control" required="" id="id" placeholder="Id" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label class="control-label" for="descripcion">Descripcion</label>
@@ -87,7 +96,7 @@ use config\views;
                                                     <div class="form-group">
                                                         <label class="control-label" for="codigo">Codigo</label>
                                                         <div class="controls">
-                                                            <input type="text" name="Codigo" value="<?php echo $controlador->row_upd->codigo; ?>" class="form-control" required="" id="codigo" placeholder="Codigo" readonly>
+                                                            <input type="text" name="Codigo" value="<?php echo $controlador->row_upd->codigo; ?>" class="form-control" required="" id="codigo" placeholder="Codigo">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -136,9 +145,7 @@ use config\views;
                                                 <p></p>
                                                 <div class="col-md-6 btn-ancho">
 
-                                                    <a href="./index.php?seccion=gt_proveedor&accion=modifica_datos_fiscales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class=""></i>
-                                                        Modifica
-                                                    </a>
+                                                    <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>
                                                 </div>
                                                 <div class="col-md-6 btn-ancho">
                                                     <a href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_fiscales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class=""></i>
@@ -147,7 +154,7 @@ use config\views;
                                                 </div>
                                             </div>
                                         </div>
-
+                                </form>
 
 
 

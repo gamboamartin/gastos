@@ -39,7 +39,7 @@ use config\views;
                                     <div class="icon d-flex align-items-center justify-content-center">
                                         <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_generales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" >  Datos Generales</a>
                                     </div>
-                                    
+
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -62,7 +62,7 @@ use config\views;
                                 </div>
                                 <div class="dbox w-100 d-flex align-items-start">
                                     <div class="icon d-flex align-items-center justify-content-center">
-                                        <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_generales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>">  Datos De contacto</a>
+                                        <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_contactos&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>">  Datos De Contactos</a>
                                     </div>
 
                                 </div>
@@ -70,8 +70,8 @@ use config\views;
                             </div>
                         </div>
                         <div class="col-lg-6 bg-info " >
+                            <form method="post" action="./index.php?seccion=gt_proveedor&accion=&accion=modifica_bd&session_id=<?php echo $controlador->session_id; ?>&registro_id=<?php echo $controlador->registro_id; ?>" class="form-additional">
 
-                            <div class="contact-wrap w-100 p-md-5 p-4">
                                 <h3 class="mb-4">Modifica</h3>
 
                                 <div class="row">
@@ -106,7 +106,7 @@ use config\views;
                                         <div class="form-group">
                                             <label class="control-label" for="exterior">Exterior</label>
                                             <div class="controls">
-                                                <input type="text" name="exterior" value="" class="form-control" required="" id="exterior" placeholder="Exterior">
+                                                <input class="form-control input-lg" type="text" name="exterior" value="<?php echo $controlador->row_upd->exterior; ?>"  class="form-control" required="" id="exterior" placeholder="Exterior">
                                             </div>
                                         </div>
                                     </div>
@@ -115,7 +115,7 @@ use config\views;
                                         <div class="form-group">
                                             <label class="control-label" for="interior">Interior</label>
                                             <div class="controls">
-                                                <input type="text" name="interior" value="" class="form-control" required="" id="interior" placeholder="Interior">
+                                                <input class="form-control input-lg" type="text" name="interior" value="<?php echo $controlador->row_upd->interior; ?>"  class="form-control" required="" id="interior" placeholder="Interior">
                                             </div>
                                         </div>
                                     </div>
@@ -132,10 +132,7 @@ use config\views;
                                             </a>
 
 
-                                            <a href="./index.php?seccion=gt_proveedor&accion=modifica_datos_fiscales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class=""></i>
-                                                Modifica
-                                            </a>
-
+                                            <button type="submit" class="btn btn-success ">Modifica</button>
 
                                             <a href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_contactos&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class=""></i>
                                                 Siguiente
@@ -149,7 +146,7 @@ use config\views;
 
 
 
-
+                            </form>
                             </div>
 
                         </div>

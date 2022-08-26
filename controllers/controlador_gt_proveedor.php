@@ -57,7 +57,7 @@ class controlador_gt_proveedor extends system {
         }
 
         $select = (new gt_tipo_proveedor_html(html: $this->html_base))->select_gt_tipo_proveedor_id(cols:12,con_registros: true,
-            id_selected: -1, link: $this->link);
+            id_selected: $this->row_upd->gt_tipo_proveedor_id, link: $this->link);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al generar select', data: $select);
             print_r($error);
@@ -79,7 +79,7 @@ class controlador_gt_proveedor extends system {
         }
 
         $select = (new cat_sat_regimen_fiscal_html(html: $this->html_base))->select_cat_sat_regimen_fiscal_id(cols:12,con_registros: true,
-            id_selected: -1, link: $this->link);
+            id_selected: $this->row_upd->cat_sat_regimen_fiscal_id, link: $this->link);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al generar select', data: $select);
             print_r($error);
@@ -235,25 +235,22 @@ class controlador_gt_proveedor extends system {
     }
 
 
-    public function alta_datos_generales(){
+    public function modifica_datos_generales(){
 
 
-        $_POST['gt_tipo_proveedor_id'] = 1;
-        $this->alta_bd(ws: false);
-        
-        
+        /*$_POST['dp_calle_pertenece_id'] = 1;
+        $_POST['cat_sat_regimen_fiscal_id'] = 1;
+        $_POST['rfc'] = 1;
+        $_POST['exterior'] = 1;
+        $_POST['interior'] = 1;
+        $_POST[ 'telefono_1'] = 1;
+        $_POST[ 'telefono_2'] = 1;
+        $_POST[ 'telefono_3'] = 1;
+        $_POST[ 'contacto_1'] = 1;
+        $_POST[ 'contacto_2'] = 1;
+        $_POST[ 'contacto_3'] = 1;*/
 
-        $this->rows_lista[] = 'dp_calle_pertenece_id';
-        $this->rows_lista[] = 'cat_sat_regimen_fiscal_id';
-        $this->rows_lista[] = 'rfc';
-        $this->rows_lista[] = 'exterior';
-        $this->rows_lista[] = 'interior';
-        $this->rows_lista[] = 'telefono_1';
-        $this->rows_lista[] = 'telefono_2';
-        $this->rows_lista[] = 'telefono_3';
-        $this->rows_lista[] = 'contacto_1';
-        $this->rows_lista[] = 'contacto_2';
-        $this->rows_lista[] = 'contacto_3';
-        $this->rows_lista[] = 'pagina_web';
+        $this->modifica_bd(header: false, ws: false);
+
     }
 }
