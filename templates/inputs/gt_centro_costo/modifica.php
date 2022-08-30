@@ -46,5 +46,11 @@ use config\views;
             <input type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->codigo_bis; ?>" class="form-control" required="" id="codigo_bis" placeholder="Codigo bis">
         </div>
     </div>
+    <div class="col-md-12">
+        <label class="control-label" for="gt_tipo_centro_costo">Tipo centro costo</label>
+        <div class="controls">
+            <?php echo $controlador->inputs->select->gt_tipo_centro_costo_id; ?>
+        </div>
+    </div>
 
 <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>

@@ -32,7 +32,13 @@
     </div>
 </div>
 
+<div class="control-group col-sm-6">
+    <label class="control-label" for="gt_tipo_centro_costo">Tipo centro costo</label>
+    <div class="controls">
+        <?php echo $controlador->inputs->select->gt_tipo_centro_costo_id; ?>
+    </div>
 
+</div>
 
 <div class="control-group btn-alta">
     <div class="controls">

@@ -61,7 +61,7 @@ class controlador_gt_centro_costo extends system {
         }
 
         $select = (new gt_tipo_centro_costo_html(html: $this->html_base))->select_gt_tipo_centro_costo_id(cols:12,con_registros:true,
-            id_selected:$this->row_upd->dp_calle_pertenece_id, link: $this->link);
+            id_selected:$this->row_upd->gt_tipo_centro_costo_id, link: $this->link);
         if(errores::$error){
             return $this->retorno_error(mensaje: 'Error al generar select', data: $select, header: $header, ws: $ws);
         }
