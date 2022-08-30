@@ -14,9 +14,7 @@ use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use gamboamartin\template\html;
 use html\gt_autrorizante_html;
-use html\gt_tipo_solicitud_html;
 use models\gt_autorizante;
-use models\gt_tipo_solicitud;
 use PDO;
 use stdClass;
 
@@ -29,7 +27,7 @@ class controlador_gt_autorizante extends system {
         $obj_link = new links_menu($this->registro_id);
         parent::__construct(html:$html, link: $link,modelo:  $modelo, obj_link: $obj_link, paths_conf: $paths_conf);
 
-        $this->titulo_lista = 'Tipo Autorizante';
+        $this->titulo_lista = 'Autorizante';
 
     }
 }
