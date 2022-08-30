@@ -5,13 +5,14 @@ use config\generales;
 use config\views;
 ?>
 
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet"/>
-        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+<div class="row form-group">
+    <div class="col-md-12 mb-3 mb-md-0">
+        <h3>Generales</h3>
+
+    </div>
+</div>
 <div class="control-group col-sm-6">
-    <label class="control-label" for="id">Id</label>
+    <label class="control-label" for="codigo">Id</label>
     <div class="controls">
         <input type="text" name="id" value="<?php echo $controlador->row_upd->id; ?>" class="form-control" required="" id="id" placeholder="Id" readonly>
     </div>
@@ -23,111 +24,124 @@ use config\views;
     </div>
 </div>
 <div class="control-group col-sm-6">
+    <label class="control-label" for="codigo">Codigo</label>
+    <div class="controls">
+        <input type="text" name="Codigo" value="<?php echo $controlador->row_upd->codigo; ?>" class="form-control" required="" id="codigo" placeholder="Codigo" >
+    </div>
+</div>
+
+<div class="control-group col-sm-6">
     <label class="control-label" for="descripcion_select">Descripcion Select</label>
     <div class="controls">
         <input type="text" name="descripcion_select" value="<?php echo $controlador->row_upd->descripcion_select; ?>" class="form-control" required="" id="descripcion_select" placeholder="Descripcion Select">
     </div>
 </div>
 <div class="control-group col-sm-6">
-    <label class="control-label" for="codigo">Codigo</label>
+    <label class="control-label" for="alias">Alias</label>
     <div class="controls">
-        <input type="text" name="codigo" value="<?php echo $controlador->row_upd->codigo; ?>" class="form-control" required="" id="codigo" placeholder="Codigo">
-    </div>
-</div>
-    <div class="control-group col-sm-6">
-
-        <label class="control-label" for="observaciones">Observaciones</label>
-        <div class="controls">
-            <textarea class="form-control" name="observaciones" id="observaciones" required="true" cols="30" rows="5"><?php echo $controlador->row_upd->observaciones; ?></textarea>
-        </div>
-        <script>
-            $('#observaciones').summernote({
-                tabsize: 1,
-                height: 100
-            });
-        </script>
-    </div>
-
-
-
-
-<div class="control-group col-sm-6">
-    <label class="control-label" for="url">Url</label>
-    <div class="controls">
-        <input type="text" name="url" value="<?php echo $controlador->row_upd->url; ?>" class="form-control" required="" id="Url" placeholder="Url">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="img_descripcion">Img Descripcion</label>
-    <div class="controls">
-        <input type="text" name="img_descripcion" value="<?php echo $controlador->row_upd->img_descripcion; ?>" class="form-control" required="" id="Url" placeholder="img_descripcion">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="georeferencia">Georeferencia</label>
-    <div class="controls">
-        <input type="text" name="georeferencia" value="<?php echo $controlador->row_upd->georeferencia; ?>" class="form-control" required="" id="georeferencia" placeholder="Georeferencia">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="ubicacion">Ubicacion</label>
-    <div class="controls">
-        <input type="text" name="ubicacion" value="<?php echo $controlador->row_upd->ubicacion; ?>" class="form-control" required="" id="ubicacion" placeholder="Ubicacion">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="wt_proposito">Proposito</label>
-    <div class="controls">
-        <?php echo $controlador->inputs->select->wt_proposito_id; ?>
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="wt_proposito">Tipo Inmueble</label>
-    <div class="controls">
-        <?php echo $controlador->inputs->select->wt_tipo_inmueble_id; ?>
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="terreno">Terreno</label>
-    <div class="controls">
-        <input type="text" name="terreno" value="<?php echo $controlador->row_upd->terreno; ?>" class="form-control" required="" id="terreno" placeholder="Terreno">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="construccion">Construccion</label>
-    <div class="controls">
-        <input type="text" name="construccion" value="<?php echo $controlador->row_upd->construccion; ?>" class="form-control" required="" id="construccion" placeholder="Construccion">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="niveles">Niveles</label>
-    <div class="controls">
-        <input type="text" name="niveles" value="<?php echo $controlador->row_upd->niveles; ?>" class="form-control" required="" id="niveles" placeholder="Niveles">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="banio">Baños</label>
-    <div class="controls">
-        <input type="text" name="banio" value="<?php echo $controlador->row_upd->banio; ?>" class="form-control" required="" id="banio" placeholder="Baños">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="recamara">Recamaras</label>
-    <div class="controls">
-        <input type="text" name="recamara" value="<?php echo $controlador->row_upd->recamara; ?>" class="form-control" required="" id="recamara" placeholder="Recamara">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="patio">Patio</label>
-    <div class="controls">
-        <input type="text" name="patio" value="<?php echo $controlador->row_upd->patio; ?>" class="form-control" required="" id="patio" placeholder="Patio">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="estacionamiento">Estacionamiento</label>
-    <div class="controls">
-        <input type="text" name="estacionamiento" value="<?php echo $controlador->row_upd->estacionamiento; ?>" class="form-control" required="" id="estacionamiento" placeholder="Estacionamiento">
+        <input type="text" name="codigo" value="<?php echo $controlador->row_upd->alias; ?>" class="form-control" required="" id="alias" placeholder="Alias">
     </div>
 </div>
 
+<div class="control-group col-sm-6">
+    <label class="control-label" for="url">Codigo bis</label>
+    <div class="controls">
+        <input type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->codigo_bis; ?>" class="form-control" required="" id="codigo_bis" placeholder="codigo bis">
+    </div>
+</div>
+<div class="control-group col-sm-6">
+    <label class="control-label" for="img_descripcion">Pagina Web</label>
+    <div class="controls">
+        <input type="text" name="pagina_web" value="<?php echo $controlador->row_upd->pagina_web; ?>" class="form-control" required="" id="pagina_web" placeholder="pagina_web">
+    </div>
+</div>
+<div class="control-group col-md-6">
+    <label class="control-label" for="gt_tipo_proveedor">Tipo proveedor</label>
+
+        <?php echo $controlador->inputs->select->gt_tipo_proveedor_id; ?>
+
+</div>
+<div class="row form-group">
+    <div class="col-md-12 mb-3 mb-md-0">
+        <h3>Datos Fiscales</h3>
+
+    </div>
+</div>
+
+
+
+<div class="control-group col-sm-6">
+    <label class="control-label" for="rfc">RFC</label>
+    <div class="controls">
+        <input type="text" name="rfc" value="<?php echo $controlador->row_upd->rfc; ?>" class="form-control" required="" id="rfc" placeholder="RFC">
+    </div>
+</div>
+<div class="control-group col-md-6">
+    <label class="control-label" for="cat_sat_regimen_fiscal">Regimen Fiscal</label>
+
+        <?php echo $controlador->inputs->select->cat_sat_regimen_fiscal_id; ?>
+
+
+</div>
+
+<div class="control-group col-md-6">
+    <label class="control-label" for="dp_calle_pertenece">Calle</label>
+
+        <?php echo $controlador->inputs->select->dp_calle_pertenece_id; ?>
+
+</div>
+<div class="control-group col-sm-6">
+    <label class="control-label" for="exterior">Exterior</label>
+    <div class="controls">
+        <input type="text" name="exterior" value="<?php echo $controlador->row_upd->exterior; ?>" class="form-control" required="" id="exterior" placeholder="Exterior">
+    </div>
+</div>
+<div class="control-group col-sm-6">
+    <label class="control-label" for="interior">Interior</label>
+    <div class="controls">
+        <input type="text" name="interior" value="<?php echo $controlador->row_upd->interior; ?>" class="form-control" required="" id="interior" placeholder="Interior">
+    </div>
+</div>
+<div class="row form-group">
+    <div class="col-md-12 mb-3 mb-md-0">
+        <h3>Contacto</h3>
+
+    </div>
+</div>
+<div class="control-group col-sm-6">
+    <label class="control-label" for="contacto_1">Contacto 1</label>
+    <div class="controls">
+        <input type="text" name="contacto_1" value="<?php echo $controlador->row_upd->contacto_1; ?>" class="form-control" required="" id="contacto_1" placeholder="Contacto 1">
+    </div>
+</div>
+<div class="control-group col-sm-6">
+    <label class="control-label" for="telefono_1">Telefono 1</label>
+    <div class="controls">
+        <input type="text" name="telefono_1" value="<?php echo $controlador->row_upd->telefono_1; ?>" class="form-control" required="" id="telefono_1" placeholder="Telefono 1">
+    </div>
+</div>
+<div class="control-group col-sm-6">
+    <label class="control-label" for="contacto_2">Contacto 2</label>
+    <div class="controls">
+        <input type="text" name="contacto_2" value="<?php echo $controlador->row_upd->contacto_2; ?>" class="form-control" required="" id="contacto_2" placeholder="Contacto 2">
+    </div>
+</div>
+<div class="control-group col-sm-6">
+    <label class="control-label" for="telefono_2">Telefono 2</label>
+    <div class="controls">
+        <input type="text" name="telefono_2" value="<?php echo $controlador->row_upd->telefono_2; ?>" class="form-control" required="" id="telefono_2" placeholder="Telefono 2">
+    </div>
+</div>
+<div class="control-group col-sm-6">
+    <label class="control-label" for="contacto_3">Contacto 3</label>
+    <div class="controls">
+        <input type="text" name="contacto_3" value="<?php echo $controlador->row_upd->contacto_3; ?>" class="form-control" required="" id="contacto_3" placeholder="Contacto 3">
+    </div>
+</div>
+<div class="control-group col-sm-6">
+    <label class="control-label" for="telefono_3">Telefono 3</label>
+    <div class="controls">
+        <input type="text" name="telefono_3" value="<?php echo $controlador->row_upd->telefono_1; ?>" class="form-control" required="" id="telefono_3" placeholder="Telefono 3">
+    </div>
+</div>
 <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>

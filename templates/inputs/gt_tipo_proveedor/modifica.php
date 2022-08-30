@@ -5,6 +5,11 @@ use config\generales;
 use config\views;
 ?>
 
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet"/>
+        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <div class="control-group col-sm-6">
     <label class="control-label" for="id">Id</label>
     <div class="controls">
@@ -39,12 +44,6 @@ use config\views;
         <label class="control-label" for="codigo_bis">Codigo bis</label>
         <div class="controls">
             <input type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->codigo_bis; ?>" class="form-control" required="" id="codigo_bis" placeholder="Codigo bis">
-        </div>
-    </div>
-    <div class="control-group col-sm-6">
-        <label class="control-label" for="wt_proposito">Tipo de solicitud</label>
-        <div class="controls">
-            <?php echo $controlador->inputs->select->gt_tipo_solicitud_id ?>
         </div>
     </div>
 
