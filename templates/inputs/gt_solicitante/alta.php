@@ -32,14 +32,19 @@
     </div>
 </div>
 
-<div class="control-group col-md-6">
+<div class="control-group col-sm-12">
     <label class="control-label" for="gt_tipo_proveedor">Tipo proveedor</label>
+    <div class="controls">
     <?php echo $controlador->inputs->select->gt_tipo_solicitud_id; ?>
+    </div>
 </div>
 
-<div class="control-group btn-alta">
-    <div class="controls">
+<div class="control-group  col-md-12"" >
+
+    <div class="controls " >
+
         <button type="submit" class="btn btn-success" name="guarda">Alta</button>
+
         <button type="submit" class="btn btn-success" name="guarda_otro">Genero Otro</button>
     </div>
 </div>
