@@ -6,7 +6,7 @@
     <td><?php echo $row->gt_proveedor_id; ?></td>
     <td><?php echo $row->gt_proveedor_descripcion; ?></td>
     <td>
-        <a href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_generales&registro_id=<?php echo $row->gt_proveedor_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class="glyphicon glyphicon-eye-open"></i>
+        <a href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_fiscales&registro_id=<?php echo $row->gt_proveedor_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class="glyphicon glyphicon-eye-open"></i>
             Ver datos fiscales
         </a>
     </td>
