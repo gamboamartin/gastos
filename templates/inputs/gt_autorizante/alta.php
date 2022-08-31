@@ -32,6 +32,15 @@
     </div>
 </div>
 
+<div class="control-group col-sm-6">
+    <label class="control-label" for="em_empleado_id">Empleado</label>
+    <div class="controls">
+        <?php echo $controlador->inputs->select->em_empleado_id; ?>
+    </div>
+</div>
+
+
+
 
 
 <div class="control-group btn-alta">
