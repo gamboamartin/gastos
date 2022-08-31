@@ -51,15 +51,16 @@ use config\views;
                                 <div class="dbox w-100 d-flex align-items-start">
                                     <div class="icon d-flex align-items-center justify-content-center">
                                         <a  class="fa fa-bandcamp" style="color:#00008B; font-size: 30px" href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_fiscales&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>">  Datos Fiscales</a>
+
                                     </div>
 
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="control-label" for="img_descripcion">    </label>
+                                iv class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label" for="img_descripcion">    </label>
 
-                                    </div>
                                 </div>
+                            </div>
                                 <div class="dbox w-100 d-flex align-items-start">
                                     <div class="icon d-flex align-items-center justify-content-center">
                                         <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_contactos&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>">  Datos De Contactos</a>
@@ -96,7 +97,7 @@ use config\views;
                                                     <div class="form-group">
                                                         <label class="control-label" for="codigo">Codigo</label>
                                                         <div class="controls">
-                                                            <input type="text" name="Codigo" value="<?php echo $controlador->row_upd->codigo; ?>" class="form-control" required="" id="codigo" placeholder="Codigo">
+                                                            <input type="text" name="codigo" value="<?php echo $controlador->row_upd->codigo; ?>" class="form-control" required="" id="codigo" placeholder="Codigo">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -120,15 +121,15 @@ use config\views;
                                                 <div class="form-group">
                                                     <label class="control-label" for="url">Codigo bis</label>
                                                     <div class="controls">
-                                                        <input class="form-control input-lg" type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->codigo_bis; ?>" class="form-control" required="" id="codigo_bis" placeholder="codigo bis">
+                                                        <input class="form-control input-lg" type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->codigo_bis; ?>" class="form-control" required="" id="codigo_bis" placeholder="Codigo bis">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label class="control-label" for="img_descripcion">Pagina Web</label>
+                                                    <label class="control-label" for="pagina_web">Pagina Web</label>
                                                     <div class="controls">
-                                                        <input class="form-control input-lg" type="text" name="pagina_web" value="<?php echo $controlador->row_upd->pagina_web; ?>" class="form-control" required="" id="pagina_web" placeholder="pagina_web">
+                                                        <input class="form-control input-lg" type="text" name="pagina_web" value="<?php echo $controlador->row_upd->pagina_web; ?>" class="form-control" required="" id="pagina_web" placeholder="Pagina_web">
                                                     </div>
                                                 </div>
                                             </div>

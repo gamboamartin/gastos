@@ -26,7 +26,7 @@ use config\views;
 <div class="control-group col-sm-6">
     <label class="control-label" for="codigo">Codigo</label>
     <div class="controls">
-        <input type="text" name="Codigo" value="<?php echo $controlador->row_upd->codigo; ?>" class="form-control" required="" id="codigo" placeholder="Codigo" >
+        <input type="text" name="codigo" value="<?php echo $controlador->row_upd->codigo; ?>" class="form-control" required="" id="codigo" placeholder="Codigo" >
     </div>
 </div>
 
@@ -39,18 +39,18 @@ use config\views;
 <div class="control-group col-sm-6">
     <label class="control-label" for="alias">Alias</label>
     <div class="controls">
-        <input type="text" name="codigo" value="<?php echo $controlador->row_upd->alias; ?>" class="form-control" required="" id="alias" placeholder="Alias">
+        <input type="text" name="alias" value="<?php echo $controlador->row_upd->alias; ?>" class="form-control" required="" id="alias" placeholder="Alias">
     </div>
 </div>
 
 <div class="control-group col-sm-6">
-    <label class="control-label" for="url">Codigo bis</label>
+    <label class="control-label" for="codigo_bis">Codigo bis</label>
     <div class="controls">
         <input type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->codigo_bis; ?>" class="form-control" required="" id="codigo_bis" placeholder="codigo bis">
     </div>
 </div>
 <div class="control-group col-sm-6">
-    <label class="control-label" for="img_descripcion">Pagina Web</label>
+    <label class="control-label" for="pagina_web">Pagina Web</label>
     <div class="controls">
         <input type="text" name="pagina_web" value="<?php echo $controlador->row_upd->pagina_web; ?>" class="form-control" required="" id="pagina_web" placeholder="pagina_web">
     </div>
