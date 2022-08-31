@@ -55,12 +55,12 @@ use config\views;
                                     </div>
 
                                 </div>
-                                iv class="col-md-12">
-                                <div class="form-group">
-                                    <label class="control-label" for="img_descripcion">    </label>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="control-label" for="img_descripcion">    </label>
 
+                                    </div>
                                 </div>
-                            </div>
                                 <div class="dbox w-100 d-flex align-items-start">
                                     <div class="icon d-flex align-items-center justify-content-center">
                                         <a class="fa fa-bandcamp" style="color:#00008B; font-size: 30px"  href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_contactos&registro_id=<?php echo $controlador->registro_id; ?>&session_id=<?php echo $controlador->session_id; ?>">  Datos De Contactos</a>
