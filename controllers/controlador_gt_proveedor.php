@@ -88,7 +88,7 @@ class controlador_gt_proveedor extends system {
         return $r_modifica;
     }
 
-    
+
 
     public function modifica_datos_fiscales(bool $header, bool $ws = false, string $breadcrumbs = '',
                                             bool $aplica_form = false, bool $muestra_btn = true): array|string

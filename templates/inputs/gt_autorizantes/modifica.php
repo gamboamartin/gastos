@@ -3,8 +3,9 @@
 <?php
 use config\generales;
 use config\views;
-?>
+use models\gt_autorizante;
 
+?>
 <div class="control-group col-sm-6">
     <label class="control-label" for="id">Id</label>
     <div class="controls">
@@ -29,17 +30,23 @@ use config\views;
         <input type="text" name="codigo" value="<?php echo $controlador->row_upd->codigo; ?>" class="form-control" required="" id="codigo" placeholder="Codigo">
     </div>
 </div>
-    <div class="control-group col-sm-6">
-        <label class="control-label" for="alias">Alias</label>
-        <div class="controls">
-            <input type="text" name="alias" value="<?php echo $controlador->row_upd->alias; ?>" class="form-control" required="" id="alias" placeholder="alias">
-        </div>
+<div class="control-group col-sm-6">
+    <label class="control-label" for="alias">Alias</label>
+    <div class="controls">
+        <input type="text" name="alias" value="<?php echo $controlador->row_upd->alias; ?>" class="form-control" required="" id="alias" placeholder="alias">
     </div>
-    <div class="control-group col-sm-6">
-        <label class="control-label" for="codigo_bis">Codigo bis</label>
-        <div class="controls">
-            <input type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->codigo_bis; ?>" class="form-control" required="" id="codigo_bis" placeholder="Codigo bis">
-        </div>
+</div>
+<div class="control-group col-sm-6">
+    <label class="control-label" for="codigo_bis">Codigo bis</label>
+    <div class="controls">
+        <input type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->codigo_bis; ?>" class="form-control" required="" id="codigo_bis" placeholder="Codigo bis">
     </div>
+</div>
+    <div class="control-group col-sm-6">
+        <label class="control-label" for="em_empleado_id">Solicitud</label>
+
+    </div>
+
+
 
 <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>
