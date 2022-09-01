@@ -31,7 +31,12 @@
         <input type="text" name="codigo_bis" value="" class="form-control" required="" id="codigo_bis" placeholder="Codigo bis">
     </div>
 </div>
-
+<div class="control-group col-sm-6">
+    <label class="control-label" for="autorizantes">Autorizantes</label>
+    <div class="controls">
+        <?php echo $controlador->inputs->select->gt_autorizante_id; ?>
+    </div>
+</div>
 
 
 
