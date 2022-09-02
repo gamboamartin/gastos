@@ -42,9 +42,15 @@ use models\gt_autorizante;
         <input type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->codigo_bis; ?>" class="form-control" required="" id="codigo_bis" placeholder="Codigo bis">
     </div>
 </div>
+    <div class="control-group col-sm-12">
+        <label class="control-label" for="autorizantes">Autorizantes</label>
+        <div class="controls">
+            <?php echo $controlador->inputs->select->gt_autorizante_id; ?>
+        </div>
+    </div>
     <div class="control-group col-sm-6">
         <label class="control-label" for="em_empleado_id">Solicitud</label>
-
+        <?php echo $controlador->inputs->select->gt_solicitud_id; ?>
     </div>
 
 
