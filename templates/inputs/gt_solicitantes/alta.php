@@ -31,16 +31,17 @@
         <input type="text" name="codigo_bis" value="" class="form-control" required="" id="codigo_bis" placeholder="Codigo bis">
     </div>
 </div>
-
 <div class="control-group col-sm-6">
-    <label class="control-label" for="em_empleado_id">Empleado</label>
+    <label class="control-label" for="autorizantes">Autorizantes</label>
     <div class="controls">
-        <?php echo $controlador->inputs->select->em_empleado_id; ?>
+        <?php echo $controlador->inputs->select->gt_solicitud_id; ?>
     </div>
 </div>
 
-
-
+<div class="control-group col-sm-6">
+    <label class="control-label" for="em_empleado_id">Solicitud</label>
+    <?php echo $controlador->inputs->select->gt_solicitud_id; ?>
+</div>
 
 
 <div class="control-group btn-alta">
