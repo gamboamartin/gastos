@@ -25,23 +25,13 @@
         <input type="text" name="alias" value="" class="form-control" required="" id="alias" placeholder="alias">
     </div>
 </div>
+<?php echo $controlador->inputs->select->em_empleado_id; ?>
 <div class="control-group col-sm-6">
     <label class="control-label" for="codigo_bis">Codigo bis</label>
     <div class="controls">
         <input type="text" name="codigo_bis" value="" class="form-control" required="" id="codigo_bis" placeholder="Codigo bis">
     </div>
 </div>
-
-<div class="control-group col-sm-6">
-    <label class="control-label" for="em_empleado_id">Empleado</label>
-    <div class="controls">
-        <?php echo $controlador->inputs->select->em_empleado_id; ?>
-    </div>
-</div>
-
-
-
-
 
 <div class="control-group btn-alta">
     <div class="controls">
