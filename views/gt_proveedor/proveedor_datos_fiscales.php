@@ -7,64 +7,6 @@ use config\views;
 <form method="post" action="./index.php?seccion=gt_proveedor&accion=modifica_bd&session_id=<?php echo $controlador->session_id; ?>&registro_id=<?php echo $controlador->registro_id; ?>" class="form-additional">
 <div class="row form-group">
     <div class="col-md-12 mb-3 mb-md-0">
-        <h3>Generales</h3>
-
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="codigo">Id</label>
-    <div class="controls">
-        <input type="text" name="id" value="<?php echo $controlador->row_upd->id; ?>" class="form-control" required="" id="id" placeholder="Id" readonly>
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="descripcion">Descripcion</label>
-    <div class="controls">
-        <input type="text" name="descripcion" value="<?php echo $controlador->row_upd->descripcion; ?>" class="form-control" required="" id="descripcion" placeholder="Descripcion">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="codigo">Codigo</label>
-    <div class="controls">
-        <input type="text" name="codigo" value="<?php echo $controlador->row_upd->codigo; ?>" class="form-control" required="" id="codigo" placeholder="Codigo" >
-    </div>
-</div>
-
-<div class="control-group col-sm-6">
-    <label class="control-label" for="descripcion_select">Descripcion Select</label>
-    <div class="controls">
-        <input type="text" name="descripcion_select" value="<?php echo $controlador->row_upd->descripcion_select; ?>" class="form-control" required="" id="descripcion_select" placeholder="Descripcion Select">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="alias">Alias</label>
-    <div class="controls">
-        <input type="text" name="alias" value="<?php echo $controlador->row_upd->alias; ?>" class="form-control" required="" id="alias" placeholder="Alias">
-    </div>
-</div>
-
-<div class="control-group col-sm-6">
-    <label class="control-label" for="codigo_bis">Codigo bis</label>
-    <div class="controls">
-        <input type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->codigo_bis; ?>" class="form-control" required="" id="codigo_bis" placeholder="codigo bis">
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="pagina_web">Pagina Web</label>
-    <div class="controls">
-        <input type="text" name="pagina_web" value="<?php echo $controlador->row_upd->pagina_web; ?>" class="form-control" required="" id="pagina_web" placeholder="pagina_web">
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
-        <label class="control-label" for="gt_tipo_proveedor">Tipo proveedor</label>
-        <div class="controls">
-            <?php echo $controlador->inputs->select->gt_tipo_proveedor_id; ?>
-        </div>
-    </div>
-</div>
-<div class="row form-group">
-    <div class="col-md-12 mb-3 mb-md-0">
         <h3>Datos Fiscales</h3>
 
     </div>
