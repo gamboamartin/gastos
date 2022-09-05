@@ -40,19 +40,11 @@ use config\views;
             <input type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->codigo_bis; ?>" class="form-control" required="" id="codigo_bis" placeholder="Codigo bis">
         </div>
     </div>
-    <div class="control-group col-sm-6">
-        <label class="control-label" for="gt_solicitud_id">Solicitud</label>
-        <div class="controls">
-            <?php echo $controlador->inputs->select->gt_solicitud_id; ?>
-        </div>
-    </div>
 
-    <div class="control-group col-sm-6">
-        <label class="control-label" for="gt_solicitante_id">Solicitante</label>
-        <div class="controls">
-            <?php echo $controlador->inputs->select->gt_solicitante_id; ?>
-        </div>
-    </div>
+<?php echo $controlador->inputs->select->gt_solicitud_id; ?>
+
+<?php echo $controlador->inputs->select->gt_solicitante_id; ?>
+
 
 
 <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>
