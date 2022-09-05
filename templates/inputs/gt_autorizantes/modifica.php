@@ -3,7 +3,6 @@
 <?php
 use config\generales;
 use config\views;
-use models\gt_autorizante;
 
 ?>
 <div class="control-group col-sm-6">
@@ -42,20 +41,11 @@ use models\gt_autorizante;
         <input type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->codigo_bis; ?>" class="form-control" required="" id="codigo_bis" placeholder="Codigo bis">
     </div>
 </div>
-    <div class="control-group col-sm-6">
-        <label class="control-label" for="gt_autorizante_id">Autorizante</label>
-        <div class="controls">
-            <?php echo $controlador->inputs->select->gt_autorizante_id; ?>
-        </div>
-    </div>
 
-    <div class="control-group col-sm-6">
-        <label class="control-label" for="gt_solicitud_id">Solicitud</label>
-        <div class="controls">
-            <?php echo $controlador->inputs->select->gt_solicitud_id; ?>
-        </div>
-    </div>
+<?php echo $controlador->inputs->select->gt_autorizante_id; ?>
+<?php echo $controlador->inputs->select->gt_solicitud_id; ?>
 
 
+<br>
 
 <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>
