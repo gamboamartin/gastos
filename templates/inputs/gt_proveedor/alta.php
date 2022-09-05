@@ -43,12 +43,11 @@
         <input type="text" name="pagina_web" value="" class="form-control" required="" id="pagina_web" placeholder="Pagina Web">
     </div>
 </div>
-<div class="control-group col-md-12">
-    <label class="control-label" for="gt_tipo_proveedor">Tipo proveedor</label>
-    <div class="controls">
+
+
     <?php echo $controlador->inputs->select->gt_tipo_proveedor_id; ?>
-    </div>
-</div>
+
+
 <div class="row form-group">
     <div class="col-md-12 mb-3 mb-md-0">
         <h3>Datos Fiscales</h3>
@@ -61,18 +60,10 @@
         <input type="text" name="rfc" value="" class="form-control" required="" id="rfc" placeholder="RFC">
     </div>
 </div>
-<div class="control-group col-md-12">
-    <label class="control-label" for="cat_sat_regimen_fiscal">Regimen Fiscal</label>
-    <div class="controls">
-    <?php echo $controlador->inputs->select->cat_sat_regimen_fiscal_id; ?>
-    </div>
-</div>
-<div class="control-group col-md-12">
-    <label class="control-label" for="dp_calle_pertenece">Calle</label>
-    <div class="controls">
-    <?php echo $controlador->inputs->select->dp_calle_pertenece_id; ?>
-    </div>
-</div>
+
+<?php echo $controlador->inputs->select->cat_sat_regimen_fiscal_id; ?>
+<?php echo $controlador->inputs->select->dp_calle_pertenece_id; ?>
+
 <div class="control-group col-sm-6">
     <label class="control-label" for="exterior">Exterior</label>
     <div class="controls">

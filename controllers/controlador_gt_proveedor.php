@@ -24,10 +24,11 @@ use stdClass;
 
 class controlador_gt_proveedor extends system {
 
-    public function __construct(PDO $link, stdClass $paths_conf = new stdClass()){
+    public function __construct(PDO $link, html $html = new \gamboamartin\template_1\html(), stdClass $paths_conf = new stdClass()){
         $modelo = new gt_proveedor(link: $link);
-        $html_base = new html();
-        $html = new gt_proveedor_html(html: $html_base);
+
+        $html_ = new gt_proveedor_html(html: $html);
+
         $obj_link = new links_menu($this->registro_id);
         $this->rows_lista[] = 'gt_tipo_proveedor_id';
         $this->rows_lista[] = 'dp_calle_pertenece_id';
@@ -42,7 +43,7 @@ class controlador_gt_proveedor extends system {
         $this->rows_lista[] = 'contacto_2';
         $this->rows_lista[] = 'contacto_3';
         $this->rows_lista[] = 'pagina_web';
-        parent::__construct(html:$html, link: $link,modelo:  $modelo, obj_link: $obj_link, paths_conf: $paths_conf);
+        parent::__construct(html:$html_, link: $link,modelo:  $modelo, obj_link: $obj_link, paths_conf: $paths_conf);
 
         $this->titulo_lista = 'Proveedor';
 
@@ -139,8 +140,8 @@ class controlador_gt_proveedor extends system {
 
         $this->inputs->select->cat_sat_regimen_fiscal_id = $select;
 
-        $select = (new gt_tipo_proveedor_html(html: $this->html_base))->select_gt_tipo_proveedor_id(cols:12,con_registros: true,
-            id_selected: -1, link: $this->link);
+        $select = (new gt_tipo_proveedor_html(html: $this->html_base))->select_gt_tipo_proveedor_id(
+            cols:12,con_registros: true, id_selected: -1, link: $this->link);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al generar select', data: $select);
             print_r($error);
@@ -148,6 +149,7 @@ class controlador_gt_proveedor extends system {
         }
 
         $this->inputs->select->gt_tipo_proveedor_id = $select;
+
 
         return $r_alta;
 
