@@ -8,24 +8,23 @@
  */
 namespace gamboamartin\gastos\controllers;
 
-use config\generales;
+
 use gamboamartin\errores\errores;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use gamboamartin\template\html;
 use html\em_empleado_html;
 use html\gt_autorizante_html;
-use models\em_empleado;
 use models\gt_autorizante;
 use PDO;
 use stdClass;
 
 class controlador_gt_autorizante extends system {
 
-    public function __construct(PDO $link, stdClass $paths_conf = new stdClass()){
+    public function __construct(PDO $link, html $html = new \gamboamartin\template_1\html(), stdClass $paths_conf = new stdClass()){
         $modelo = new gt_autorizante(link: $link);
-        $html_base = new html();
-        $html = new gt_autorizante_html(html: $html_base);
+
+        $html = new gt_autorizante_html(html: $html);
         $obj_link = new links_menu($this->registro_id);
         $this->rows_lista[] = 'em_empleado_id';
         parent::__construct(html:$html, link: $link,modelo:  $modelo, obj_link: $obj_link, paths_conf: $paths_conf);
