@@ -27,11 +27,10 @@ class controlador_gt_autorizantes extends system {
         $html_base = new html();
         $html = new gt_autorizantes_html(html: $html_base);
         $obj_link = new links_menu($this->registro_id);
-        parent::__construct(html:$html, link: $link,modelo:  $modelo, obj_link: $obj_link, paths_conf: $paths_conf);
-
         $this->rows_lista[] = 'gt_autorizante_id';
         $this->rows_lista[] = 'gt_solicitud_id';
-        $this->titulo_lista = 'Autorizante';
+        parent::__construct(html:$html, link: $link,modelo:  $modelo, obj_link: $obj_link, paths_conf: $paths_conf);
+        $this->titulo_lista = 'Autorizantes';
     }
 
     public function alta(bool $header, bool $ws = false): array|string
