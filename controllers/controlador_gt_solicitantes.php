@@ -23,10 +23,10 @@ use stdClass;
 
 class controlador_gt_solicitantes extends system {
 
-    public function __construct(PDO $link, stdClass $paths_conf = new stdClass()){
+    public function __construct(PDO $link, html $html = new \gamboamartin\template_1\html(), stdClass $paths_conf = new stdClass()){
         $modelo = new gt_solicitantes(link: $link);
-        $html_base = new html();
-        $html = new gt_solicitantes_html(html: $html_base);
+
+        $html = new gt_solicitantes_html(html: $html);
         $obj_link = new links_menu($this->registro_id);
         $this->rows_lista[] = 'gt_solicitud_id';
         $this->rows_lista[] = 'gt_solicitante_id';
