@@ -27,9 +27,9 @@ class controlador_gt_solicitud extends system {
         $html_base = new html();
         $html = new gt_solicitud_html(html: $html_base);
         $obj_link = new links_menu($this->registro_id);
-        parent::__construct(html:$html, link: $link,modelo:  $modelo, obj_link: $obj_link, paths_conf: $paths_conf);
-
+        $this->rows_lista[] = 'gt_centro_costo_id';
         $this->rows_lista[] = 'gt_tipo_solicitud_id';
+        parent::__construct(html:$html, link: $link,modelo:  $modelo, obj_link: $obj_link, paths_conf: $paths_conf);
         $this->titulo_lista = 'Solicitud';
 
     }

@@ -40,7 +40,7 @@
 </div>
 
 <div class="control-group col-sm-6">
-    <label class="control-label" for="gt_tipo_centro_costo">Solicitud</label>
+    <label class="control-label" for="gt_tipo_centro_costo">Tipo Solicitud</label>
     <div class="controls">
         <?php echo $controlador->inputs->select->gt_tipo_solicitud_id; ?>
     </div>
