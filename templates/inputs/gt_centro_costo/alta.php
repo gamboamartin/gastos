@@ -25,6 +25,7 @@
         <input type="text" name="alias" value="" class="form-control" required="" id="alias" placeholder="alias">
     </div>
 </div>
+<?php echo $controlador->inputs->select->gt_tipo_centro_costo_id; ?>
 <div class="control-group col-sm-6">
     <label class="control-label" for="codigo_bis">Codigo bis</label>
     <div class="controls">
@@ -32,13 +33,6 @@
     </div>
 </div>
 
-<div class="control-group col-sm-6">
-    <label class="control-label" for="gt_tipo_centro_costo">Tipo centro costo</label>
-    <div class="controls">
-        <?php echo $controlador->inputs->select->gt_tipo_centro_costo_id; ?>
-    </div>
-
-</div>
 
 <div class="control-group btn-alta">
     <div class="controls">
