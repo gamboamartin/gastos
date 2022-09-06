@@ -67,13 +67,18 @@ use config\views;
 
 
 
-<div class="control-group col-sm-12">
+<div class="control-group col-sm-6">
     <label class="control-label" for="rfc">RFC</label>
     <div class="controls">
         <input type="text" name="rfc" value="<?php echo $controlador->row_upd->rfc; ?>" class="form-control" required="" id="rfc" placeholder="RFC">
     </div>
 </div>
-
+<div class="control-group col-sm-6">
+    <label class="control-label" for="razon_social">Razon social</label>
+    <div class="controls">
+        <input type="text" name="razon_social" value="<?php echo $controlador->row_upd->razon_social; ?>" class="form-control" required="" id="razon_social" placeholder="Razon Social">
+    </div>
+</div>
 <?php echo $controlador->inputs->select->cat_sat_regimen_fiscal_id; ?>
 <?php echo $controlador->inputs->select->dp_calle_pertenece_id; ?>
 
