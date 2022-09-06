@@ -9,7 +9,8 @@ class gt_proveedor extends modelo{
     public function __construct(PDO $link){
         $tabla = __CLASS__;
         $columnas = array($tabla=>false);
-        $campos_obligatorios = array();
+        $campos_obligatorios = array('gt_tipo_proveedor_id', 'dp_calle_pertenece_id', 'cat_sat_regimen_fiscal_id',
+            'rfc', 'exterior', 'telefono_1', 'contacto_1', 'pagina_web');
 
         $no_duplicados = array();
 
