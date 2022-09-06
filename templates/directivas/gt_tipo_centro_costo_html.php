@@ -21,7 +21,7 @@ class gt_tipo_centro_costo_html extends html_controler {
         $modelo = new gt_tipo_centro_costo($link);
 
         $select = $this->select_catalogo(cols:$cols,con_registros:$con_registros,id_selected:$id_selected,
-            modelo: $modelo,label: 'Tipo Proveedor',required: true);
+            modelo: $modelo,label: 'Tipo Centro Costo',required: true);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar select', data: $select);
         }
