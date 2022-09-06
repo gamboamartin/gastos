@@ -21,7 +21,7 @@ class gt_solicitante_html extends html_controler {
         $modelo = new gt_solicitante($link);
 
         $select = $this->select_catalogo(cols:$cols,con_registros:$con_registros,id_selected:$id_selected,
-            modelo: $modelo,label: 'Tipo Proveedor',required: true);
+            modelo: $modelo,label: 'Solicitante',required: true);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar select', data: $select);
         }
