@@ -41,7 +41,7 @@ class controlador_gt_autorizantes extends system {
         }
 
         $select = (new gt_autorizante_html(html: $this->html_base))->select_gt_autorizante_id(cols:12,con_registros: true,
-            id_selected: -1, link: $this->link, required: false);
+            id_selected: -1, link: $this->link, required: true);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al generar select', data: $select, header: $header, ws: $ws);
         }

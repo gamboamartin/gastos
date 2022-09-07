@@ -31,7 +31,7 @@ class gt_autorizante_html extends html_controler {
         $modelo = new gt_autorizante($link);
 
         $select = $this->select_catalogo(cols:$cols,con_registros:$con_registros,id_selected:$id_selected, filtro: $filtro,
-            modelo: $modelo,label: 'Autorizante', name: 'dp_calle_pertenece_id' ,disabled:$disabled, required: $required);
+            modelo: $modelo,label: 'Autorizante', name: 'tg_autorizante_id' ,disabled:$disabled, required: $required);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar select', data: $select);
         }
