@@ -22,7 +22,7 @@ class gt_proveedor_html extends html_controler {
         $modelo = new gt_proveedor($link);
 
         $select = $this->select_catalogo(cols:$cols,con_registros:$con_registros,id_selected:$id_selected,
-            modelo: $modelo,label: 'Tipo Proveedor',required: true);
+            modelo: $modelo,label: 'Proveedor',required: true);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar select', data: $select);
         }
