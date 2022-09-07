@@ -120,7 +120,7 @@ class controlador_gt_proveedor extends system {
         }
 
         $select = (new dp_calle_pertenece_html(html: $this->html_base))->select_dp_calle_pertenece_id(cols:12,con_registros: true,
-            id_selected: -1, link: $this->link);
+            id_selected: -1, link: $this->link, required: true);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al generar select', data: $select);
             print_r($error);
@@ -164,7 +164,7 @@ class controlador_gt_proveedor extends system {
         }
 
         $select = (new dp_calle_pertenece_html(html: $this->html_base))->select_dp_calle_pertenece_id(cols:12,con_registros:true,
-            id_selected:$this->row_upd->dp_calle_pertenece_id, link: $this->link);
+            id_selected:$this->row_upd->dp_calle_pertenece_id, link: $this->link, required: true);
         if(errores::$error){
             $error = $this->errores->error(mensaje: 'Error al generar select',data:  $select);
             print_r($error);
