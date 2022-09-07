@@ -8,10 +8,17 @@ use models\gt_autorizante;
 use PDO;
 use stdClass;
 
+
 class gt_autorizante_html extends html_controler {
+    /**
+     * @param bool $disabled Si disabled el input que da inactivo
+     * @param array $filtro Filtro para obtencion de datos via filtro and del modelo
+     * @return array|string
+     */
 
-
-    public function select_gt_autorizante_id(int $cols, bool $con_registros,int $id_selected, PDO $link): array|string
+    public function select_gt_autorizante_id(int $cols, bool $con_registros, int|null $id_selected, PDO $link,
+                                             bool $disabled = false, array $filtro = array(),
+                                             bool $required = false ): array|string
     {
         $valida = (new directivas(html:$this->html_base))->valida_cols(cols:$cols);
         if(errores::$error){
@@ -23,8 +30,8 @@ class gt_autorizante_html extends html_controler {
 
         $modelo = new gt_autorizante($link);
 
-        $select = $this->select_catalogo(cols:$cols,con_registros:$con_registros,id_selected:$id_selected,
-            modelo: $modelo,label: 'Autorizante',required: true);
+        $select = $this->select_catalogo(cols:$cols,con_registros:$con_registros,id_selected:$id_selected, filtro: $filtro,
+            modelo: $modelo,label: 'Autorizante', name: 'dp_calle_pertenece_id' ,disabled:$disabled, required: $required);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar select', data: $select);
         }
