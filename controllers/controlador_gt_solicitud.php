@@ -41,7 +41,7 @@ class controlador_gt_solicitud extends system {
         }
 
         $select = (new gt_centro_costo_html(html: $this->html_base))->select_gt_centro_costo_id(cols:12,con_registros: true,
-            id_selected: -1, link: $this->link);
+            id_selected: -1, link: $this->link,required: true);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al generar select', data: $select, header: $header, ws: $ws);
         }
@@ -50,7 +50,7 @@ class controlador_gt_solicitud extends system {
         $this->inputs->select->gt_centro_costo_id = $select;
 
         $select = (new gt_tipo_solicitud_html(html: $this->html_base))->select_gt_tipo_solicitud_id(cols:12,con_registros: true,
-            id_selected: -1, link: $this->link);
+            id_selected: -1, link: $this->link,required: true);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al generar select', data: $select, header: $header, ws: $ws);
         }
@@ -70,7 +70,7 @@ class controlador_gt_solicitud extends system {
         }
 
         $select = (new gt_centro_costo_html(html: $this->html_base))->select_gt_centro_costo_id(cols:12,con_registros: true,
-            id_selected:$this->row_upd->gt_centro_costo_id, link: $this->link);
+            id_selected:$this->row_upd->gt_centro_costo_id, link: $this->link,required: true);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al generar select', data: $select, header: $header, ws: $ws);
         }
@@ -80,7 +80,7 @@ class controlador_gt_solicitud extends system {
 
 
         $select = (new gt_tipo_solicitud_html(html: $this->html_base))->select_gt_tipo_solicitud_id(cols:12,con_registros: true,
-            id_selected:$this->row_upd->gt_tipo_solicitud_id, link: $this->link);
+            id_selected:$this->row_upd->gt_tipo_solicitud_id, link: $this->link,required: true);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al generar select', data: $select, header: $header, ws: $ws);
         }
