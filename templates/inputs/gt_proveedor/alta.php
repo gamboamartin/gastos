@@ -14,12 +14,6 @@
     </div>
 </div>
 <div class="control-group col-sm-6">
-    <label class="control-label" for="alias">Alias</label>
-    <div class="controls">
-        <input type="text" name="alias" value="" class="form-control" required="" id="alias" placeholder="alias">
-    </div>
-</div>
-<div class="control-group col-sm-6">
     <label class="control-label" for="codigo_bis">Codigo bis</label>
     <div class="controls">
         <input type="text" name="codigo_bis" value="" class="form-control" required="" id="codigo_bis" placeholder="Codigo bis">
