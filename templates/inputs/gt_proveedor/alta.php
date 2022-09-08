@@ -14,12 +14,6 @@
     </div>
 </div>
 <div class="control-group col-sm-6">
-    <label class="control-label" for="codigo_bis">Codigo bis</label>
-    <div class="controls">
-        <input type="text" name="codigo_bis" value="" class="form-control" required="" id="codigo_bis" placeholder="Codigo bis">
-    </div>
-</div>
-<div class="control-group col-sm-6">
     <label class="control-label" for="pagina_web">Pagina Web</label>
     <div class="controls">
         <input type="text" name="pagina_web" value="" class="form-control" required="" id="pagina_web" placeholder="Pagina Web">
