@@ -50,7 +50,7 @@ class controlador_gt_autorizantes extends system {
         $this->inputs->select->gt_autorizante_id = $select;
 
         $select = (new gt_solicitud_html(html: $this->html_base))->select_gt_solicitud_id(cols:12,con_registros: true,
-            id_selected: -1, link: $this->link);
+            id_selected: -1, link: $this->link, required: true);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al generar select', data: $select, header: $header, ws: $ws);
         }
@@ -70,7 +70,7 @@ class controlador_gt_autorizantes extends system {
         }
 
         $select = (new gt_autorizante_html(html: $this->html_base))->select_gt_autorizante_id(cols:12,con_registros:true,
-            id_selected:$this->row_upd->gt_autorizante_id, link: $this->link);
+            id_selected:$this->row_upd->gt_autorizante_id, link: $this->link, required: true);
         if(errores::$error){
             $error = $this->errores->error(mensaje: 'Error al generar select',data:  $select);
             print_r($error);
@@ -81,7 +81,7 @@ class controlador_gt_autorizantes extends system {
         $this->inputs->select->gt_autorizante_id = $select;
 
         $select = (new gt_solicitud_html(html: $this->html_base))->select_gt_solicitud_id(cols:12,con_registros: true,
-            id_selected:$this->row_upd->gt_solicitud_id, link: $this->link);
+            id_selected:$this->row_upd->gt_solicitud_id, link: $this->link, required: true);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al generar select', data: $select, header: $header, ws: $ws);
         }
