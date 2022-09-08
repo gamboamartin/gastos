@@ -131,7 +131,7 @@ class controlador_gt_proveedor extends system {
         $this->inputs->select->dp_calle_pertenece_id = $select;
 
         $select = (new cat_sat_regimen_fiscal_html(html: $this->html_base))->select_cat_sat_regimen_fiscal_id(cols:12,con_registros: true,
-            id_selected: -1, link: $this->link);
+            id_selected: -1, link: $this->link, required: true);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al generar select', data: $select);
             print_r($error);
@@ -187,7 +187,7 @@ class controlador_gt_proveedor extends system {
 
 
         $select = (new cat_sat_regimen_fiscal_html(html: $this->html_base))->select_cat_sat_regimen_fiscal_id(cols:12,con_registros:true,
-            id_selected:$this->row_upd->cat_sat_regimen_fiscal_id, link: $this->link);
+            id_selected:$this->row_upd->cat_sat_regimen_fiscal_id, link: $this->link, required: true);
         if(errores::$error){
             $error = $this->errores->error(mensaje: 'Error al generar select',data:  $select);
             print_r($error);
