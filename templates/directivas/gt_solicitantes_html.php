@@ -23,7 +23,7 @@ class gt_solicitantes_html extends html_controler {
         $modelo = new gt_solicitantes($link);
 
         $select = $this->select_catalogo(cols:$cols,con_registros:$con_registros,id_selected:$id_selected, filtro: $filtro,
-            modelo: $modelo,label: 'Solicitantes', name: 'tg_solicitantes_id', disabled:$disabled, required: $required);
+            modelo: $modelo,label: 'Solicitantes', name: 'gt_solicitantes_id', disabled:$disabled, required: $required);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar select', data: $select);
         }
