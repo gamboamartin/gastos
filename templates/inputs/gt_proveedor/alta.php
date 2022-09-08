@@ -8,12 +8,6 @@
     </div>
 </div>
 <div class="control-group col-sm-6">
-    <label class="control-label" for="descripcion">Descripcion</label>
-    <div class="controls">
-        <input type="text" name="descripcion" value="" class="form-control" required="" id="descripcion" placeholder="Descripcion">
-    </div>
-</div>
-<div class="control-group col-sm-6">
     <label class="control-label" for="codigo">Codigo</label>
     <div class="controls">
         <input type="text" name="codigo" value="" class="form-control" required="" id="codigo" placeholder="Codigo">
