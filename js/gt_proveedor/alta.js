@@ -82,6 +82,24 @@ txt_telefono_2.change(function () {
     }
 });
 
+telefono_3_error.hide();
+txt_telefono_3.change(function () {
+    let telefono = $(this).val();
+    telefono_3_valido = false;
+    let regex_val = telefono_mx_regex.test(telefono);
+    let n_car = telefono.length;
+
+    if(n_car === 0 || regex_val){
+        telefono_3_valido = true;
+    }
+
+    if(!telefono_3_valido){
+        telefono_3_error.show();
+    } else {
+        telefono_3_error.hide();
+    }
+});
+
 btn_alta.on('click', function(  ){
     if(!pagina_web_valido){
         pagina_web_error.show();
@@ -98,6 +116,12 @@ btn_alta.on('click', function(  ){
     if(!telefono_2_valido){
         telefono_2_error.show();
         txt_telefono_2.focus();
+        window.scrollTo(0, 500);
+        return false;
+    }
+    if(!telefono_3_valido){
+        telefono_3_error.show();
+        txt_telefono_3.focus();
         window.scrollTo(0, 500);
         return false;
     }

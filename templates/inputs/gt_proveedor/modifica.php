@@ -133,7 +133,7 @@ use config\views;
 <div class="control-group col-sm-6">
     <label class="control-label" for="telefono_3">Telefono 3</label>
     <div class="controls">
-        <input type="text" name="telefono_3" value="<?php echo $controlador->row_upd->telefono_1; ?>" class="form-control" required="" id="telefono_3" placeholder="Telefono 3">
+        <input type="text" name="telefono_3" value="<?php echo $controlador->row_upd->telefono_3; ?>" class="form-control" required="" id="telefono_3" placeholder="Telefono 3">
     </div>
 </div>
 <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>
