@@ -92,6 +92,9 @@
     <label class="control-label" for="telefono_2">Telefono 2</label>
     <div class="controls">
         <input type="text" name="telefono_2" value="" class="form-control" id="telefono_2" placeholder="Telefono 2">
+        <div class="col-sm-12 content_center">
+            <label id="label_alerta" class="label-error-telefono-2 text-danger">Introduzca un numero de telefono valido </label>
+        </div>
     </div>
 </div>
 <div class="control-group col-sm-6">
