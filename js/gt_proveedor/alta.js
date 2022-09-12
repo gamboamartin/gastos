@@ -4,13 +4,28 @@ function getAbsolutePath() {
     return loc.href.substring(0, loc.href.length - ((loc.pathname + loc.search + loc.hash).length - pathName.length));
 }
 
-let session_id = getParameterByName('session_id');
-
+let pagina_web_regex = new RegExp('http(s)?:\\/\\/(([a-z])+.)+([a-z])+');
+let telefono_mx_regex = new RegExp('[1-9][0-9]{9}');
 
 let txt_pagina_web = $("input[name=pagina_web]");
-let pagina_web_regex = new RegExp('http(s)?:\\/\\/(([a-z])+.)+([a-z])+');
+let txt_telefono_1 = $("input[name=telefono_1]");
+let txt_telefono_2 = $("input[name=telefono_2]");
+let txt_telefono_3 = $("input[name=telefono_3]");
+
+
 let pagina_web_error = $(".label-error-url");
+let telefono_1_error = $(".label-error-telefono-1");
+let telefono_2_error = $(".label-error-telefono-2");
+let telefono_3_error = $(".label-error-telefono-3");
+
+
+
 let pagina_web_valido = false;
+let telefono_1_valido = false;
+let telefono_2_valido = false;
+let telefono_3_valido = false;
+
+
 let btn_alta = $(".btn");
 
 pagina_web_error.hide();
@@ -31,11 +46,35 @@ txt_pagina_web.change(function () {
     }
 });
 
+telefono_1_error.hide();
+txt_telefono_1.change(function () {
+    let telefono = $(this).val();
+    telefono_1_valido = false;
+    let regex_val = telefono_mx_regex.test(telefono);
+    let n_car = telefono.length;
+
+    if(n_car > 0 && regex_val){
+        telefono_1_valido = true;
+    }
+
+    if(!telefono_1_valido){
+        telefono_1_error.show();
+    } else {
+        telefono_1_error.hide();
+    }
+});
+
 btn_alta.on('click', function(  ){
     if(!pagina_web_valido){
         pagina_web_error.show();
         txt_pagina_web.focus();
         window.scrollTo(txt_pagina_web.positionX, txt_pagina_web.positionY);
+        return false;
+    }
+    if(!telefono_1_valido){
+        telefono_1_error.show();
+        txt_telefono_1.focus();
+        window.scrollTo(0, 500);
         return false;
     }
 });
