@@ -5,7 +5,7 @@ function getAbsolutePath() {
 }
 
 let pagina_web_regex = new RegExp('http(s)?:\\/\\/(([a-z])+.)+([a-z])+');
-let telefono_mx_regex = new RegExp('[1-9][0-9]{9}');
+let telefono_mx_regex = new RegExp('^[1-9]{1}[0-9]{9}$');
 
 let txt_pagina_web = $("input[name=pagina_web]");
 let txt_telefono_1 = $("input[name=telefono_1]");
@@ -47,7 +47,7 @@ txt_pagina_web.change(function () {
 });
 
 telefono_1_error.hide();
-txt_telefono_1.change(function () {
+txt_telefono_1.keyup(function () {
     let telefono = $(this).val();
     telefono_1_valido = false;
     let regex_val = telefono_mx_regex.test(telefono);
@@ -65,7 +65,7 @@ txt_telefono_1.change(function () {
 });
 
 telefono_2_error.hide();
-txt_telefono_2.change(function () {
+txt_telefono_2.keyup(function () {
     let telefono = $(this).val();
     telefono_2_valido = false;
     let regex_val = telefono_mx_regex.test(telefono);
@@ -83,7 +83,7 @@ txt_telefono_2.change(function () {
 });
 
 telefono_3_error.hide();
-txt_telefono_3.change(function () {
+txt_telefono_3.keyup(function () {
     let telefono = $(this).val();
     telefono_3_valido = false;
     let regex_val = telefono_mx_regex.test(telefono);
