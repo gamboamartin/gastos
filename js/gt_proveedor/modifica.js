@@ -79,6 +79,23 @@ function valida_telefono_2(){
     }
 }
 
+function valida_telefono_3(){
+    let telefono = $(txt_telefono_3).val();
+    telefono_3_valido = false;
+    let regex_val = telefono_mx_regex.test(telefono);
+    let n_car = telefono.length;
+
+    if(n_car === 0 || regex_val){
+        telefono_3_valido = true;
+    }
+
+    if(!telefono_3_valido){
+        telefono_3_error.show();
+    } else {
+        telefono_3_error.hide();
+    }
+}
+
 
 
 pagina_web_error.hide();
@@ -100,20 +117,7 @@ txt_telefono_2.keyup(function () {
 
 telefono_3_error.hide();
 txt_telefono_3.keyup(function () {
-    let telefono = $(this).val();
-    telefono_3_valido = false;
-    let regex_val = telefono_mx_regex.test(telefono);
-    let n_car = telefono.length;
-
-    if(n_car === 0 || regex_val){
-        telefono_3_valido = true;
-    }
-
-    if(!telefono_3_valido){
-        telefono_3_error.show();
-    } else {
-        telefono_3_error.hide();
-    }
+    valida_telefono_3();
 });
 
 btn_alta.on('click', function(  ){
@@ -138,6 +142,7 @@ btn_alta.on('click', function(  ){
         window.scrollTo(0, 500);
         return false;
     }
+    valida_telefono_3();
     if(!telefono_3_valido){
         telefono_3_error.show();
         txt_telefono_3.focus();
