@@ -53,6 +53,9 @@ use config\views;
     <label class="control-label" for="pagina_web">Pagina Web</label>
     <div class="controls">
         <input type="text" name="pagina_web" value="<?php echo $controlador->row_upd->pagina_web; ?>" class="form-control" required="" id="pagina_web" placeholder="pagina_web">
+        <div class="col-sm-12 content_center">
+            <label id="label_alerta" class="label-error-url text-danger">Introduzca una url valida </label>
+        </div>
     </div>
 </div>
 
