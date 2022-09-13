@@ -45,17 +45,8 @@ function valida_url(){
     }
 }
 
-
-
-pagina_web_error.hide();
-txt_pagina_web.change(function () {
-    valida_url();
-
-});
-
-telefono_1_error.hide();
-txt_telefono_1.keyup(function () {
-    let telefono = $(this).val();
+function valida_telefono_requerido(){
+    let telefono = $(txt_telefono_1).val();
     telefono_1_valido = false;
     let regex_val = telefono_mx_regex.test(telefono);
     let n_car = telefono.length;
@@ -69,6 +60,19 @@ txt_telefono_1.keyup(function () {
     } else {
         telefono_1_error.hide();
     }
+}
+
+
+
+pagina_web_error.hide();
+txt_pagina_web.change(function () {
+    valida_url();
+
+});
+
+telefono_1_error.hide();
+txt_telefono_1.keyup(function () {
+    valida_telefono_requerido()
 });
 
 telefono_2_error.hide();
