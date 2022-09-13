@@ -62,6 +62,23 @@ function valida_telefono_requerido(){
     }
 }
 
+function valida_telefono_2(){
+    let telefono = $(txt_telefono_2).val();
+    telefono_2_valido = false;
+    let regex_val = telefono_mx_regex.test(telefono);
+    let n_car = telefono.length;
+
+    if(n_car === 0 || regex_val){
+        telefono_2_valido = true;
+    }
+
+    if(!telefono_2_valido){
+        telefono_2_error.show();
+    } else {
+        telefono_2_error.hide();
+    }
+}
+
 
 
 pagina_web_error.hide();
@@ -77,20 +94,8 @@ txt_telefono_1.keyup(function () {
 
 telefono_2_error.hide();
 txt_telefono_2.keyup(function () {
-    let telefono = $(this).val();
-    telefono_2_valido = false;
-    let regex_val = telefono_mx_regex.test(telefono);
-    let n_car = telefono.length;
+    valida_telefono_2();
 
-    if(n_car === 0 || regex_val){
-        telefono_2_valido = true;
-    }
-
-    if(!telefono_2_valido){
-        telefono_2_error.show();
-    } else {
-        telefono_2_error.hide();
-    }
 });
 
 telefono_3_error.hide();
@@ -119,12 +124,14 @@ btn_alta.on('click', function(  ){
         window.scrollTo(txt_pagina_web.positionX, txt_pagina_web.positionY);
         return false;
     }
+    valida_telefono_requerido();
     if(!telefono_1_valido){
         telefono_1_error.show();
         txt_telefono_1.focus();
         window.scrollTo(0, 500);
         return false;
     }
+    valida_telefono_2();
     if(!telefono_2_valido){
         telefono_2_error.show();
         txt_telefono_2.focus();
