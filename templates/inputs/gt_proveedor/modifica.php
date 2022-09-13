@@ -20,39 +20,39 @@ use config\views;
 <div class="control-group col-sm-6">
     <label class="control-label" for="descripcion">Descripcion</label>
     <div class="controls">
-        <input type="text" name="descripcion" value="<?php echo $controlador->row_upd->descripcion; ?>" class="form-control" required="" id="descripcion" placeholder="Descripcion" disabled>
+        <input type="text" name="descripcion" value="<?php echo $controlador->row_upd->descripcion; ?>" class="form-control" id="descripcion" placeholder="Descripcion" disabled>
     </div>
 </div>
 <div class="control-group col-sm-6">
     <label class="control-label" for="codigo">Codigo</label>
     <div class="controls">
-        <input type="text" name="codigo" value="<?php echo $controlador->row_upd->codigo; ?>" class="form-control" required="" id="codigo" placeholder="Codigo" >
+        <input type="text" name="codigo" value="<?php echo $controlador->row_upd->codigo; ?>" class="form-control" required id="codigo" placeholder="Codigo" >
     </div>
 </div>
 
 <div class="control-group col-sm-6">
     <label class="control-label" for="descripcion_select">Descripcion Select</label>
     <div class="controls">
-        <input type="text" name="descripcion_select" value="<?php echo $controlador->row_upd->descripcion_select; ?>" class="form-control" required="" id="descripcion_select" placeholder="Descripcion Select" disabled>
+        <input type="text" name="descripcion_select" value="<?php echo $controlador->row_upd->descripcion_select; ?>" class="form-control" id="descripcion_select" placeholder="Descripcion Select" disabled>
     </div>
 </div>
 <div class="control-group col-sm-6">
     <label class="control-label" for="alias">Alias</label>
     <div class="controls">
-        <input type="text" name="alias" value="<?php echo $controlador->row_upd->alias; ?>" class="form-control" required="" id="alias" placeholder="Alias" disabled>
+        <input type="text" name="alias" value="<?php echo $controlador->row_upd->alias; ?>" class="form-control" id="alias" placeholder="Alias" disabled>
     </div>
 </div>
 
 <div class="control-group col-sm-6">
     <label class="control-label" for="codigo_bis">Codigo bis</label>
     <div class="controls">
-        <input type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->codigo_bis; ?>" class="form-control" required="" id="codigo_bis" placeholder="codigo bis" disabled>
+        <input type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->codigo_bis; ?>" class="form-control" id="codigo_bis" placeholder="codigo bis" disabled>
     </div>
 </div>
 <div class="control-group col-sm-6">
     <label class="control-label" for="pagina_web">Pagina Web</label>
     <div class="controls">
-        <input type="text" name="pagina_web" value="<?php echo $controlador->row_upd->pagina_web; ?>" class="form-control" required="" id="pagina_web" placeholder="pagina_web">
+        <input type="text" name="pagina_web" value="<?php echo $controlador->row_upd->pagina_web; ?>" class="form-control" required id="pagina_web" placeholder="pagina_web">
         <div class="col-sm-12 content_center">
             <label id="label_alerta" class="label-error-url text-danger">Introduzca una url valida </label>
         </div>
@@ -94,7 +94,7 @@ use config\views;
 <div class="control-group col-sm-6">
     <label class="control-label" for="interior">Interior</label>
     <div class="controls">
-        <input type="text" name="interior" value="<?php echo $controlador->row_upd->interior; ?>" class="form-control" required="" id="interior" placeholder="Interior">
+        <input type="text" name="interior" value="<?php echo $controlador->row_upd->interior; ?>" class="form-control" id="interior" placeholder="Interior">
     </div>
 </div>
 <div class="row form-group">
@@ -106,13 +106,13 @@ use config\views;
 <div class="control-group col-sm-6">
     <label class="control-label" for="contacto_1">Contacto 1</label>
     <div class="controls">
-        <input type="text" name="contacto_1" value="<?php echo $controlador->row_upd->contacto_1; ?>" class="form-control" required="" id="contacto_1" placeholder="Contacto 1">
+        <input type="text" name="contacto_1" value="<?php echo $controlador->row_upd->contacto_1; ?>" class="form-control" required id="contacto_1" placeholder="Contacto 1">
     </div>
 </div>
 <div class="control-group col-sm-6">
     <label class="control-label" for="telefono_1">Telefono 1</label>
     <div class="controls">
-        <input type="text" name="telefono_1" value="<?php echo $controlador->row_upd->telefono_1; ?>" class="form-control" required="" id="telefono_1" placeholder="Telefono 1">
+        <input type="text" name="telefono_1" value="<?php echo $controlador->row_upd->telefono_1; ?>" class="form-control" required id="telefono_1" placeholder="Telefono 1">
         <div class="col-sm-12 content_center">
             <label id="label_alerta" class="label-error-telefono-1 text-danger">Introduzca un numero de telefono valido </label>
         </div>
@@ -121,13 +121,13 @@ use config\views;
 <div class="control-group col-sm-6">
     <label class="control-label" for="contacto_2">Contacto 2</label>
     <div class="controls">
-        <input type="text" name="contacto_2" value="<?php echo $controlador->row_upd->contacto_2; ?>" class="form-control" required="" id="contacto_2" placeholder="Contacto 2">
+        <input type="text" name="contacto_2" value="<?php echo $controlador->row_upd->contacto_2; ?>" class="form-control" id="contacto_2" placeholder="Contacto 2">
     </div>
 </div>
 <div class="control-group col-sm-6">
     <label class="control-label" for="telefono_2">Telefono 2</label>
     <div class="controls">
-        <input type="text" name="telefono_2" value="<?php echo $controlador->row_upd->telefono_2; ?>" class="form-control" required="" id="telefono_2" placeholder="Telefono 2">
+        <input type="text" name="telefono_2" value="<?php echo $controlador->row_upd->telefono_2; ?>" class="form-control" id="telefono_2" placeholder="Telefono 2">
         <div class="col-sm-12 content_center">
             <label id="label_alerta" class="label-error-telefono-2 text-danger">Introduzca un numero de telefono valido </label>
         </div>
@@ -136,13 +136,13 @@ use config\views;
 <div class="control-group col-sm-6">
     <label class="control-label" for="contacto_3">Contacto 3</label>
     <div class="controls">
-        <input type="text" name="contacto_3" value="<?php echo $controlador->row_upd->contacto_3; ?>" class="form-control" required="" id="contacto_3" placeholder="Contacto 3">
+        <input type="text" name="contacto_3" value="<?php echo $controlador->row_upd->contacto_3; ?>" class="form-control" id="contacto_3" placeholder="Contacto 3">
     </div>
 </div>
 <div class="control-group col-sm-6">
     <label class="control-label" for="telefono_3">Telefono 3</label>
     <div class="controls">
-        <input type="text" name="telefono_3" value="<?php echo $controlador->row_upd->telefono_3; ?>" class="form-control" required="" id="telefono_3" placeholder="Telefono 3">
+        <input type="text" name="telefono_3" value="<?php echo $controlador->row_upd->telefono_3; ?>" class="form-control" id="telefono_3" placeholder="Telefono 3">
         <div class="col-sm-12 content_center">
             <label id="label_alerta" class="label-error-telefono-3 text-danger">Introduzca un numero de telefono valido </label>
         </div>
