@@ -28,9 +28,8 @@ let telefono_3_valido = true;
 
 let btn_alta = $(".btn");
 
-pagina_web_error.hide();
-txt_pagina_web.change(function () {
-    let url = $(this).val();
+function valida_url(){
+    let url = $(txt_pagina_web).val();
     pagina_web_valido = false;
     let regex_val = pagina_web_regex.test(url);
     let n_car = url.length;
@@ -44,6 +43,14 @@ txt_pagina_web.change(function () {
     } else {
         pagina_web_error.hide();
     }
+}
+
+
+
+pagina_web_error.hide();
+txt_pagina_web.change(function () {
+    valida_url();
+
 });
 
 telefono_1_error.hide();
@@ -101,6 +108,7 @@ txt_telefono_3.keyup(function () {
 });
 
 btn_alta.on('click', function(  ){
+    valida_url();
     if(!pagina_web_valido){
         pagina_web_error.show();
         txt_pagina_web.focus();
