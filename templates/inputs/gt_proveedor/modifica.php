@@ -143,6 +143,9 @@ use config\views;
     <label class="control-label" for="telefono_3">Telefono 3</label>
     <div class="controls">
         <input type="text" name="telefono_3" value="<?php echo $controlador->row_upd->telefono_3; ?>" class="form-control" required="" id="telefono_3" placeholder="Telefono 3">
+        <div class="col-sm-12 content_center">
+            <label id="label_alerta" class="label-error-telefono-3 text-danger">Introduzca un numero de telefono valido </label>
+        </div>
     </div>
 </div>
 <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>
