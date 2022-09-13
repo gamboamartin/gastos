@@ -113,6 +113,9 @@ use config\views;
     <label class="control-label" for="telefono_1">Telefono 1</label>
     <div class="controls">
         <input type="text" name="telefono_1" value="<?php echo $controlador->row_upd->telefono_1; ?>" class="form-control" required="" id="telefono_1" placeholder="Telefono 1">
+        <div class="col-sm-12 content_center">
+            <label id="label_alerta" class="label-error-telefono-1 text-danger">Introduzca un numero de telefono valido </label>
+        </div>
     </div>
 </div>
 <div class="control-group col-sm-6">
