@@ -18,35 +18,9 @@ use config\views;
     </div>
 </div>
 <div class="control-group col-sm-6">
-    <label class="control-label" for="descripcion">Descripcion</label>
-    <div class="controls">
-        <input type="text" name="descripcion" value="<?php echo $controlador->row_upd->descripcion; ?>" class="form-control" id="descripcion" placeholder="Descripcion" disabled>
-    </div>
-</div>
-<div class="control-group col-sm-6">
     <label class="control-label" for="codigo">Codigo</label>
     <div class="controls">
         <input type="text" name="codigo" value="<?php echo $controlador->row_upd->codigo; ?>" class="form-control" required id="codigo" placeholder="Codigo" >
-    </div>
-</div>
-
-<div class="control-group col-sm-6">
-    <label class="control-label" for="descripcion_select">Descripcion Select</label>
-    <div class="controls">
-        <input type="text" name="descripcion_select" value="<?php echo $controlador->row_upd->descripcion_select; ?>" class="form-control" id="descripcion_select" placeholder="Descripcion Select" disabled>
-    </div>
-</div>
-<div class="control-group col-sm-6">
-    <label class="control-label" for="alias">Alias</label>
-    <div class="controls">
-        <input type="text" name="alias" value="<?php echo $controlador->row_upd->alias; ?>" class="form-control" id="alias" placeholder="Alias" disabled>
-    </div>
-</div>
-
-<div class="control-group col-sm-6">
-    <label class="control-label" for="codigo_bis">Codigo bis</label>
-    <div class="controls">
-        <input type="text" name="codigo_bis" value="<?php echo $controlador->row_upd->codigo_bis; ?>" class="form-control" id="codigo_bis" placeholder="codigo bis" disabled>
     </div>
 </div>
 <div class="control-group col-sm-6">
