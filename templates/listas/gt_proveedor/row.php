@@ -11,7 +11,7 @@
         </a>
     </td>
     <td>
-        <a href="http://<?php echo $row->gt_proveedor_pagina_web?>" class="btn btn-info"><i class="glyphicon glyphicon-eye-open"></i>
+        <a href="<?php echo $row->gt_proveedor_pagina_web?>" target="_blank" class="btn btn-info"><i class="glyphicon glyphicon-eye-open"></i>
             Ir a pagina web
         </a>
     </td>
