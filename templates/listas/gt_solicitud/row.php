@@ -4,12 +4,18 @@
 
 <tr>
     <td><?php echo $row->gt_solicitud_id; ?></td>
-    <td><?php echo $row->gt_solicitud_codigo_bis; ?></td>
+    <td><?php echo $row->gt_solicitud_codigo; ?></td>
     <td><?php echo $row->gt_solicitud_descripcion; ?></td>
-    <td><?php echo $row->gt_solicitud_descripcion_select; ?></td>
-    <td><?php echo $row->gt_solicitud_alias; ?></td>
-    <td><?php echo $row->gt_solicitud_gt_centro_costo_id; ?></td>
-    <td><?php echo $row->gt_solicitud_gt_tipo_solicitud_id; ?></td>
+    <td><a href="./index.php?seccion=gt_solicitud&accion=asignar_solicitante&registro_id=<?php echo $row->gt_solicitud_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info">
+            Asignar Solicitante
+        </a>
+    </td>
+    <td><a href="./index.php?seccion=gt_solicitud&accion=asignar_autorizante&registro_id=<?php echo $row->gt_solicitud_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info">
+            Asignar Autorizante
+        </a>
+    </td>
+    <td><?php echo $row->gt_solicitud_descripcion; ?></td>
+
 
 
     <!-- End dynamic generated -->
