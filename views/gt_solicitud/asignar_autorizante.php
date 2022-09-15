@@ -21,10 +21,10 @@ use config\views;
                         <h2>Asignar Solicitante</h2>
                     </div>
                     <div>
-                        <form method="post" action="./index.php?seccion=gt_solicitantes&accion=alta_bd&session_id=<?php echo $controlador->session_id; ?>&registro_id=<?php echo $controlador->registro_id; ?>" class="form-additional">
+                        <form method="post" action="./index.php?seccion=gt_autorizantes&accion=alta_bd&session_id=<?php echo $controlador->session_id; ?>&registro_id=<?php echo $controlador->registro_id; ?>" class="form-additional">
 
                             <?php echo $controlador->inputs->select->gt_solicitud_id; ?>
-                            <?php echo $controlador->inputs->select->gt_solicitante_id; ?>
+                            <?php echo $controlador->inputs->select->gt_autorizante_id; ?>
                             <input type="hidden" name="gt_solicitud_id" value="<?php echo $controlador->registro_id ?>">
                             <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>
                         </form>

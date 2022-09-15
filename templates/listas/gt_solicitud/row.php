@@ -14,7 +14,6 @@
             Asignar Autorizante
         </a>
     </td>
-    <td><?php echo $row->gt_solicitud_descripcion; ?></td>
 
 
 

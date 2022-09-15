@@ -18,22 +18,4 @@ class gt_solicitud extends modelo{
             columnas: $columnas,no_duplicados: $no_duplicados);
     }
 
-    public function alta_bd(): array|stdClass
-    {
-        $gt_solicitantes = new gt_solicitantes($this->link);
-
-        $r_alta_bd = parent::alta_bd();
-        if(errores::$error){
-            return $this->error->error('Error al dar de alta registro',$r_alta_bd);
-        }
-
-
-        $gt_solicitantes->registro['gt_solicitud_id'] = $r_alta_bd->registro['gt_solicitud_id'];
-        $gt_solicitantes->registro['gt_solicitante_id'] = $_POST['gt_solicitante_id'];
-
-        $gt_solicitantes->alta_bd();
-
-        return $r_alta_bd;
-    }
-
 }
