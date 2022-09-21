@@ -28,6 +28,10 @@ $gt_solicitantes = new gt_solicitantes($controlador->link);
 
                             <?php echo $controlador->inputs->select->gt_solicitud_id; ?>
                             <?php echo $controlador->inputs->select->gt_solicitante_id; ?>
+                            <br>
+                            <div class="col-sm-12 text-center">
+                                <label id="label_alerta" class="label-error-solicitante text-danger">El solicitante ya ha sido asignado </label>
+                            </div>
                             <input type="hidden" name="gt_solicitud_id" value="<?php echo $controlador->registro_id ?>">
                             <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>
                         </form>
@@ -69,7 +73,7 @@ $gt_solicitantes = new gt_solicitantes($controlador->link);
                                     <td><?php echo $solicitantes['gt_solicitantes_descripcion']; ?></td>
                                     <td><?php echo $solicitantes['gt_solicitantes_fecha_alta']; ?></td>
                                     <script>
-                                        id_autorizantes.push(<?php echo $solicitantes['gt_solicitantes_gt_autorizante_id']; ?>);
+                                        id_solicitantes.push(<?php echo $solicitantes['gt_solicitantes_gt_solicitante_id']; ?>);
                                     </script>
                                     <td><a href="./index.php?seccion=gt_solicitantes&accion=modifica&registro_id=<?php echo $solicitantes['gt_solicitantes_id']; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info">
                                             Modificar
