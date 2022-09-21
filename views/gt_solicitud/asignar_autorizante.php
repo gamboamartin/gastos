@@ -16,20 +16,24 @@ $gt_autorizantes = new gt_autorizantes($controlador->link);
                         <li class="item"><a href="./index.php?seccion=adm_session&accion=inicio&session_id=<?php echo $controlador->session_id; ?>"> Inicio </a></li>
                         <li class="item"><a href="./index.php?seccion=gt_solicitud&accion=lista&session_id=<?php echo $controlador->session_id; ?>"> Lista </a></li>
                         <?php //var_dump($controlador->row_upd); exit; ?>
-                        <li class="item"> Asignar Solicitante </li>
+                        <li class="item"> Asignar Autorizante </li>
                     </ul>    <h1 class="h-side-title page-title page-title-big text-color-primary"><?php echo strtoupper($controlador->row_upd->gt_solicitud_codigo)?></h1>
                 </section> <!-- /. content-header -->
                 <div class="widget  widget-box box-container form-main widget-form-cart" id="form">
                     <div class="widget-header">
-                        <h2>Asignar Solicitante</h2>
+                        <h2>Asignar Autorizante</h2>
                     </div>
                     <div>
                         <form method="post" action="./index.php?seccion=gt_autorizantes&accion=alta_bd&session_id=<?php echo $controlador->session_id; ?>&registro_id=<?php echo $controlador->registro_id; ?>" class="form-additional">
 
                             <?php echo $controlador->inputs->select->gt_solicitud_id; ?>
                             <?php echo $controlador->inputs->select->gt_autorizante_id; ?>
+                            <br>
+                            <div class="col-sm-12 text-center">
+                                <label id="label_alerta" class="label-error-autorizante text-danger">El autorizante ya ha sido asignado </label>
+                            </div>
                             <input type="hidden" name="gt_solicitud_id" value="<?php echo $controlador->registro_id ?>">
-                            <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>
+                            <?php include (new views())->ruta_templates.'botons/submit/alta_bd.php';?>
                         </form>
                     </div>
 
@@ -53,6 +57,9 @@ $gt_autorizantes = new gt_autorizantes($controlador->link);
                             <th>Elimina</th>
 
                             <tbody>
+                            <script>
+                                let id_autorizantes = Array();
+                            </script>
                             <?php
                             $gt_autorizantes_buscados['gt_solicitud_id'] = $controlador->registro_id;
                             $gt_autorizantes->registros();
@@ -65,6 +72,9 @@ $gt_autorizantes = new gt_autorizantes($controlador->link);
                                     <td><?php echo $autorizante['gt_autorizantes_codigo_bis']; ?></td>
                                     <td><?php echo $autorizante['gt_autorizantes_descripcion']; ?></td>
                                     <td><?php echo $autorizante['gt_autorizantes_fecha_alta']; ?></td>
+                                    <script>
+                                        id_autorizantes.push(<?php echo $autorizante['gt_autorizantes_gt_autorizante_id']; ?>);
+                                    </script>
                                     <td><a href="./index.php?seccion=gt_autorizantes&accion=modifica&registro_id=<?php echo $autorizante['gt_autorizantes_id']; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info">
                                             Modificar
                                         </a>
