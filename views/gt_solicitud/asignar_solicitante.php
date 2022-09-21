@@ -3,6 +3,9 @@
 <?php
 use config\generales;
 use config\views;
+use models\gt_solicitantes;
+
+$gt_solicitantes = new gt_solicitantes($controlador->link);
 ?>
 <div class="widget  widget-box box-container form-main widget-form-cart" id="form">
     <div class="container">
@@ -31,6 +34,63 @@ use config\views;
                     </div>
 
                 </div>
+            </div><!-- /.center-content -->
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="widget widget-box box-container widget-mylistings">
+
+                    <div class="">
+                        <table class="table table-striped footable-sort" data-sorting="true">
+                            <th>Id</th>
+                            <th>Codigo</th>
+                            <th>Codigo Bis</th>
+                            <th>Descripcion</th>
+                            <th>Fecha asignacion</th>
+
+                            <th>Modifica</th>
+                            <th>Elimina</th>
+
+                            <tbody>
+                            <script>
+                                let id_solicitantes = Array();
+                            </script>
+                            <?php
+                            $gt_solicitantes_buscados['gt_solicitud_id'] = $controlador->registro_id;
+                            $gt_solicitantes->registros();
+                            $r_gt_autorizantes = $gt_solicitantes->filtro_and(filtro: $gt_solicitantes_buscados);
+                            foreach ($gt_solicitantes->registros as $solicitantes){
+                                ?>
+                                <tr>
+                                    <td><?php echo $solicitantes['gt_solicitantes_id']; ?></td>
+                                    <td><?php echo $solicitantes['gt_solicitantes_codigo']; ?></td>
+                                    <td><?php echo $solicitantes['gt_solicitantes_codigo_bis']; ?></td>
+                                    <td><?php echo $solicitantes['gt_solicitantes_descripcion']; ?></td>
+                                    <td><?php echo $solicitantes['gt_solicitantes_fecha_alta']; ?></td>
+                                    <script>
+                                        id_autorizantes.push(<?php echo $solicitantes['gt_solicitantes_gt_autorizante_id']; ?>);
+                                    </script>
+                                    <td><a href="./index.php?seccion=gt_solicitantes&accion=modifica&registro_id=<?php echo $solicitantes['gt_solicitantes_id']; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info">
+                                            Modificar
+                                        </a>
+                                    </td>
+                                    <td><a href="./index.php?seccion=gt_solicitantes&accion=elimina_bd&registro_id=<?php echo $solicitantes['gt_solicitantes_id']; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-danger">
+                                            Eliminar
+                                        </a>
+                                    </td>
+
+
+                                </tr>
+                            <?php } ?>
+                            </tbody>
+                        </table>
+                        <div class="box-body">
+                            * Total registros: <?php echo $gt_solicitantes->n_registros; ?><br />
+                            * Fecha Hora: <?php echo $controlador->fecha_hoy; ?>
+                        </div>
+                    </div>
+                </div> <!-- /. widget-table-->
             </div><!-- /.center-content -->
         </div>
     </div>
