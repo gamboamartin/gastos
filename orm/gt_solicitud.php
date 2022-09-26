@@ -18,4 +18,23 @@ class gt_solicitud extends modelo{
             columnas: $columnas,no_duplicados: $no_duplicados);
     }
 
+    public function alta_bd(): array|stdClass
+    {
+        if(!isset($this->registro['codigo']))
+            $this->registro['codigo'] = $this->registro['gt_centro_costo_id'].'.'.$this->registro['gt_tipo_solicitud_id'].'.'.rand();
+        if(!isset($this->registro['descripcion_select']))
+            $this->registro['descripcion_select'] = strtoupper($this->registro['descripcion']). ' ' .$this->registro['gt_centro_costo_id'].' '.$this->registro['gt_tipo_solicitud_id'];
+        if(!isset($this->registro['alias']))
+            $this->registro['alias'] = $this->registro['descripcion_select'];
+        if(!isset($this->registro['codigo_bis']))
+            $this->registro['codigo_bis'] = $this->registro['codigo'];
+
+        $r_alta_bd = parent::alta_bd();
+        if(errores::$error){
+            return $this->error->error('Error al dar de alta registro',$r_alta_bd);
+        }
+
+        return $r_alta_bd;
+    }
+
 }
