@@ -33,7 +33,11 @@ $gt_autorizantes = new gt_autorizantes($controlador->link);
                                 <label id="label_alerta" class="label-error-autorizante text-danger">El autorizante ya ha sido asignado </label>
                             </div>
                             <input type="hidden" name="gt_solicitud_id" value="<?php echo $controlador->registro_id ?>">
-                            <?php include (new views())->ruta_templates.'botons/submit/alta_bd.php';?>
+                            <div class="control-group btn-modifica">
+                                <div class="controls">
+                                    <button type="submit" class="btn btn-success ">Asignar Autorizante</button>
+                                </div>
+                            </div>
                         </form>
                     </div>
 

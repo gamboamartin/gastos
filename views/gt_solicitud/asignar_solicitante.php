@@ -33,7 +33,11 @@ $gt_solicitantes = new gt_solicitantes($controlador->link);
                                 <label id="label_alerta" class="label-error-solicitante text-danger">El solicitante ya ha sido asignado </label>
                             </div>
                             <input type="hidden" name="gt_solicitud_id" value="<?php echo $controlador->registro_id ?>">
-                            <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>
+                            <div class="control-group btn-modifica">
+                                <div class="controls">
+                                    <button type="submit" class="btn btn-success ">Asignar Solicitante</button>
+                                </div>
+                            </div>
                         </form>
                     </div>
 
