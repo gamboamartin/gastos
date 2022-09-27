@@ -1,7 +1,7 @@
 
 let autorizante = document.getElementById("gt_autorizante_id");
 
-let btn_alta = $(".btn");
+let btn_alta = $(".btn-asignar");
 
 let autorizante_duplicado_error = $(".label-error-autorizante");
 

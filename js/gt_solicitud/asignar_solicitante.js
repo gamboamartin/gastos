@@ -1,7 +1,7 @@
 
 let solicitante = document.getElementById("gt_solicitante_id");
 
-let btn_alta = $(".btn");
+let btn_alta = $(".btn-asignar");
 
 let solicitante_duplicado_error = $(".label-error-solicitante");
 

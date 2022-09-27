@@ -35,7 +35,7 @@ $gt_autorizantes = new gt_autorizantes($controlador->link);
                             <input type="hidden" name="gt_solicitud_id" value="<?php echo $controlador->registro_id ?>">
                             <div class="control-group btn-modifica">
                                 <div class="controls">
-                                    <button type="submit" class="btn btn-success ">Asignar Autorizante</button>
+                                    <button type="submit" class="btn btn-success btn-asignar">Asignar Autorizante</button>
                                 </div>
                             </div>
                         </form>

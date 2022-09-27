@@ -35,7 +35,7 @@ $gt_solicitantes = new gt_solicitantes($controlador->link);
                             <input type="hidden" name="gt_solicitud_id" value="<?php echo $controlador->registro_id ?>">
                             <div class="control-group btn-modifica">
                                 <div class="controls">
-                                    <button type="submit" class="btn btn-success ">Asignar Solicitante</button>
+                                    <button type="submit" class="btn btn-success btn-asignar ">Asignar Solicitante</button>
                                 </div>
                             </div>
                         </form>
