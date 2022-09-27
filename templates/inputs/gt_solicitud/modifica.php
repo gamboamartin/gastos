@@ -27,6 +27,7 @@ $gt_autorizantes = new gt_autorizantes($controlador->link);
 
 <?php echo $controlador->inputs->select->gt_centro_costo_id; ?>
 <?php echo $controlador->inputs->select->gt_tipo_solicitud_id; ?>
+<?php //var_dump($controlador); exit; ?>
 
 <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>
 
@@ -38,6 +39,9 @@ $gt_autorizantes = new gt_autorizantes($controlador->link);
                 <div class="widget widget-box box-container widget-mylistings">
                     <h2>Solicitantes</h2>
                     <div class="">
+                        <a href="./index.php?seccion=gt_solicitud&accion=asignar_solicitante&registro_id=<?php echo $controlador->row_upd->id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info">
+                            Asignar Solicitante
+                        </a>
                         <table class="table table-striped footable-sort" data-sorting="true">
                             <th>Id</th>
                             <th>Codigo</th>
@@ -97,6 +101,9 @@ $gt_autorizantes = new gt_autorizantes($controlador->link);
                 <h2>Autorizantes</h2>
 
                 <div class="">
+                    <a href="./index.php?seccion=gt_solicitud&accion=asignar_autorizante&registro_id=<?php echo $controlador->row_upd->id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info">
+                        Asignar Autorizante
+                    </a>
                     <table class="table table-striped footable-sort" data-sorting="true">
                         <th>Id</th>
                         <th>Codigo</th>
