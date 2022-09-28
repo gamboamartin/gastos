@@ -5,17 +5,17 @@
 <tr>
     <td><?php echo $row->gt_proveedor_id; ?></td>
     <td><?php echo $row->gt_proveedor_descripcion; ?></td>
-    <td>
-        <a href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_fiscales&registro_id=<?php echo $row->gt_proveedor_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class="glyphicon glyphicon-eye-open"></i>
-            Ver datos fiscales
-        </a>
-    </td>
-    <td>
-        <a href="<?php echo $row->gt_proveedor_pagina_web?>" target="_blank" class="btn btn-info"><i class="glyphicon glyphicon-eye-open"></i>
-            Ir a pagina web
-        </a>
-    </td>
     <td><?php echo $row->gt_proveedor_gt_tipo_proveedor_id; ?></td>
+    <td>
+        <a href="./index.php?seccion=gt_proveedor&accion=proveedor_datos_fiscales&registro_id=<?php echo $row->gt_proveedor_id; ?>&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info"><i class=""></i>
+            Datos Fiscales
+        </a>
+    </td>
+    <td>
+        <a href="<?php echo $row->gt_proveedor_pagina_web?>" target="_blank" class="btn btn-info"><i class=""></i>
+            Pagina Web
+        </a>
+    </td>
 
     <!-- End dynamic generated -->
 
