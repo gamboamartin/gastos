@@ -11,11 +11,6 @@
             Datos Fiscales
         </a>
     </td>
-    <td>
-        <a href="<?php echo $row->gt_proveedor_pagina_web?>" target="_blank" class="btn btn-info"><i class=""></i>
-            Pagina Web
-        </a>
-    </td>
 
     <!-- End dynamic generated -->
 
