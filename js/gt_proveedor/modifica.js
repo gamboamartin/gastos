@@ -108,16 +108,49 @@ telefono_1_error.hide();
 txt_telefono_1.keyup(function () {
     valida_telefono_requerido()
 });
+txt_telefono_1.on('keydown',function (e) {
+    tecla = e.key;
+    var valoresAceptados = /^[0-9]+$/;
+    if(!tecla.match(valoresAceptados)){
+        if(e.keyCode != 8){
+            if(e.keyCode != 13){
+                return false;
+            }
+        }
+    }
+});
 
 telefono_2_error.hide();
 txt_telefono_2.keyup(function () {
     valida_telefono_2();
 
 });
+txt_telefono_2.on('keydown',function (e) {
+    tecla = e.key;
+    var valoresAceptados = /^[0-9]+$/;
+    if(!tecla.match(valoresAceptados)){
+        if(e.keyCode != 8){
+            if(e.keyCode != 13){
+                return false;
+            }
+        }
+    }
+});
 
 telefono_3_error.hide();
 txt_telefono_3.keyup(function () {
     valida_telefono_3();
+});
+txt_telefono_3.on('keydown',function (e) {
+    tecla = e.key;
+    var valoresAceptados = /^[0-9]+$/;
+    if(!tecla.match(valoresAceptados)){
+        if(e.keyCode != 8){
+            if(e.keyCode != 13){
+                return false;
+            }
+        }
+    }
 });
 
 btn_alta.on('click', function(  ){

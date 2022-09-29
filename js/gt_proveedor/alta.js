@@ -48,6 +48,7 @@ txt_pagina_web.change(function () {
 
 telefono_1_error.hide();
 txt_telefono_1.keyup(function () {
+
     let telefono = $(this).val();
     telefono_1_valido = false;
     let regex_val = telefono_mx_regex.test(telefono);
@@ -61,6 +62,18 @@ txt_telefono_1.keyup(function () {
         telefono_1_error.show();
     } else {
         telefono_1_error.hide();
+    }
+});
+
+txt_telefono_1.on('keydown',function (e) {
+    tecla = e.key;
+    var valoresAceptados = /^[0-9]+$/;
+    if(!tecla.match(valoresAceptados)){
+        if(e.keyCode != 8){
+            if(e.keyCode != 13){
+                return false;
+            }
+        }
     }
 });
 
@@ -81,6 +94,17 @@ txt_telefono_2.keyup(function () {
         telefono_2_error.hide();
     }
 });
+txt_telefono_2.on('keydown',function (e) {
+    tecla = e.key;
+    var valoresAceptados = /^[0-9]+$/;
+    if(!tecla.match(valoresAceptados)){
+        if(e.keyCode != 8){
+            if(e.keyCode != 13){
+                return false;
+            }
+        }
+    }
+});
 
 telefono_3_error.hide();
 txt_telefono_3.keyup(function () {
@@ -97,6 +121,17 @@ txt_telefono_3.keyup(function () {
         telefono_3_error.show();
     } else {
         telefono_3_error.hide();
+    }
+});
+txt_telefono_3.on('keydown',function (e) {
+    tecla = e.key;
+    var valoresAceptados = /^[0-9]+$/;
+    if(!tecla.match(valoresAceptados)){
+        if(e.keyCode != 8){
+            if(e.keyCode != 13){
+                return false;
+            }
+        }
     }
 });
 
