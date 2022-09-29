@@ -8,7 +8,8 @@ use models\gt_tipo_proveedor; ?>
         registro_id: $row->gt_proveedor_gt_tipo_proveedor_id);?>
 
 <tr>
-    <td><?php echo $row->gt_proveedor_id; ?></td>
+    <td><?php echo $row->gt_proveedor_codigo; ?></td>
+    <td><?php echo $row->gt_proveedor_rfc; ?></td>
     <td><?php echo $row->gt_proveedor_descripcion; ?></td>
     <td><?php echo $r_gt_tipo_proveedor['gt_tipo_proveedor_descripcion']; ?></td>
     <td>
