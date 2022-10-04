@@ -16,5 +16,7 @@ class gt_tipo_solicitud extends modelo{
 
         parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
             columnas: $columnas,no_duplicados: $no_duplicados);
+
+        $this->NAMESPACE = __NAMESPACE__;
     }
 }
