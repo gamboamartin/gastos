@@ -28,7 +28,7 @@ class controlador_gt_proveedor extends system {
 
         $html_ = new gt_proveedor_html(html: $html);
 
-        $obj_link = new links_menu($this->registro_id);
+        $obj_link = new links_menu(link: $link, registro_id:$this->registro_id);
         $this->rows_lista[] = 'gt_tipo_proveedor_id';
         $this->rows_lista[] = 'dp_calle_pertenece_id';
         $this->rows_lista[] = 'cat_sat_regimen_fiscal_id';
