@@ -1,5 +1,5 @@
 <?php
-namespace models;
+namespace gamboamartin\gastos\models;
 use base\orm\modelo;
 use gamboamartin\errores\errores;
 use PDO;
@@ -7,8 +7,9 @@ use stdClass;
 
 class gt_solicitud extends modelo{
     public function __construct(PDO $link){
-        $tabla = __CLASS__;
-        $columnas = array($tabla=>false);
+        $tabla = 'gt_solicitud';
+        $columnas = array($tabla=>false,'gt_tipo_solicitud'=>$tabla,'gt_centro_costo'=>$tabla,
+            'gt_tipo_centro_costo'=>'gt_centro_costo');
         $campos_obligatorios = array();
 
         $no_duplicados = array();

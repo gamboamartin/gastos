@@ -2,11 +2,10 @@
 namespace html;
 
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_solicitud;
 use gamboamartin\system\html_controler;
 use gamboamartin\template\directivas;
-use models\gt_solicitud;
 use PDO;
-use stdClass;
 
 class gt_solicitud_html extends html_controler {
     public function select_gt_solicitud_id(int $cols, bool $con_registros, int|null $id_selected, PDO $link,
@@ -22,8 +21,9 @@ class gt_solicitud_html extends html_controler {
         }
         $modelo = new gt_solicitud($link);
 
-        $select = $this->select_catalogo(cols:$cols,con_registros:$con_registros,id_selected:$id_selected, filtro: $filtro,
-            modelo: $modelo,label: 'Solicitud', name: 'gt_solicitud_id', disabled:$disabled, required: $required);
+        $select = $this->select_catalogo(cols: $cols, con_registros: $con_registros, id_selected: $id_selected,
+            modelo: $modelo, disabled: $disabled, filtro: $filtro, label: 'Solicitud', name: 'gt_solicitud_id',
+            required: $required);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar select', data: $select );
         }

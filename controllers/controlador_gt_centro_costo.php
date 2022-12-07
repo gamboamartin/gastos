@@ -8,14 +8,14 @@
  */
 namespace gamboamartin\gastos\controllers;
 
-use config\generales;
+
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_centro_costo;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use gamboamartin\template\html;
 use html\gt_centro_costo_html;
 use html\gt_tipo_centro_costo_html;
-use models\gt_centro_costo;
 use PDO;
 use stdClass;
 

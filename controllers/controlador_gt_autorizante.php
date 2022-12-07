@@ -10,12 +10,12 @@ namespace gamboamartin\gastos\controllers;
 
 
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_autorizante;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use gamboamartin\template\html;
 use html\em_empleado_html;
 use html\gt_autorizante_html;
-use models\gt_autorizante;
 use PDO;
 use stdClass;
 

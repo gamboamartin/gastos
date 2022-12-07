@@ -2,11 +2,10 @@
 namespace html;
 
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_proveedor;
 use gamboamartin\system\html_controler;
 use gamboamartin\template\directivas;
-use models\gt_proveedor;
 use PDO;
-use stdClass;
 
 class gt_proveedor_html extends html_controler {
 
@@ -23,8 +22,9 @@ class gt_proveedor_html extends html_controler {
         }
         $modelo = new gt_proveedor($link);
 
-        $select = $this->select_catalogo(cols:$cols,con_registros:$con_registros,id_selected:$id_selected, filtro: $filtro,
-            modelo: $modelo,label: 'Proveedor', name: 'gt_proveedor_id', disabled:$disabled, required: $required);
+        $select = $this->select_catalogo(cols: $cols, con_registros: $con_registros, id_selected: $id_selected,
+            modelo: $modelo, disabled: $disabled, filtro: $filtro, label: 'Proveedor', name: 'gt_proveedor_id',
+            required: $required);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar select', data: $select);
         }

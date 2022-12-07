@@ -1,13 +1,12 @@
 <?php
-namespace models;
+namespace gamboamartin\gastos\models;
 use base\orm\modelo;
-use gamboamartin\errores\errores;
 use PDO;
-use stdClass;
+
 
 class gt_solicitante extends modelo{
     public function __construct(PDO $link){
-        $tabla = __CLASS__;
+        $tabla = 'gt_solicitante';
         $columnas = array($tabla=>false);
         $campos_obligatorios = array();
 

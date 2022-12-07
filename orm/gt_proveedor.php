@@ -1,5 +1,5 @@
 <?php
-namespace models;
+namespace gamboamartin\gastos\models;
 use base\orm\modelo;
 use gamboamartin\errores\errores;
 use PDO;
@@ -7,7 +7,7 @@ use stdClass;
 
 class gt_proveedor extends modelo{
     public function __construct(PDO $link){
-        $tabla = __CLASS__;
+        $tabla = 'gt_proveedor';
         $columnas = array($tabla=>false);
         $campos_obligatorios = array('gt_tipo_proveedor_id', 'dp_calle_pertenece_id', 'cat_sat_regimen_fiscal_id',
             'rfc', 'exterior', 'telefono_1', 'contacto_1', 'pagina_web');

@@ -8,13 +8,12 @@
  */
 namespace gamboamartin\gastos\controllers;
 
-use config\generales;
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_autorizantes;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use gamboamartin\template\html;
 use html\gt_autorizantes_html;
-use models\gt_autorizantes;
 use html\gt_autorizante_html;
 use html\gt_solicitud_html;
 use PDO;

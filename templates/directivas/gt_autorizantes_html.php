@@ -2,11 +2,10 @@
 namespace html;
 
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_autorizantes;
 use gamboamartin\system\html_controler;
 use gamboamartin\template\directivas;
-use models\gt_autorizantes;
 use PDO;
-use stdClass;
 
 class gt_autorizantes_html extends html_controler {
     public function select_gt_autorizantes_id(int $cols, bool $con_registros, int|null $id_selected, PDO $link,
@@ -24,8 +23,9 @@ class gt_autorizantes_html extends html_controler {
 
         $modelo = new gt_autorizantes($link);
 
-        $select = $this->select_catalogo(cols:$cols,con_registros:$con_registros,id_selected:$id_selected, filtro: $filtro,
-            modelo: $modelo,label: 'Autorizantes', name: 'gt_autorizantes_id' ,disabled:$disabled, required: $required);
+        $select = $this->select_catalogo(cols: $cols, con_registros: $con_registros, id_selected: $id_selected,
+            modelo: $modelo, disabled: $disabled, filtro: $filtro, label: 'Autorizantes', name: 'gt_autorizantes_id',
+            required: $required);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar select', data: $select);
         }

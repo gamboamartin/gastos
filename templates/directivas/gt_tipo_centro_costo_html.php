@@ -2,11 +2,10 @@
 namespace html;
 
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_tipo_centro_costo;
 use gamboamartin\system\html_controler;
 use gamboamartin\template\directivas;
-use models\gt_tipo_centro_costo;
 use PDO;
-use stdClass;
 
 class gt_tipo_centro_costo_html extends html_controler {
     public function select_gt_tipo_centro_costo_id(int $cols, bool $con_registros, int|null $id_selected, PDO $link,
@@ -22,8 +21,9 @@ class gt_tipo_centro_costo_html extends html_controler {
         }
         $modelo = new gt_tipo_centro_costo($link);
 
-        $select = $this->select_catalogo(cols:$cols,con_registros:$con_registros,id_selected:$id_selected, filtro: $filtro,
-            modelo: $modelo,label: 'Tipo Centro Costo', name: 'gt_tipo_centro_costo_id', disabled:$disabled, required: $required);
+        $select = $this->select_catalogo(cols: $cols, con_registros: $con_registros, id_selected: $id_selected,
+            modelo: $modelo, disabled: $disabled, filtro: $filtro, label: 'Tipo Centro Costo',
+            name: 'gt_tipo_centro_costo_id', required: $required);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar select', data: $select);
         }

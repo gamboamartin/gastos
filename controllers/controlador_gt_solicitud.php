@@ -8,15 +8,14 @@
  */
 namespace gamboamartin\gastos\controllers;
 
-use config\generales;
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_solicitud;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use gamboamartin\template\html;
 use html\gt_autorizante_html;
 use html\gt_solicitante_html;
 use html\gt_solicitud_html;
-use models\gt_solicitud;
 use html\gt_centro_costo_html;
 use html\gt_tipo_solicitud_html;
 use PDO;

@@ -8,13 +8,11 @@
  */
 namespace gamboamartin\gastos\controllers;
 
-use config\generales;
-use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_tipo_proveedor;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use gamboamartin\template\html;
 use html\gt_tipo_proveedor_html;
-use models\gt_tipo_proveedor;
 use PDO;
 use stdClass;
 

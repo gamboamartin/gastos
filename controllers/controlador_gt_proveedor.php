@@ -9,6 +9,7 @@
 namespace gamboamartin\gastos\controllers;
 
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_proveedor;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use gamboamartin\template\html;
@@ -16,7 +17,6 @@ use html\cat_sat_regimen_fiscal_html;
 use html\dp_calle_pertenece_html;
 use html\gt_proveedor_html;
 use html\gt_tipo_proveedor_html;
-use models\gt_proveedor;
 
 use PDO;
 use stdClass;

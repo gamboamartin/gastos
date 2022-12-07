@@ -1,12 +1,13 @@
 <?php
-namespace models;
+namespace gamboamartin\gastos\models;
+
 use base\orm\_modelo_parent_sin_codigo;
 use PDO;
 
 
-class gt_tipo_solicitud extends _modelo_parent_sin_codigo{
+class gt_tipo_solicitud extends _modelo_parent_sin_codigo {
     public function __construct(PDO $link){
-        $tabla = __CLASS__;
+        $tabla = 'gt_tipo_solicitud';
         $columnas = array($tabla=>false);
         $campos_obligatorios = array();
 
