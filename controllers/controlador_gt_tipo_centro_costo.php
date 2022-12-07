@@ -43,6 +43,23 @@ class controlador_gt_tipo_centro_costo extends _ctl_parent_sin_codigo {
 
     }
 
+    protected function inputs_children(stdClass $registro): array|stdClass{
+        $gt_tipo_centro_costo_id = (new gt_tipo_centro_costo_html(html: $this->html_base))->select_gt_tipo_centro_costo_id(
+            cols:12,con_registros: true,id_selected:  $registro->gt_tipo_centro_costo_id,link:  $this->link, disabled: true);
+
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener gt_tipo_solicitud_id',data:  $gt_tipo_centro_costo_id);
+        }
+
+
+
+        $this->inputs = new stdClass();
+        $this->inputs->select = new stdClass();
+        $this->inputs->select->gt_tipo_centro_costo_id = $gt_tipo_centro_costo_id;
+
+        return $this->inputs;
+    }
+
     protected function key_selects_txt(array $keys_selects): array
     {
         $keys_selects = (new \base\controller\init())->key_select_txt(cols: 6,key: 'codigo',
@@ -58,5 +75,27 @@ class controlador_gt_tipo_centro_costo extends _ctl_parent_sin_codigo {
         }
 
         return $keys_selects;
+    }
+
+    public function centros_costo(bool $header = true, bool $ws = false): array|stdClass|string
+    {
+
+        $data_view = new stdClass();
+        $data_view->names = array('Id', 'CC','Acciones');
+        $data_view->keys_data = array('gt_tipo_centro_costo_id','gt_centro_costo_descripcion');
+        $data_view->key_actions = 'acciones';
+        $data_view->namespace_model = 'gamboamartin\\gastos\\models';
+        $data_view->name_model_children = 'gt_centro_costo';
+
+
+        $contenido_table = $this->contenido_children(data_view: $data_view, next_accion: __FUNCTION__);
+        if(errores::$error){
+            return $this->retorno_error(
+                mensaje: 'Error al obtener tbody',data:  $contenido_table, header: $header,ws:  $ws);
+        }
+
+
+        return $contenido_table;
+
     }
 }

@@ -6,7 +6,7 @@ use PDO;
 class gt_centro_costo extends modelo{
     public function __construct(PDO $link){
         $tabla = 'gt_centro_costo';
-        $columnas = array($tabla=>false);
+        $columnas = array($tabla=>false, 'gt_tipo_centro_costo'=>$tabla);
         $campos_obligatorios = array();
 
         $no_duplicados = array();
