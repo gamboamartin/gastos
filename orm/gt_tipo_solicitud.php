@@ -1,11 +1,10 @@
 <?php
 namespace models;
-use base\orm\modelo;
-use gamboamartin\errores\errores;
+use base\orm\_modelo_parent_sin_codigo;
 use PDO;
-use stdClass;
 
-class gt_tipo_solicitud extends modelo{
+
+class gt_tipo_solicitud extends _modelo_parent_sin_codigo{
     public function __construct(PDO $link){
         $tabla = __CLASS__;
         $columnas = array($tabla=>false);
