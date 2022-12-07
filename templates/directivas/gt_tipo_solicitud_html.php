@@ -8,6 +8,19 @@ use gamboamartin\template\directivas;
 use PDO;
 
 class gt_tipo_solicitud_html extends html_controler {
+
+    /**
+     * @param int $cols N cols css
+     * @param bool $con_registros true integra rows en options
+     * @param int|null $id_selected Identificador
+     * @param PDO $link Conexion a la base de datos
+     * @param bool $disabled atributo disabled si true
+     * @param array $filtro Filtro para obtencion de datos
+     * @param bool $required Atributo required si true
+     * @return array|string
+     * @version 0.163.4
+     */
+
     public function select_gt_tipo_solicitud_id(int $cols, bool $con_registros, int|null $id_selected, PDO $link,
                                                 bool $disabled = false, array $filtro = array(),
                                                 bool $required = false): array|string
