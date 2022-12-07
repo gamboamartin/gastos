@@ -1,9 +1,10 @@
 <?php
 namespace gamboamartin\gastos\models;
+use base\orm\_modelo_parent_sin_codigo;
 use base\orm\modelo;
 use PDO;
 
-class gt_tipo_centro_costo extends modelo{
+class gt_tipo_centro_costo extends _modelo_parent_sin_codigo {
     public function __construct(PDO $link){
         $tabla = 'gt_tipo_centro_costo';
         $columnas = array($tabla=>false);
