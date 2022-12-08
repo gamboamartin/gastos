@@ -8,7 +8,7 @@ use stdClass;
 class gt_autorizantes extends modelo{
     public function __construct(PDO $link){
         $tabla = 'gt_autorizantes';
-        $columnas = array($tabla=>false);
+        $columnas = array($tabla=>false, 'gt_solicitud'=>$tabla, 'gt_autorizante'=>$tabla);
         $campos_obligatorios = array();
 
         $no_duplicados = array();
