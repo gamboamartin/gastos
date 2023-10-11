@@ -151,8 +151,7 @@ class controlador_gt_proveedor extends _ctl_base {
             con_registros: false);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "dp_calle_pertenece_id", label: "Calle",
             con_registros: false);
-        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_tipo_proveedor_id", label: "Tipo",
-            con_registros: false);
+        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_tipo_proveedor_id", label: "Tipo");
         return $this->init_selects(keys_selects: $keys_selects, key: "cat_sat_regimen_fiscal_id",
             label: "Régimen Fiscal");
     }
