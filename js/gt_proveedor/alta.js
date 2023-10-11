@@ -100,7 +100,7 @@ let asigna_colonias_postales = (dp_cp_id = '',dp_colonia_postal_id = '') => {
 }
 
 let asigna_calles = (dp_colonia_postal = '', dp_calle_pertenece_id = '') => {
-    let url = get_url("dp_calle_pertenece","get_calle_pertenece", {dp_colonia_postal: dp_colonia_postal});
+    let url = get_url("dp_calle_pertenece","get_calle_pertenece", {dp_colonia_postal_id: 627});
 
     get_data(url, function (data) {
         sl_dp_calle_pertenece.empty();

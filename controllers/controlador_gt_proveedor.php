@@ -9,6 +9,7 @@
 namespace gamboamartin\gastos\controllers;
 
 use base\controller\controler;
+use gamboamartin\direccion_postal\models\dp_calle_pertenece;
 use gamboamartin\errores\errores;
 use gamboamartin\gastos\models\gt_proveedor;
 use gamboamartin\system\_ctl_base;
@@ -140,19 +141,19 @@ class controlador_gt_proveedor extends _ctl_base {
 
     public function init_selects_inputs(): array
     {
-        $keys_selects = $this->init_selects(keys_selects: array(), key: "dp_pais_id", label: "País");
-        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "dp_estado_id", label: "Estado",
+        $this->keys_selects = $this->init_selects(keys_selects: array(), key: "dp_pais_id", label: "País");
+        $this->keys_selects = $this->init_selects(keys_selects: $this->keys_selects, key: "dp_estado_id", label: "Estado",
             con_registros: false);
-        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "dp_municipio_id", label: "Municipio",
+        $this->keys_selects = $this->init_selects(keys_selects: $this->keys_selects, key: "dp_municipio_id", label: "Municipio",
             con_registros: false);
-        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "dp_cp_id", label: "CP",
+        $this->keys_selects = $this->init_selects(keys_selects: $this->keys_selects, key: "dp_cp_id", label: "CP",
             con_registros: false);
-        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "dp_colonia_postal_id", label: "Colonia",
+        $this->keys_selects = $this->init_selects(keys_selects: $this->keys_selects, key: "dp_colonia_postal_id", label: "Colonia",
             con_registros: false);
-        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "dp_calle_pertenece_id", label: "Calle",
+        $this->keys_selects = $this->init_selects(keys_selects: $this->keys_selects, key: "dp_calle_pertenece_id", label: "Calle",
             con_registros: false);
-        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_tipo_proveedor_id", label: "Tipo");
-        return $this->init_selects(keys_selects: $keys_selects, key: "cat_sat_regimen_fiscal_id",
+        $this->keys_selects = $this->init_selects(keys_selects: $this->keys_selects, key: "gt_tipo_proveedor_id", label: "Tipo");
+        return $this->init_selects(keys_selects: $this->keys_selects, key: "cat_sat_regimen_fiscal_id",
             label: "Régimen Fiscal");
     }
 
@@ -164,7 +165,7 @@ class controlador_gt_proveedor extends _ctl_base {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
         }
 
-        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 8, key: 'descripcion',
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'descripcion',
             keys_selects: $keys_selects, place_holder: 'Descripción');
         if (errores::$error) {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
@@ -259,10 +260,50 @@ class controlador_gt_proveedor extends _ctl_base {
                 ws: $ws);
         }
 
-        $keys_selects['cat_sat_regimen_fiscal_id']->id_selected = $this->registro['cat_sat_regimen_fiscal_id'];
-        $keys_selects['gt_tipo_proveedor_id']->id_selected = $this->registro['gt_tipo_proveedor_id'];
+        $calle = (new dp_calle_pertenece($this->link))->get_calle_pertenece($this->registro['dp_calle_pertenece_id']);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener calle',data:  $calle);
+        }
 
-        $base = $this->base_upd(keys_selects: $keys_selects, params: array(), params_ajustados: array());
+        $identificador = "dp_pais_id";
+        $propiedades = array("id_selected" => $calle['dp_pais_id']);
+        $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
+
+        $identificador = "dp_estado_id";
+        $propiedades = array("id_selected" => $calle['dp_estado_id'], "con_registros" => true,
+            "filtro" => array('dp_pais.id' => $calle['dp_pais_id']));
+        $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
+
+        $identificador = "dp_municipio_id";
+        $propiedades = array("id_selected" => $calle['dp_municipio_id'], "con_registros" => true,
+            "filtro" => array('dp_estado.id' => $calle['dp_estado_id']));
+        $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
+
+        $identificador = "dp_cp_id";
+        $propiedades = array("id_selected" => $calle['dp_cp_id'], "con_registros" => true,
+            "filtro" => array('dp_estado.id' => $calle['dp_estado_id']));
+        $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
+
+        $identificador = "dp_colonia_postal_id";
+        $propiedades = array("id_selected" => $calle['dp_colonia_postal_id'], "con_registros" => true,
+            "filtro" => array('dp_cp.id' => $calle['dp_cp_id']),'key_descripcion_select'=>'dp_colonia_descripcion');
+        $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
+
+        $identificador = "dp_calle_pertenece_id";
+        $propiedades = array("id_selected" => $this->row_upd->dp_calle_pertenece_id, "con_registros" => true,
+            "filtro" => array('dp_colonia_postal.id' => $calle['dp_colonia_postal_id']),
+            'key_descripcion_select'=>'dp_calle_descripcion');
+        $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
+
+        $identificador = "cat_sat_regimen_fiscal_id";
+        $propiedades = array("id_selected" => $this->registro['cat_sat_regimen_fiscal_id']);
+        $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
+
+        $identificador = "gt_tipo_proveedor_id";
+        $propiedades = array("id_selected" => $this->registro['gt_tipo_proveedor_id']);
+        $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
+
+        $base = $this->base_upd(keys_selects: $this->keys_selects, params: array(), params_ajustados: array());
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }

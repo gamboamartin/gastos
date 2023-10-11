@@ -19,4 +19,5 @@
 <?php echo $controlador->inputs->contacto_1; ?>
 <?php echo $controlador->inputs->contacto_2; ?>
 <?php echo $controlador->inputs->contacto_3; ?>
+<?php echo $controlador->inputs->descripcion; ?>
 <?php include (new views())->ruta_templates.'botons/submit/alta_bd.php';?>
