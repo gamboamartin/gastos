@@ -153,8 +153,10 @@ class controlador_gt_proveedor extends _ctl_base {
         $this->keys_selects = $this->init_selects(keys_selects: $this->keys_selects, key: "dp_calle_pertenece_id", label: "Calle",
             con_registros: false);
         $this->keys_selects = $this->init_selects(keys_selects: $this->keys_selects, key: "gt_tipo_proveedor_id", label: "Tipo");
-        return $this->init_selects(keys_selects: $this->keys_selects, key: "cat_sat_regimen_fiscal_id",
+        $this->keys_selects = $this->init_selects(keys_selects: $this->keys_selects, key: "cat_sat_regimen_fiscal_id",
             label: "Régimen Fiscal");
+
+        return $this->keys_selects;
     }
 
     protected function key_selects_txt(array $keys_selects): array
@@ -286,13 +288,12 @@ class controlador_gt_proveedor extends _ctl_base {
 
         $identificador = "dp_colonia_postal_id";
         $propiedades = array("id_selected" => $calle['dp_colonia_postal_id'], "con_registros" => true,
-            "filtro" => array('dp_cp.id' => $calle['dp_cp_id']),'key_descripcion_select'=>'dp_colonia_descripcion');
+            "filtro" => array('dp_cp.id' => $calle['dp_cp_id']));
         $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
 
         $identificador = "dp_calle_pertenece_id";
         $propiedades = array("id_selected" => $this->row_upd->dp_calle_pertenece_id, "con_registros" => true,
-            "filtro" => array('dp_colonia_postal.id' => $calle['dp_colonia_postal_id']),
-            'key_descripcion_select'=>'dp_calle_descripcion');
+            "filtro" => array('dp_colonia_postal.id' => $calle['dp_colonia_postal_id']));
         $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
 
         $identificador = "cat_sat_regimen_fiscal_id";
