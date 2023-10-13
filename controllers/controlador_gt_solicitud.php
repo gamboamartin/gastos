@@ -84,6 +84,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         $init_data = array();
         $init_data['gt_centro_costo'] = "gamboamartin\\gastos";
         $init_data['gt_tipo_solicitud'] = "gamboamartin\\gastos";
+        $init_data['em_empleado'] = "gamboamartin\\empleado";
 
         $campos_view = $this->campos_view_base(init_data: $init_data, keys: $keys);
         if (errores::$error) {
@@ -135,6 +136,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
     public function init_selects_inputs(): array
     {
         $keys_selects = $this->init_selects(keys_selects: array(), key: "gt_centro_costo_id", label: "Centro Costo", cols: 12);
+        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "em_empleado_id", label: "Empleado", cols: 12);
         return $this->init_selects(keys_selects: $keys_selects, key: "gt_tipo_solicitud_id", label: "Tipo Solicitud", cols: 12);
     }
 
