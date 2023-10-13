@@ -2,11 +2,10 @@
 
 namespace gamboamartin\gastos\models;
 
-use base\orm\_modelo_parent;
 use PDO;
 
 
-class gt_solicitante extends _modelo_parent
+class gt_solicitante extends _base_transacciones
 {
     public function __construct(PDO $link)
     {
