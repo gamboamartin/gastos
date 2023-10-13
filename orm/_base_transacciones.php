@@ -5,7 +5,6 @@ namespace gamboamartin\gastos\models;
 use base\orm\_modelo_parent;
 use gamboamartin\errores\errores;
 use gamboamartin\nomina\models\em_empleado;
-use PDO;
 use stdClass;
 
 class _base_transacciones extends _modelo_parent
@@ -30,7 +29,7 @@ class _base_transacciones extends _modelo_parent
         $keys = array('em_empleado_id');
         $valida = $this->validacion->valida_ids(keys: $keys, registro: $registros);
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al campos', data: $valida);
+            return $this->error->error(mensaje: 'Error validar campos', data: $valida);
         }
 
         $keys = array('codigo');

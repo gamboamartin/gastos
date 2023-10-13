@@ -7,7 +7,7 @@ use gamboamartin\errores\errores;
 use PDO;
 use stdClass;
 
-class gt_solicitantes extends modelo
+class gt_solicitantes extends _base_auto_soli
 {
     public function __construct(PDO $link)
     {
@@ -24,5 +24,20 @@ class gt_solicitantes extends modelo
         $this->NAMESPACE = __NAMESPACE__;
     }
 
+    protected function inicializa_campos(array $registros): array
+    {
+        $keys = array('gt_solicitante_id');
+        $valida = $this->validacion->valida_ids(keys: $keys, registro: $registros);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error validar campos', data: $valida);
+        }
+
+        $init = parent::inicializa_campos($registros);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error validar campos', data: $valida);
+        }
+
+        return $init;
+    }
 
 }
