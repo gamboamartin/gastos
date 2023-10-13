@@ -131,7 +131,7 @@ class controlador_gt_autorizante extends _ctl_base {
 
     public function init_selects_inputs(): array
     {
-        return $this->init_selects(keys_selects: array(), key: "em_empleado_id", label: "Empleado", cols: 12);
+        return $this->init_selects(keys_selects: array(), key: "em_empleado_id", label: "Empleado", cols: 8);
     }
 
     protected function key_selects_txt(array $keys_selects): array
