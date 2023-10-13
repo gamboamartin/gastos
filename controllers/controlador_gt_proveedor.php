@@ -179,13 +179,13 @@ class controlador_gt_proveedor extends _ctl_base {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
         }
 
-        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 4, key: 'exterior',
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 6, key: 'exterior',
             keys_selects: $keys_selects, place_holder: 'Exterior');
         if (errores::$error) {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
         }
 
-        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 4, key: 'interior',
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 6, key: 'interior',
             keys_selects: $keys_selects, place_holder: 'Interior');
         if (errores::$error) {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
@@ -239,7 +239,7 @@ class controlador_gt_proveedor extends _ctl_base {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
         }
 
-        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'razon_social',
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 8, key: 'razon_social',
             keys_selects: $keys_selects, place_holder: 'Razón social');
         if (errores::$error) {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
