@@ -79,6 +79,7 @@ class controlador_gt_empleado_usuario extends _ctl_base {
 
         $init_data = array();
         $init_data['em_empleado'] = "gamboamartin\\empleado";
+        $init_data['adm_usuario'] = "gamboamartin\\administrador";
 
 
         $campos_view = $this->campos_view_base(init_data: $init_data, keys: $keys);
@@ -104,9 +105,10 @@ class controlador_gt_empleado_usuario extends _ctl_base {
         $columns["gt_empleado_usuario_id"]["titulo"] = "Id";
         $columns["em_empleado_nombre"]["titulo"] = "Empleado";
         $columns["em_empleado_nombre"]["campos"] = array("em_empleado_ap","em_empleado_am");
+        $columns["adm_usuario_user"]["titulo"] = "Usuario";
 
         $filtro = array("gt_empleado_usuario.id","em_empleado.nombre","em_empleado.ap","em_empleado.am",
-            "gt_empleado_usuario.descripcion");
+            "adm_usuario.user");
 
         $datatables = new stdClass();
         $datatables->columns = $columns;
@@ -129,7 +131,8 @@ class controlador_gt_empleado_usuario extends _ctl_base {
 
     public function init_selects_inputs(): array
     {
-        return $this->init_selects(keys_selects: array(), key: "em_empleado_id", label: "Empleado", cols: 8);
+        $keys_selects = $this->init_selects(keys_selects: array(), key: "em_empleado_id", label: "Empleado", cols: 12);
+        return $this->init_selects(keys_selects: $keys_selects, key: "adm_usuario_id", label: "Usuario", cols: 12);
     }
 
     protected function key_selects_txt(array $keys_selects): array
@@ -164,6 +167,7 @@ class controlador_gt_empleado_usuario extends _ctl_base {
         }
 
         $keys_selects['em_empleado_id']->id_selected = $this->registro['em_empleado_id'];
+        $keys_selects['adm_usuario_id']->id_selected = $this->registro['adm_usuario_id'];
 
         $base = $this->base_upd(keys_selects: $keys_selects, params: array(), params_ajustados: array());
         if (errores::$error) {

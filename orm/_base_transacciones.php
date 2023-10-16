@@ -24,7 +24,7 @@ class _base_transacciones extends _modelo_parent
         return $r_alta_bd;
     }
 
-    private function inicializa_campos(array $registros): array
+    protected function inicializa_campos(array $registros): array
     {
         $keys = array('em_empleado_id');
         $valida = $this->validacion->valida_ids(keys: $keys, registro: $registros);

@@ -2,6 +2,7 @@
 
 namespace gamboamartin\gastos\models;
 
+use gamboamartin\errores\errores;
 use PDO;
 
 class gt_empleado_usuario extends _base_transacciones
@@ -9,7 +10,7 @@ class gt_empleado_usuario extends _base_transacciones
     public function __construct(PDO $link)
     {
         $tabla = 'gt_empleado_usuario';
-        $columnas = array($tabla => false, "em_empleado" => $tabla);
+        $columnas = array($tabla => false, "em_empleado" => $tabla, "adm_usuario" => $tabla);
         $campos_obligatorios = array();
 
         $no_duplicados = array();
@@ -19,5 +20,20 @@ class gt_empleado_usuario extends _base_transacciones
             columnas: $columnas, no_duplicados: $no_duplicados);
 
         $this->NAMESPACE = __NAMESPACE__;
+    }
+
+    protected function inicializa_campos(array $registros): array
+    {
+        $registros['codigo'] = $this->get_codigo_aleatorio();
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error generar codigo', data: $registros);
+        }
+
+        $init = parent::inicializa_campos($registros);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error inicializar campos', data: $init);
+        }
+
+        return $init;
     }
 }
