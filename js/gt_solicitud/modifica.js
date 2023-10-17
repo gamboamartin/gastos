@@ -13,17 +13,17 @@ btn_alta_autorizante.click(function () {
         return;
     }
 
-    let url = get_url("gt_autorizante","alta_bd", {});
+    let url = get_url("gt_autorizante", "alta_bd", {});
 
     $.ajax({
-        url : url,
-        data : {em_empleado_id: selected_empleado} ,
-        type : 'POST',
-        success : function(json) {
+        url: url,
+        data: {em_empleado_id: selected_empleado},
+        type: 'POST',
+        success: function (json) {
             sl_em_empleado1.val('').change();
             console.log(json);
         },
-        error : function(xhr, status) {
+        error: function (xhr, status) {
             alert('Error, ocurrio un error al ejecutar la peticion');
             console.log({xhr, status})
         }
@@ -39,37 +39,64 @@ btn_alta_solicitante.click(function () {
         return;
     }
 
-    let url = get_url("gt_solicitante","alta_bd", {});
+    let url = get_url("gt_solicitante", "alta_bd", {});
 
     $.ajax({
-        url : url,
-        data : {em_empleado_id: selected_empleado} ,
-        type : 'POST',
-        success : function(json) {
+        url: url,
+        data: {em_empleado_id: selected_empleado},
+        type: 'POST',
+        success: function (json) {
             sl_em_empleado2.val('').change();
             console.log(json);
         },
-        error : function(xhr, status) {
+        error: function (xhr, status) {
             alert('Error, ocurrio un error al ejecutar la peticion');
             console.log({xhr, status})
         }
     });
 });
 
-let table1 = new DataTable('#table-autorizantes', {
-    columns: [
-        { title: 'Id' },
-        { title: 'Autorizante' },
-        { title: 'Acciones' },
+const main = (seccion, identificador) => {
+    const ruta_load = get_url(seccion, "get_data", {ws: 1});
 
-    ]
-});
+    let table = new DataTable(`#table-${identificador}`, {
+        ajax: {
+            "url": ruta_load,
+            "error": function (jqXHR, textStatus, errorThrown) {
+                let response = jqXHR.responseText;
+                console.log(response)
+            }
+        },
+        columns: [
+            {title: 'Id', data: `gt_${identificador}_id`},
+            {title: identificador, data: 'em_empleado_nombre'},
+            {title: 'Acciones', data: null},
+        ],
+        columnDefs: [
+            {
+                targets: 1,
+                render: function (data, type, row, meta) {
+                    return `${row.em_empleado_ap} ${row.em_empleado_am} ${row.em_empleado_nombre}`;
+                }
+            },
+            {
+                targets: 2,
+                render: function (data, type, row, meta) {
+                    let seccion = getParameterByName('seccion');
+                    let accion = getParameterByName('accion');
+                    let registro_id = getParameterByName('registro_id');
 
-let table2 = new DataTable('#table-solicitantes', {
-    columns: [
-        { title: 'Id' },
-        { title: 'Solicitante' },
-        { title: 'Acciones' },
+                    let url = $(location).attr('href');
+                    url = url.replace(accion, "elimina_bd");
+                    url = url.replace(seccion, `gt_${identificador}`);
+                    url = url.replace(registro_id, row[`gt_${identificador}_id`]);
+                    return `<a href="${url}" class="btn btn-danger btn-sm">Elimina</a>`;
+                }
+            }
+        ]
+    });
+}
 
-    ]
-});
+main('gt_autorizante', 'autorizante');
+main('gt_solicitante', 'solicitante');
+

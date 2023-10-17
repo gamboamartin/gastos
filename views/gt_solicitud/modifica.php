@@ -67,7 +67,7 @@
                     </div>
 
                     <div class="table-responsive">
-                        <table id="table-autorizantes" class="table mb-0 table-striped table-sm "></table>
+                        <table id="table-autorizante" class="table mb-0 table-striped table-sm "></table>
                     </div>
                 </div>
             </div>
@@ -116,7 +116,7 @@
                     </div>
 
                     <div class="table-responsive">
-                        <table id="table-solicitantes" class="table mb-0 table-striped table-sm "></table>
+                        <table id="table-solicitante" class="table mb-0 table-striped table-sm "></table>
                     </div>
                 </div>
             </div>
