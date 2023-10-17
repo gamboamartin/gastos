@@ -55,3 +55,21 @@ btn_alta_solicitante.click(function () {
         }
     });
 });
+
+let table1 = new DataTable('#table-autorizantes', {
+    columns: [
+        { title: 'Id' },
+        { title: 'Autorizante' },
+        { title: 'Acciones' },
+
+    ]
+});
+
+let table2 = new DataTable('#table-solicitantes', {
+    columns: [
+        { title: 'Id' },
+        { title: 'Solicitante' },
+        { title: 'Acciones' },
+
+    ]
+});
