@@ -21,7 +21,8 @@ btn_alta_autorizante.click(function () {
         type: 'POST',
         success: function (json) {
             sl_em_empleado1.val('').change();
-            console.log(json);
+            $('#table-autorizante').DataTable().clear().destroy();
+            main('gt_autorizante', 'autorizante');
         },
         error: function (xhr, status) {
             alert('Error, ocurrio un error al ejecutar la peticion');
@@ -47,7 +48,8 @@ btn_alta_solicitante.click(function () {
         type: 'POST',
         success: function (json) {
             sl_em_empleado2.val('').change();
-            console.log(json);
+            $('#table-solicitante').DataTable().clear().destroy();
+            main('gt_solicitante', 'solicitante');
         },
         error: function (xhr, status) {
             alert('Error, ocurrio un error al ejecutar la peticion');
@@ -60,6 +62,8 @@ const main = (seccion, identificador) => {
     const ruta_load = get_url(seccion, "get_data", {ws: 1});
 
     let table = new DataTable(`#table-${identificador}`, {
+        dom: 'Bfrtip',
+        retrieve: true,
         ajax: {
             "url": ruta_load,
             "error": function (jqXHR, textStatus, errorThrown) {
