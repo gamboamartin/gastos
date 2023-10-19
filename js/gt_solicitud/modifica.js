@@ -124,7 +124,7 @@ table_1.on('click', 'button', function (e) {
         type: 'POST',
         success: function (json) {
             $('#table-autorizante').DataTable().clear().destroy();
-            main('gt_autorizante', 'autorizante');
+            main('gt_autorizantes', 'autorizante');
 
             if (json.includes('error')){
                 alert("Error al eliminar el regstro")
@@ -145,7 +145,7 @@ table_2.on('click', 'button', function (e) {
         type: 'POST',
         success: function (json) {
             $('#table-solicitante').DataTable().clear().destroy();
-            main('gt_solicitante', 'solicitante');
+            main('gt_solicitantes', 'solicitante');
 
             if (json.includes('error')){
                 alert("Error al eliminar el regstro")
