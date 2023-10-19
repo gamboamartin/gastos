@@ -94,12 +94,14 @@ const main = (seccion, identificador) => {
                     url = url.replace(accion, "elimina_bd");
                     url = url.replace(seccion, `gt_${identificador}`);
                     url = url.replace(registro_id, row[`gt_${identificador}_id`]);
-                    return `<a href="${url}" class="btn btn-danger btn-sm">Elimina</a>`;
+                    return `<a href="#" data-url="${url}" class="btn btn-danger btn-sm">Elimina</a>`;
                 }
             }
         ]
     });
 }
+
+
 
 main('gt_autorizante', 'autorizante');
 main('gt_solicitante', 'solicitante');
