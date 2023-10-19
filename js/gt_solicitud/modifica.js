@@ -1,17 +1,17 @@
 let btn_alta_autorizante = $("#btn-alta-autorizante");
 let btn_alta_solicitante = $("#btn-alta-solicitante");
 
-let sl_em_empleado1 = $(".autorizantes #em_empleado_id");
-let sl_em_empleado2 = $(".solicitantes #em_empleado_id");
+let sl_gt_autorizante = $("#gt_autorizante_id");
+let sl_gt_soliciante = $("#gt_solicitante_id");
 
 let registro_id = getParameterByName('registro_id');
 
 btn_alta_autorizante.click(function () {
 
-    let selected_empleado = sl_em_empleado1.find('option:selected').val();
+    let autorizante = sl_gt_autorizante.find('option:selected').val();
 
-    if (selected_empleado === "") {
-        alert("Seleccione un empleado");
+    if (autorizante === "") {
+        alert("Seleccione un autorizante");
         return;
     }
 
@@ -19,12 +19,16 @@ btn_alta_autorizante.click(function () {
 
     $.ajax({
         url: url,
-        data: {em_empleado_id: selected_empleado, gt_solicitud_id: registro_id},
+        data: {gt_autorizante_id: autorizante, gt_solicitud_id: registro_id},
         type: 'POST',
         success: function (json) {
-            sl_em_empleado1.val('').change();
+            sl_gt_autorizante.val('').change();
             $('#table-autorizante').DataTable().clear().destroy();
             main('gt_autorizantes', 'autorizante');
+
+            if (json.hasOwnProperty("error")){
+                alert(json.mensaje_limpio)
+            }
         },
         error: function (xhr, status) {
             alert('Error, ocurrio un error al ejecutar la peticion');
@@ -35,10 +39,10 @@ btn_alta_autorizante.click(function () {
 
 btn_alta_solicitante.click(function () {
 
-    let selected_empleado = sl_em_empleado2.find('option:selected').val();
+    let solicitante = sl_gt_soliciante.find('option:selected').val();
 
-    if (selected_empleado === "") {
-        alert("Seleccione un empleado");
+    if (solicitante === "") {
+        alert("Seleccione un solicitante");
         return;
     }
 
@@ -46,12 +50,16 @@ btn_alta_solicitante.click(function () {
 
     $.ajax({
         url: url,
-        data: {em_empleado_id: selected_empleado, gt_solicitud_id: registro_id},
+        data: {gt_solicitante_id: solicitante, gt_solicitud_id: registro_id},
         type: 'POST',
         success: function (json) {
-            sl_em_empleado2.val('').change();
+            sl_gt_soliciante.val('').change();
             $('#table-solicitante').DataTable().clear().destroy();
             main('gt_solicitantes', 'solicitante');
+
+            if (json.hasOwnProperty("error")){
+                alert(json.mensaje_limpio)
+            }
         },
         error: function (xhr, status) {
             alert('Error, ocurrio un error al ejecutar la peticion');
@@ -74,7 +82,7 @@ const main = (seccion, identificador) => {
             }
         },
         columns: [
-            {title: 'Id', data: `gt_${identificador}_id`},
+            {title: 'Id', data: `gt_${identificador}s_id`},
             {title: identificador, data: 'em_empleado_nombre'},
             {title: 'Acciones', data: null},
         ],
@@ -94,8 +102,8 @@ const main = (seccion, identificador) => {
 
                     let url = $(location).attr('href');
                     url = url.replace(accion, "elimina_bd");
-                    url = url.replace(seccion, `gt_${identificador}`);
-                    url = url.replace(registro_id, row[`gt_${identificador}_id`]);
+                    url = url.replace(seccion, `gt_${identificador}s`);
+                    url = url.replace(registro_id, row[`gt_${identificador}s_id`]);
                     return `<button  data-url="${url}" class="btn btn-danger btn-sm">Elimina</button>`;
                 }
             }
