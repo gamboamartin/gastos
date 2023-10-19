@@ -94,15 +94,61 @@ const main = (seccion, identificador) => {
                     url = url.replace(accion, "elimina_bd");
                     url = url.replace(seccion, `gt_${identificador}`);
                     url = url.replace(registro_id, row[`gt_${identificador}_id`]);
-                    return `<a href="#" data-url="${url}" class="btn btn-danger btn-sm">Elimina</a>`;
+                    return `<button  data-url="${url}" class="btn btn-danger btn-sm">Elimina</button>`;
                 }
             }
         ]
     });
+
+    return table;
 }
 
+const table_1 = main('gt_autorizante', 'autorizante');
+const table_2 = main('gt_solicitante', 'solicitante');
+
+table_1.on('click', 'button', function (e) {
+    const url = $( this ).data( "url" );
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        success: function (json) {
+            $('#table-autorizante').DataTable().clear().destroy();
+            main('gt_autorizante', 'autorizante');
+
+            if (json.includes('error')){
+                alert("Error al eliminar el regstro")
+            }
+        },
+        error: function (xhr, status) {
+            alert('Error, ocurrio un error al ejecutar la peticion');
+            console.log({xhr, status})
+        }
+    });
+});
+
+table_2.on('click', 'button', function (e) {
+    const url = $( this ).data( "url" );
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        success: function (json) {
+            $('#table-solicitante').DataTable().clear().destroy();
+            main('gt_solicitante', 'solicitante');
+
+            if (json.includes('error')){
+                alert("Error al eliminar el regstro")
+            }
+        },
+        error: function (xhr, status) {
+            alert('Error, ocurrio un error al ejecutar la peticion');
+            console.log({xhr, status})
+        }
+    });
+});
 
 
-main('gt_autorizante', 'autorizante');
-main('gt_solicitante', 'solicitante');
+
+
 
