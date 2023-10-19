@@ -4,6 +4,8 @@ let btn_alta_solicitante = $("#btn-alta-solicitante");
 let sl_em_empleado1 = $(".autorizantes #em_empleado_id");
 let sl_em_empleado2 = $(".solicitantes #em_empleado_id");
 
+let registro_id = getParameterByName('registro_id');
+
 btn_alta_autorizante.click(function () {
 
     let selected_empleado = sl_em_empleado1.find('option:selected').val();
@@ -13,16 +15,16 @@ btn_alta_autorizante.click(function () {
         return;
     }
 
-    let url = get_url("gt_autorizante", "alta_bd", {});
+    let url = get_url("gt_autorizantes", "alta_bd", {});
 
     $.ajax({
         url: url,
-        data: {em_empleado_id: selected_empleado},
+        data: {em_empleado_id: selected_empleado, gt_solicitud_id: registro_id},
         type: 'POST',
         success: function (json) {
             sl_em_empleado1.val('').change();
             $('#table-autorizante').DataTable().clear().destroy();
-            main('gt_autorizante', 'autorizante');
+            main('gt_autorizantes', 'autorizante');
         },
         error: function (xhr, status) {
             alert('Error, ocurrio un error al ejecutar la peticion');
@@ -40,16 +42,16 @@ btn_alta_solicitante.click(function () {
         return;
     }
 
-    let url = get_url("gt_solicitante", "alta_bd", {});
+    let url = get_url("gt_solicitantes", "alta_bd", {});
 
     $.ajax({
         url: url,
-        data: {em_empleado_id: selected_empleado},
+        data: {em_empleado_id: selected_empleado, gt_solicitud_id: registro_id},
         type: 'POST',
         success: function (json) {
             sl_em_empleado2.val('').change();
             $('#table-solicitante').DataTable().clear().destroy();
-            main('gt_solicitante', 'solicitante');
+            main('gt_solicitantes', 'solicitante');
         },
         error: function (xhr, status) {
             alert('Error, ocurrio un error al ejecutar la peticion');
@@ -103,8 +105,8 @@ const main = (seccion, identificador) => {
     return table;
 }
 
-const table_1 = main('gt_autorizante', 'autorizante');
-const table_2 = main('gt_solicitante', 'solicitante');
+const table_1 = main('gt_autorizantes', 'autorizante');
+const table_2 = main('gt_solicitantes', 'solicitante');
 
 table_1.on('click', 'button', function (e) {
     const url = $( this ).data( "url" );

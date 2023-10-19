@@ -37,7 +37,7 @@
                     </div>
                     <form method="post" action="#" class="form-additional" id="frm-autorizante">
 
-                        <?php echo $controlador->inputs->em_empleado_id; ?>
+                        <?php echo $controlador->inputs->gt_autorizante_id; ?>
 
                         <div class="control-group btn-alta">
                             <div class="controls">
@@ -86,7 +86,7 @@
                     </div>
                     <form method="post" action="#" class="form-additional" id="frm-solicitante">
 
-                        <?php echo $controlador->inputs->em_empleado_id; ?>
+                        <?php echo $controlador->inputs->gt_solicitante_id; ?>
 
                         <div class="control-group btn-alta">
                             <div class="controls">
