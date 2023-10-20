@@ -14,8 +14,8 @@
                         <?php include (new views())->ruta_templates . "head/title.php"; ?>
                         <?php include (new views())->ruta_templates . "head/subtitulo.php"; ?>
                         <?php include (new views())->ruta_templates . "mensajes.php"; ?>
-                        <?php echo $controlador->inputs->gt_centro_costo_id; ?>
                         <?php echo $controlador->inputs->gt_tipo_solicitud_id; ?>
+                        <?php echo $controlador->inputs->gt_centro_costo_id; ?>
                         <?php echo $controlador->inputs->descripcion; ?>
                         <?php include (new views())->ruta_templates . 'botons/submit/modifica_bd.php'; ?>
 
