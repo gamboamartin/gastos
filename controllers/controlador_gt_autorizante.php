@@ -105,10 +105,8 @@ class controlador_gt_autorizante extends _ctl_base {
         $columns["gt_autorizante_id"]["titulo"] = "Id";
         $columns["em_empleado_nombre"]["titulo"] = "Empleado";
         $columns["em_empleado_nombre"]["campos"] = array("em_empleado_ap","em_empleado_am");
-        $columns["gt_autorizante_descripcion"]["titulo"] = "Descripción";
 
-        $filtro = array("gt_autorizante.id","em_empleado.nombre","em_empleado.ap","em_empleado.am",
-            "gt_autorizante.descripcion");
+        $filtro = array("gt_autorizante.id","em_empleado.nombre","em_empleado.ap","em_empleado.am");
 
         $datatables = new stdClass();
         $datatables->columns = $columns;
