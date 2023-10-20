@@ -12,7 +12,8 @@ class gt_solicitantes extends _base_auto_soli
     public function __construct(PDO $link)
     {
         $tabla = 'gt_solicitantes';
-        $columnas = array($tabla => false, 'gt_solicitud' => $tabla, 'gt_solicitante' => $tabla, "em_empleado" => 'gt_solicitante');
+        $columnas = array($tabla => false, 'gt_solicitud' => $tabla, 'gt_solicitante' => $tabla,
+            "em_empleado" => 'gt_solicitante', "gt_centro_costo" => 'gt_solicitud');
         $campos_obligatorios = array();
 
         $no_duplicados = array();

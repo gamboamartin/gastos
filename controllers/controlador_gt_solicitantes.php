@@ -107,13 +107,13 @@ class controlador_gt_solicitantes extends _ctl_base {
     protected function init_datatable(): stdClass
     {
         $columns["gt_solicitantes_id"]["titulo"] = "Id";
-        $columns["gt_solicitante_descripcion"]["titulo"] = "Autorizante";
-        $columns["em_empleado_nombre"]["titulo"] = "Empleado";
+        $columns["em_empleado_nombre"]["titulo"] = "Solicitante";
         $columns["em_empleado_nombre"]["campos"] = array("em_empleado_ap","em_empleado_am");
-        $columns["gt_solicitantes_descripcion"]["titulo"] = "Descripción";
+        $columns["gt_solicitud_descripcion"]["titulo"] = "Solicitud";
+        $columns["gt_centro_costo_descripcion"]["titulo"] = "Centro Costo";
 
         $filtro = array("gt_solicitantes.id","gt_solicitante.descripcion","em_empleado.nombre","em_empleado.ap",
-            "em_empleado.am", "gt_solicitantes.descripcion");
+            "em_empleado.am", "gt_solicitud.descripcion", "gt_centro_costo.descripcion");
 
         $datatables = new stdClass();
         $datatables->columns = $columns;
