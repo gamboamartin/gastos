@@ -26,7 +26,7 @@ btn_alta_autorizante.click(function () {
             $('#table-autorizante').DataTable().clear().destroy();
             main('gt_autorizantes', 'autorizante');
 
-            if (json.hasOwnProperty("error")){
+            if (json.hasOwnProperty("error")) {
                 alert(json.mensaje_limpio)
             }
         },
@@ -57,7 +57,7 @@ btn_alta_solicitante.click(function () {
             $('#table-solicitante').DataTable().clear().destroy();
             main('gt_solicitantes', 'solicitante');
 
-            if (json.hasOwnProperty("error")){
+            if (json.hasOwnProperty("error")) {
                 alert(json.mensaje_limpio)
             }
         },
@@ -69,13 +69,22 @@ btn_alta_solicitante.click(function () {
 });
 
 const main = (seccion, identificador) => {
-    const ruta_load = get_url(seccion, "get_data", {ws: 1});
+    const ruta_load = get_url(seccion, "data_ajax", {ws: 1});
+
 
     let table = new DataTable(`#table-${identificador}`, {
         dom: 'Bfrtip',
         retrieve: true,
         ajax: {
             "url": ruta_load,
+            'data': function (data) {
+                data.filtros = {
+                    filtro: [{
+                        "key": "gt_solicitud.id",
+                        "valor": registro_id
+                    }]
+                }
+            },
             "error": function (jqXHR, textStatus, errorThrown) {
                 let response = jqXHR.responseText;
                 console.log(response)
@@ -117,7 +126,7 @@ const table_1 = main('gt_autorizantes', 'autorizante');
 const table_2 = main('gt_solicitantes', 'solicitante');
 
 table_1.on('click', 'button', function (e) {
-    const url = $( this ).data( "url" );
+    const url = $(this).data("url");
 
     $.ajax({
         url: url,
@@ -126,7 +135,7 @@ table_1.on('click', 'button', function (e) {
             $('#table-autorizante').DataTable().clear().destroy();
             main('gt_autorizantes', 'autorizante');
 
-            if (json.includes('error')){
+            if (json.includes('error')) {
                 alert("Error al eliminar el regstro")
             }
         },
@@ -138,7 +147,7 @@ table_1.on('click', 'button', function (e) {
 });
 
 table_2.on('click', 'button', function (e) {
-    const url = $( this ).data( "url" );
+    const url = $(this).data("url");
 
     $.ajax({
         url: url,
@@ -147,7 +156,7 @@ table_2.on('click', 'button', function (e) {
             $('#table-solicitante').DataTable().clear().destroy();
             main('gt_solicitantes', 'solicitante');
 
-            if (json.includes('error')){
+            if (json.includes('error')) {
                 alert("Error al eliminar el regstro")
             }
         },
