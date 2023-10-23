@@ -88,7 +88,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
     protected function campos_view(array $inputs = array()): array
     {
         $keys = new stdClass();
-        $keys->inputs = array('codigo', 'descripcion');
+        $keys->inputs = array('codigo', 'descripcion', 'cantidad');
         $keys->telefonos = array();
         $keys->fechas = array();
         $keys->selects = array();
@@ -99,6 +99,8 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         $init_data['gt_solicitante'] = "gamboamartin\\gastos";
         $init_data['gt_autorizante'] = "gamboamartin\\gastos";
         $init_data['em_empleado'] = "gamboamartin\\empleado";
+        $init_data['com_producto'] = "gamboamartin\\comercial";
+        $init_data['cat_sat_unidad'] = "gamboamartin\\cat_sat";
 
         $campos_view = $this->campos_view_base(init_data: $init_data, keys: $keys);
         if (errores::$error) {
@@ -173,13 +175,21 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "em_empleado_id", label: "Empleado", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_solicitante_id", label: "Solicitante", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_autorizante_id", label: "Autorizante", cols: 12);
-        return $this->init_selects(keys_selects: $keys_selects, key: "gt_tipo_solicitud_id", label: "Tipo Solicitud", cols: 12);
+        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_tipo_solicitud_id", label: "Tipo Solicitud", cols: 12);
+        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "com_producto_id", label: "Producto", cols: 12);
+        return $this->init_selects(keys_selects: $keys_selects, key: "cat_sat_unidad_id", label: "Unidad");
     }
 
     protected function key_selects_txt(array $keys_selects): array
     {
         $keys_selects = (new \base\controller\init())->key_select_txt(cols: 4, key: 'codigo',
             keys_selects: $keys_selects, place_holder: 'Código');
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
+        }
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 6, key: 'cantidad',
+            keys_selects: $keys_selects, place_holder: 'Cantidad');
         if (errores::$error) {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
         }
