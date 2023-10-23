@@ -75,8 +75,8 @@ class controlador_gt_proveedor extends _ctl_base {
     {
         $keys = new stdClass();
         $keys->inputs = array('codigo', 'descripcion', 'rfc', 'exterior', 'interior', 'contacto_1', 'contacto_2',
-            'contacto_3', 'pagina_web', 'razon_social');
-        $keys->telefonos = array('telefono_1', 'telefono_2', 'telefono_3');
+            'contacto_3', 'pagina_web', 'razon_social', 'telefono_1', 'telefono_2', 'telefono_3');
+        $keys->telefonos = array();
         $keys->fechas = array();
         $keys->selects = array();
 
