@@ -102,7 +102,69 @@ const main_productos = (seccion, identificador) => {
     });
 }
 
+const main = (seccion, identificador) => {
+    const ruta_load = get_url(seccion, "data_ajax", {ws: 1});
+
+
+    let table = new DataTable(`#table-${identificador}`, {
+        dom: 'Bfrtip',
+        retrieve: true,
+        ajax: {
+            "url": ruta_load,
+            'data': function (data) {
+                data.filtros = {
+                    filtro: [{
+                        "key": "gt_solicitud.id",
+                        "valor": registro_id
+                    }]
+                }
+            },
+            "error": function (jqXHR, textStatus, errorThrown) {
+                let response = jqXHR.responseText;
+                console.log(response)
+            }
+        },
+        columns: [
+            {title: 'Id', data: `gt_${identificador}s_id`},
+            {title: identificador, data: 'em_empleado_nombre'},
+        ],
+        columnDefs: [
+            {
+                targets: 1,
+                render: function (data, type, row, meta) {
+                    return `${row.em_empleado_ap} ${row.em_empleado_am} ${row.em_empleado_nombre}`;
+                }
+            }
+        ]
+    });
+
+    return table;
+}
+
 const table_1 = main_productos('gt_solicitud_producto', 'productos');
+const table_2 = main('gt_autorizantes', 'autorizante');
+const table_3 = main('gt_solicitantes', 'solicitante');
 
 
+table_1.on('click', 'button', function (e) {
+    const url = $(this).data("url");
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        success: function (json) {
+            if (json.includes('error')) {
+                alert("Error al eliminar el regstro")
+                return;
+            }
+
+            $('#table-productos').DataTable().clear().destroy();
+            main_productos('gt_solicitud_producto', 'productos');
+        },
+        error: function (xhr, status) {
+            alert('Error, ocurrio un error al ejecutar la peticion');
+            console.log({xhr, status})
+        }
+    });
+});
 
