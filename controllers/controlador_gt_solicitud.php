@@ -73,6 +73,9 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
                 ws: $ws);
         }
 
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'descripcion',
+            keys_selects: $keys_selects, place_holder: 'Descripción');
+
         $inputs = $this->inputs(keys_selects: $keys_selects);
         if (errores::$error) {
             return $this->retorno_error(
@@ -181,12 +184,6 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
         }
 
-        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'descripcion',
-            keys_selects: $keys_selects, place_holder: 'Descripción');
-        if (errores::$error) {
-            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
-        }
-
         return $keys_selects;
     }
 
@@ -198,6 +195,8 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
                 mensaje: 'Error al generar salida de template', data: $r_modifica, header: $header, ws: $ws);
         }
 
+
+
         $keys_selects = $this->init_selects_inputs();
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al inicializar selects', data: $keys_selects, header: $header,
@@ -206,6 +205,16 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
 
         $keys_selects['gt_centro_costo_id']->id_selected = $this->registro['gt_centro_costo_id'];
         $keys_selects['gt_tipo_solicitud_id']->id_selected = $this->registro['gt_tipo_solicitud_id'];
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'descripcion',
+            keys_selects: $keys_selects, place_holder: 'Descripción');
+        $keys_selects['descripcion']->disabled = true;
+        $keys_selects['gt_centro_costo_id']->disabled = true;
+        $keys_selects['gt_tipo_solicitud_id']->disabled = true;
+
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
+        }
 
         $base = $this->base_upd(keys_selects: $keys_selects, params: array(), params_ajustados: array());
         if (errores::$error) {
@@ -233,6 +242,9 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         $keys_selects['gt_centro_costo_id']->id_selected = $this->registro['gt_centro_costo_id'];
         $keys_selects['gt_tipo_solicitud_id']->id_selected = $this->registro['gt_tipo_solicitud_id'];
 
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'descripcion',
+            keys_selects: $keys_selects, place_holder: 'Descripción');
+        $keys_selects['descripcion']->disabled = true;
         $keys_selects['gt_centro_costo_id']->disabled = true;
         $keys_selects['gt_tipo_solicitud_id']->disabled = true;
 
