@@ -1,5 +1,8 @@
-@media print
-{
+@media print {
+    * {
+        margin-bottom: 0 !important;
+    }
+
     header,
     .breadcrumb,
     .producto,
@@ -7,29 +10,34 @@
     .dataTables_info,
     .dataTables_paginate,
     .bs-caret,
+    .widget-header,
     #table-productos th:last-child,
     #table-productos td:last-child,
-    .footer{
-        display: none;
+    .footer {
+        display: none !important;
     }
 
     .top-title {
-        padding-top: 0;
+        padding: 0 0 10px 15px;
     }
 
-    .page-title {
-        border-bottom: 1px solid black;
-        padding: 20px;
-        text-align: center;
-        font-family: aakar, serif;
+    .control-group:nth-child(3), .control-group:nth-child(4) {
+        display: flex;
+        align-items: center;
     }
 
-    .box-container {
-        border-bottom: none;
+    .control-group #descripcion {
+        line-height: 30px;
+        border: none;
+        padding: 0;
     }
 
-    .table > thead > tr > th {
-        border-bottom: none;
+    .control-group:last-child {
+        height: 88px;
+    }
+
+    .widget-box {
+        padding: 0;
     }
 
     table.dataTable thead > tr > th.sorting::before,
@@ -61,7 +69,6 @@
     table.dataTable {
         max-width: 100% !important;
     }
-
 
 
 }
