@@ -11,7 +11,10 @@ namespace gamboamartin\gastos\controllers;
 use base\controller\controler;
 use gamboamartin\errores\errores;
 use gamboamartin\gastos\models\gt_solicitud;
+use gamboamartin\gastos\models\gt_solicitud_etapa;
+use gamboamartin\proceso\models\pr_etapa_proceso;
 use gamboamartin\system\_ctl_parent_sin_codigo;
+use gamboamartin\system\actions;
 use gamboamartin\system\links_menu;
 use gamboamartin\template\html;
 use html\gt_autorizante_html;
@@ -25,6 +28,7 @@ use stdClass;
 class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
 
     public string $link_partidas = '';
+    public string $link_autoriza_bd = '';
 
     public function __construct(PDO      $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass())
@@ -95,22 +99,9 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
                 mensaje: 'Error al generar salida de template', data: $r_modifica, header: $header, ws: $ws);
         }
 
-        $keys_selects = $this->init_selects_inputs();
-        if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al inicializar selects', data: $keys_selects, header: $header,
-                ws: $ws);
-        }
+        $this->row_upd->fecha = date("Y-m-d");
 
-        $keys_selects['gt_centro_costo_id']->id_selected = $this->registro['gt_centro_costo_id'];
-        $keys_selects['gt_tipo_solicitud_id']->id_selected = $this->registro['gt_tipo_solicitud_id'];
-
-        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'descripcion',
-            keys_selects: $keys_selects, place_holder: 'Descripción');
-        $keys_selects['descripcion']->disabled = true;
-        $keys_selects['gt_centro_costo_id']->disabled = true;
-        $keys_selects['gt_tipo_solicitud_id']->disabled = true;
-
-        $base = $this->base_upd(keys_selects: $keys_selects, params: array(), params_ajustados: array());
+        $base = $this->base_upd(keys_selects: array(), params: array(), params_ajustados: array());
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
@@ -118,12 +109,68 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         return $r_modifica;
     }
 
+    public function autoriza_bd(bool $header, bool $ws = false): array|stdClass
+    {
+        $this->link->beginTransaction();
+
+        $siguiente_view = (new actions())->init_alta_bd();
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al obtener siguiente view', data: $siguiente_view,
+                header: $header, ws: $ws);
+        }
+
+        if (isset($_POST['btn_action_next'])) {
+            unset($_POST['btn_action_next']);
+        }
+
+        $etapa = Constantes::PR_ETAPA_AUTORIZADO->value;
+        $filtro['pr_etapa.descripcion'] = $etapa;
+        $etapa_proceso = (new pr_etapa_proceso($this->link))->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al integrar base', data: $etapa_proceso, header: $header, ws: $ws);
+        }
+
+        if ($etapa_proceso->n_registros <= 0){
+            return $this->retorno_error(mensaje: "Error no existe la relacion de etapa proceso: $etapa",
+                data: $etapa_proceso, header: $header, ws: $ws);
+        }
+
+        $registro = $etapa_proceso->registros[0];
+
+        $registros['gt_solicitud_id'] = $this->registro_id;
+        $registros['pr_etapa_proceso_id'] = $registro['pr_etapa_proceso_id'];
+        $registros['fecha'] = $_POST['fecha'];
+
+        $alta = (new gt_solicitud_etapa($this->link))->alta_registro(registro: $registros);
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al dar de alta solicitud etapa', data: $alta,
+                header: $header, ws: $ws);
+        }
+
+        $this->link->commit();
+
+        if ($header) {
+            $this->retorno_base(registro_id: $this->registro_id, result: $alta,
+                siguiente_view: "lista", ws: $ws);
+        }
+        if ($ws) {
+            header('Content-Type: application/json');
+            echo json_encode($alta, JSON_THROW_ON_ERROR);
+            exit;
+        }
+        $alta->siguiente_view = "lista";
+
+        return $alta;
+    }
+
     protected function campos_view(array $inputs = array()): array
     {
         $keys = new stdClass();
         $keys->inputs = array('codigo', 'descripcion', 'cantidad');
         $keys->telefonos = array();
-        $keys->fechas = array();
+        $keys->fechas = array('fecha');
         $keys->selects = array();
 
         $init_data = array();
@@ -187,6 +234,14 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         }
         $this->link_partidas = $link;
 
+        $link = $this->obj_link->get_link(seccion: "gt_solicitud", accion: "autoriza_bd");
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al recuperar link autoriza_bd', data: $link);
+            print_r($error);
+            exit;
+        }
+        $this->link_autoriza_bd = $link;
+
         return $link;
     }
 
@@ -223,6 +278,12 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
 
         $keys_selects = (new \base\controller\init())->key_select_txt(cols: 6, key: 'cantidad',
             keys_selects: $keys_selects, place_holder: 'Cantidad');
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
+        }
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 6, key: 'fecha',
+            keys_selects: $keys_selects, place_holder: 'Fecha');
         if (errores::$error) {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
         }
