@@ -63,6 +63,8 @@ class controlador_gt_solicitud_etapa extends _ctl_base {
                 ws: $ws);
         }
 
+        $this->row_upd->fecha = date("Y-m-d");
+
         $inputs = $this->inputs(keys_selects: $keys_selects);
         if (errores::$error) {
             return $this->retorno_error(
