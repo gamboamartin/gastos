@@ -85,6 +85,39 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         return $r_alta;
     }
 
+    public function autoriza(bool $header, bool $ws = false): array|stdClass
+    {
+        $this->accion_titulo = 'Autoriza';
+
+        $r_modifica = $this->init_modifica();
+        if (errores::$error) {
+            return $this->retorno_error(
+                mensaje: 'Error al generar salida de template', data: $r_modifica, header: $header, ws: $ws);
+        }
+
+        $keys_selects = $this->init_selects_inputs();
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al inicializar selects', data: $keys_selects, header: $header,
+                ws: $ws);
+        }
+
+        $keys_selects['gt_centro_costo_id']->id_selected = $this->registro['gt_centro_costo_id'];
+        $keys_selects['gt_tipo_solicitud_id']->id_selected = $this->registro['gt_tipo_solicitud_id'];
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'descripcion',
+            keys_selects: $keys_selects, place_holder: 'Descripción');
+        $keys_selects['descripcion']->disabled = true;
+        $keys_selects['gt_centro_costo_id']->disabled = true;
+        $keys_selects['gt_tipo_solicitud_id']->disabled = true;
+
+        $base = $this->base_upd(keys_selects: $keys_selects, params: array(), params_ajustados: array());
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
+        }
+
+        return $r_modifica;
+    }
+
     protected function campos_view(array $inputs = array()): array
     {
         $keys = new stdClass();
