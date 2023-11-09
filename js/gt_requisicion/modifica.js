@@ -59,7 +59,7 @@ const main = (seccion, identificador) => {
             }
         },
         columns: [
-            {title: 'Id', data: `gt_${identificador}s_id`},
+            {title: 'Id', data: `gt_${identificador}_id`},
             {title: identificador, data: 'em_empleado_nombre'},
             {title: 'Acciones', data: null},
         ],
@@ -79,8 +79,8 @@ const main = (seccion, identificador) => {
 
                     let url = $(location).attr('href');
                     url = url.replace(accion, "elimina_bd");
-                    url = url.replace(seccion, `gt_${identificador}s`);
-                    url = url.replace(registro_id, row[`gt_${identificador}s_id`]);
+                    url = url.replace(seccion, `gt_${identificador}es`);
+                    url = url.replace(registro_id, row[`gt_${identificador}es_id`]);
                     return `<button  data-url="${url}" class="btn btn-danger btn-sm">Elimina</button>`;
                 }
             }
@@ -99,8 +99,8 @@ table_1.on('click', 'button', function (e) {
         url: url,
         type: 'POST',
         success: function (json) {
-            $('#table-autorizante').DataTable().clear().destroy();
-            main('gt_autorizantes', 'autorizante');
+            $('#table-requisitor').DataTable().clear().destroy();
+            main('gt_requisitores', 'requisitor');
 
             if (json.includes('error')) {
                 alert("Error al eliminar el regstro")
