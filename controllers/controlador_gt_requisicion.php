@@ -179,7 +179,7 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
         $init_data = array();
         $init_data['gt_centro_costo'] = "gamboamartin\\gastos";
         $init_data['gt_tipo_requisicion'] = "gamboamartin\\gastos";
-        $init_data['gt_solicitante'] = "gamboamartin\\gastos";
+        $init_data['gt_requisitor'] = "gamboamartin\\gastos";
         $init_data['gt_autorizante'] = "gamboamartin\\gastos";
         $init_data['em_empleado'] = "gamboamartin\\empleado";
         $init_data['com_producto'] = "gamboamartin\\comercial";
@@ -256,7 +256,7 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
     {
         $keys_selects = $this->init_selects(keys_selects: array(), key: "gt_centro_costo_id", label: "Centro Costo", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "em_empleado_id", label: "Empleado", cols: 12);
-        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_solicitante_id", label: "Solicitante", cols: 12);
+        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_requisitor_id", label: "Requisitor", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_autorizante_id", label: "Autorizante", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_tipo_requisicion_id", label: "Tipo Requisicion", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "com_producto_id", label: "Producto", cols: 12);
@@ -307,7 +307,7 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
 
         $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'descripcion',
             keys_selects: $keys_selects, place_holder: 'Descripción');
-        //$keys_selects['descripcion']->disabled = true;
+        $keys_selects['descripcion']->disabled = true;
         $keys_selects['gt_centro_costo_id']->disabled = true;
         $keys_selects['gt_tipo_requisicion_id']->disabled = true;
 
