@@ -10,8 +10,11 @@ namespace gamboamartin\gastos\controllers;
 
 use base\controller\controler;
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_requisicion;
 use gamboamartin\gastos\models\gt_solicitud;
 use gamboamartin\gastos\models\gt_solicitud_etapa;
+use gamboamartin\gastos\models\gt_solicitud_requisicion;
+use gamboamartin\gastos\models\gt_tipo_requisicion;
 use gamboamartin\proceso\models\pr_etapa_proceso;
 use gamboamartin\system\_ctl_parent_sin_codigo;
 use gamboamartin\system\actions;
@@ -124,7 +127,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
             unset($_POST['btn_action_next']);
         }
 
-        $etapa = Constantes::PR_ETAPA_AUTORIZADO->value;
+        $etapa = constantes::PR_ETAPA_AUTORIZADO->value;
         $filtro['pr_etapa.descripcion'] = $etapa;
         $etapa_proceso = (new pr_etapa_proceso($this->link))->filtro_and(filtro: $filtro);
         if (errores::$error) {
@@ -146,6 +149,51 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         if (errores::$error) {
             $this->link->rollBack();
             return $this->retorno_error(mensaje: 'Error al dar de alta solicitud etapa', data: $alta,
+                header: $header, ws: $ws);
+        }
+
+        $filtro = array();
+        $tipo = constantes::GT_TIPO_REQUISICION_DEFAULT->value;
+        $filtro['gt_tipo_requisicion.descripcion'] = $tipo;
+        $tipo_requisicion = (new gt_tipo_requisicion($this->link))->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al integrar base', data: $tipo_requisicion, header: $header, ws: $ws);
+        }
+
+        if ($tipo_requisicion->n_registros <= 0){
+            return $this->retorno_error(mensaje: "Error no existe EL tipo de requisicion: $tipo",
+                data: $etapa_proceso, header: $header, ws: $ws);
+        }
+
+        $registro = $tipo_requisicion->registros[0];
+
+        $solicitud = (new gt_solicitud($this->link))->registro(registro_id: $this->registro_id);
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error no se pudo obtener los datos de solicitud', data: $solicitud,
+                header: $header, ws: $ws);
+        }
+
+        $registros = array();
+        $registros['gt_centro_costo_id'] = $solicitud['gt_centro_costo_id'];
+        $registros['gt_tipo_requisicion_id'] = $registro['gt_tipo_requisicion_id'];
+        $registros['etapa'] = $solicitud['gt_solicitud_etapa'];
+        $registros['descripcion'] = "Solicitud de requisición";
+        $alta = (new gt_requisicion($this->link))->alta_registro(registro: $registros);
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al dar de alta requisicion', data: $alta,
+                header: $header, ws: $ws);
+        }
+
+        $registros = array();
+        $registros['gt_solicitud_id'] = $this->registro_id;
+        $registros['gt_requisicion_id'] = $alta->registro_id;
+        $alta = (new gt_solicitud_requisicion($this->link))->alta_registro(registro: $registros);
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al dar de alta relacion solicitud y requisicion', data: $alta,
                 header: $header, ws: $ws);
         }
 
