@@ -41,7 +41,7 @@
                         <div class="control-group btn-alta">
                             <div class="controls">
                                 <button type="button" class="btn btn-success" value="modifica" name="btn_action_next"
-                                        id="btn-alta-autorizante">Alta
+                                        id="btn-alta-requisitor">Alta
                                 </button>
                                 <br>
                             </div>
