@@ -15,7 +15,7 @@ class gt_cotizacion extends _modelo_parent_sin_codigo
     {
         $tabla = 'gt_cotizacion';
         $columnas = array($tabla => false, 'gt_tipo_cotizacion' => $tabla, 'gt_centro_costo' => $tabla,
-            'gt_tipo_centro_costo' => 'gt_centro_costo');
+            'gt_tipo_centro_costo' => 'gt_centro_costo', 'gt_proveedor' => $tabla);
         $campos_obligatorios = array();
 
         $no_duplicados = array();

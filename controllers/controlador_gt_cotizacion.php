@@ -105,6 +105,8 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
         $init_data = array();
         $init_data['gt_centro_costo'] = "gamboamartin\\gastos";
         $init_data['gt_tipo_cotizacion'] = "gamboamartin\\gastos";
+        $init_data['gt_proveedor'] = "gamboamartin\\gastos";
+
         $init_data['gt_requisitor'] = "gamboamartin\\gastos";
         $init_data['gt_autorizante'] = "gamboamartin\\gastos";
         $init_data['em_empleado'] = "gamboamartin\\empleado";
@@ -133,10 +135,11 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
     {
         $columns["gt_cotizacion_id"]["titulo"] = "Id";
         $columns["gt_tipo_cotizacion_descripcion"]["titulo"] = "Tipo";
+        $columns["gt_proveedor_descripcion"]["titulo"] = "Proveedor";
         $columns["gt_centro_costo_descripcion"]["titulo"] = "Centro Costo";
         $columns["gt_cotizacion_descripcion"]["titulo"] = "Descripción";
 
-        $filtro = array("gt_cotizacion.id","gt_tipo_cotizacion.descripcion","gt_centro_costo.descripcion",
+        $filtro = array("gt_cotizacion.id","gt_proveedor.descripcion","gt_tipo_cotizacion.descripcion","gt_centro_costo.descripcion",
             "gt_cotizacion.descripcion");
 
         $datatables = new stdClass();
@@ -173,6 +176,7 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
     public function init_selects_inputs(): array
     {
         $keys_selects = $this->init_selects(keys_selects: array(), key: "gt_centro_costo_id", label: "Centro Costo", cols: 12);
+        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_proveedor_id", label: "Proveedor", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "em_empleado_id", label: "Empleado", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_requisitor_id", label: "Requisitor", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_autorizante_id", label: "Autorizante", cols: 12);
@@ -228,12 +232,14 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
 
         $keys_selects['gt_centro_costo_id']->id_selected = $this->registro['gt_centro_costo_id'];
         $keys_selects['gt_tipo_cotizacion_id']->id_selected = $this->registro['gt_tipo_cotizacion_id'];
+        $keys_selects['gt_proveedor_id']->id_selected = $this->registro['gt_proveedor_id'];
 
         $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'descripcion',
             keys_selects: $keys_selects, place_holder: 'Descripción');
         $keys_selects['descripcion']->disabled = true;
         $keys_selects['gt_centro_costo_id']->disabled = true;
         $keys_selects['gt_tipo_cotizacion_id']->disabled = true;
+        $keys_selects['gt_proveedor_id']->disabled = true;
 
         if (errores::$error) {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
