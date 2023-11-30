@@ -29,11 +29,8 @@ class gt_cotizacion_requisicion extends _base_transacciones
             return $this->error->error(mensaje: 'Error generar codigo', data: $registros);
         }
 
-        $init = parent::inicializa_campos($registros);
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error inicializar campos', data: $init);
-        }
+        $registros['descripcion'] = $registros['codigo'];
 
-        return $init;
+        return $registros;
     }
 }
