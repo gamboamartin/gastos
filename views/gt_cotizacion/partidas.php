@@ -14,7 +14,8 @@
                         <?php include (new views())->ruta_templates . "head/title.php"; ?>
                         <?php include (new views())->ruta_templates . "head/subtitulo.php"; ?>
                         <?php include (new views())->ruta_templates . "mensajes.php"; ?>
-                        <?php echo $controlador->inputs->gt_tipo_requisicion_id; ?>
+                        <?php echo $controlador->inputs->gt_tipo_cotizacion_id; ?>
+                        <?php echo $controlador->inputs->gt_proveedor_id; ?>
                         <?php echo $controlador->inputs->gt_centro_costo_id; ?>
                         <?php echo $controlador->inputs->descripcion; ?>
 
@@ -74,26 +75,6 @@
 
         </div>
     </div>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-
-                <div class="widget widget-box box-container widget-mylistings">
-                    <div class="widget-header"
-                         style="display: flex;justify-content: space-between;align-items: center;">
-                        <h2>Requisitores</h2>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table id="table-requisitor" class="table mb-0 table-striped table-sm "></table>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
 
 </main>
 
