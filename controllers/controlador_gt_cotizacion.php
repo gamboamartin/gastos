@@ -158,7 +158,15 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
             exit;
         }
 
-        return "";
+        $link = $this->obj_link->get_link(seccion: "gt_cotizacion", accion: "partidas");
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al recuperar link partidas', data: $link);
+            print_r($error);
+            exit;
+        }
+        $this->link_partidas = $link;
+
+        return $link;
     }
 
     private function init_selects(array $keys_selects, string $key, string $label, int $id_selected = -1, int $cols = 6,
@@ -249,6 +257,19 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
+
+        return $r_modifica;
+    }
+
+    public function partidas(bool $header, bool $ws = false): array|stdClass
+    {
+        $r_modifica = $this->init_modifica();
+        if (errores::$error) {
+            return $this->retorno_error(
+                mensaje: 'Error al generar salida de template', data: $r_modifica, header: $header, ws: $ws);
+        }
+
+
 
         return $r_modifica;
     }

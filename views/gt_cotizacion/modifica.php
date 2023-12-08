@@ -27,6 +27,23 @@
         </div>
     </div>
 
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="widget widget-box box-container widget-mylistings">
+
+                    <div class="table-responsive" style="display: flex; justify-content: end;">
+                        <a role="button" title="Partidas"
+                           href="<?php echo $controlador->link_partidas; ?>"
+                           class="btn btn-success col-sm-2">Partidas</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 </main>
 
 
