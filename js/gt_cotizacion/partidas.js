@@ -87,13 +87,21 @@ const main_productos = (seccion, identificador) => {
         columns: [
             {title: 'Id', data: `${seccion}_id`},
             {title: 'Producto', data: `com_producto_descripcion`},
-            {title: 'Producto', data: `cat_sat_unidad_descripcion`},
+            {title: 'Unidad', data: `cat_sat_unidad_descripcion`},
             {title: 'Cantidad', data: `${seccion}_cantidad`},
+            {title: 'Precio', data: `${seccion}_precio`},
+            {title: 'Total', data: null},
             {title: 'Acciones', data: null},
         ],
         columnDefs: [
             {
-                targets: 4,
+                targets: 5,
+                render: function (data, type, row, meta) {
+                    return Number(row[`gt_cotizacion_producto_cantidad`] * row[`gt_cotizacion_producto_precio`]).toFixed(2);
+                }
+            },
+            {
+                targets: 6,
                 render: function (data, type, row, meta) {
                     let seccion = getParameterByName('seccion');
                     let accion = getParameterByName('accion');
