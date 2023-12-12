@@ -27,4 +27,29 @@ class gt_solicitud extends _modelo_parent_sin_codigo
         $this->NAMESPACE = __NAMESPACE__;
     }
 
+    public function convierte_requisicion(int $gt_requision_id) : array|stdClass
+    {
+        $alta = $this->alta_relacion_solicitud_requisicion(gt_requision_id: $gt_requision_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error insertar relacion', data: $alta);
+        }
+
+        return $alta;
+    }
+
+    private function alta_relacion_solicitud_requisicion(int $gt_requision_id)
+    {
+        $registros['gt_solicitud_id'] = $this->registro_id;
+        $registros['gt_requisicion_id'] = $gt_requision_id;
+
+        $alta = (new gt_solicitud_requisicion($this->link))->alta_registro(registro: $registros);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al dar de alta relacion solicitud requision', data: $alta);
+        }
+
+        return $alta;
+    }
+
+
+
 }
