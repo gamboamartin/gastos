@@ -34,6 +34,11 @@ class gt_solicitud extends _modelo_parent_sin_codigo
             return $this->error->error(mensaje: 'Error insertar relacion', data: $alta);
         }
 
+        $productos = $this->solicitud_productos($this->registro_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener productos', data: $productos);
+        }
+
         return $alta;
     }
 
@@ -43,6 +48,18 @@ class gt_solicitud extends _modelo_parent_sin_codigo
         $registros['gt_requisicion_id'] = $gt_requision_id;
 
         $alta = (new gt_solicitud_requisicion($this->link))->alta_registro(registro: $registros);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al dar de alta relacion solicitud requision', data: $alta);
+        }
+
+        return $alta;
+    }
+
+    public function solicitud_productos(int $gt_solicitud_id)
+    {
+        $filtro['gt_solicitud_producto.gt_solicitud_id'] = $gt_solicitud_id;
+
+        $alta = (new gt_solicitud_producto($this->link))->filtro_and(filtro: $filtro);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al dar de alta relacion solicitud requision', data: $alta);
         }
