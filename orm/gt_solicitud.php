@@ -27,24 +27,29 @@ class gt_solicitud extends _modelo_parent_sin_codigo
         $this->NAMESPACE = __NAMESPACE__;
     }
 
-    public function convierte_requisicion(int $gt_requision_id) : array|stdClass
+    public function convierte_requisicion(int $gt_solicitud_id, int $gt_requision_id) : array|stdClass
     {
-        $alta = $this->alta_relacion_solicitud_requisicion(gt_requision_id: $gt_requision_id);
+        $alta = $this->alta_relacion_solicitud_requisicion(gt_solicitud_id: $gt_solicitud_id, gt_requision_id: $gt_requision_id);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error insertar relacion', data: $alta);
         }
 
-        $productos = $this->solicitud_productos($this->registro_id);
+        $productos = $this->solicitud_productos(gt_solicitud_id: $gt_solicitud_id);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al obtener productos', data: $productos);
         }
 
-        return $alta;
+        $alta_productos = $this->alta_requisicion_productos(datos: $productos, gt_requision_id: $gt_requision_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener productos', data: $productos);
+        }
+
+        return $alta_productos;
     }
 
-    private function alta_relacion_solicitud_requisicion(int $gt_requision_id)
+    private function alta_relacion_solicitud_requisicion(int $gt_solicitud_id, int $gt_requision_id)
     {
-        $registros['gt_solicitud_id'] = $this->registro_id;
+        $registros['gt_solicitud_id'] = $gt_solicitud_id;
         $registros['gt_requisicion_id'] = $gt_requision_id;
 
         $alta = (new gt_solicitud_requisicion($this->link))->alta_registro(registro: $registros);
@@ -59,13 +64,35 @@ class gt_solicitud extends _modelo_parent_sin_codigo
     {
         $filtro['gt_solicitud_producto.gt_solicitud_id'] = $gt_solicitud_id;
 
-        $alta = (new gt_solicitud_producto($this->link))->filtro_and(filtro: $filtro);
+        $datos = (new gt_solicitud_producto($this->link))->filtro_and(filtro: $filtro);
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al dar de alta relacion solicitud requision', data: $alta);
+            return $this->error->error(mensaje: 'Error al dar de alta relacion solicitud requision', data: $datos);
         }
 
-        return $alta;
+        return $datos;
     }
+
+    public function alta_requisicion_productos(stdClass $datos, int $gt_requision_id) : array
+    {
+        $registros = $datos->registros;
+
+        foreach ($registros as $registro){
+            $alta['gt_requisicion_id'] = $gt_requision_id;
+            $alta['com_producto_id'] = $registro['com_producto_id'];
+            $alta['cat_sat_unidad_id'] = $registro['cat_sat_unidad_id'];
+            $alta['cantidad'] = $registro['gt_solicitud_producto_cantidad'];
+            $alta['precio'] = $registro['com_producto_precio'];
+
+            $alta = (new gt_requisicion_producto($this->link))->alta_registro(registro: $alta);
+            if (errores::$error) {
+                return $this->error->error(mensaje: 'Error al dar de alta requisicion producto', data: $alta);
+            }
+        }
+
+        return $registros;
+    }
+
+
 
 
 
