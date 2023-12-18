@@ -267,7 +267,7 @@ class controlador_gt_orden_compra extends _ctl_base {
         $orden_compra['gt_cotizacion_id'] = $_POST['gt_cotizacion_id'];
         $orden_compra['gt_orden_compra_id'] = $this->registro_id;
         $orden_compra['gt_cotizacion_producto_id'] = $alta->registro_id;
-        $orden_compra['descripcion'] = $orden_compra['gt_cotizacion_id'].$orden_compra['gt_orden_compra_id'];
+        $orden_compra['descripcion'] = $this->modelo->get_codigo_aleatorio();
 
         $alta = (new gt_orden_compra_cotizacion($this->link))->alta_registro(registro: $orden_compra);
         if (errores::$error) {
@@ -278,18 +278,10 @@ class controlador_gt_orden_compra extends _ctl_base {
 
         $this->link->commit();
 
-        if ($header) {
-            $this->retorno_base(registro_id: $this->registro_id, result: $alta,
-                siguiente_view: "lista", ws: $ws);
-        }
-        if ($ws) {
-            header('Content-Type: application/json');
-            echo json_encode($alta, JSON_THROW_ON_ERROR);
-            exit;
-        }
-        $alta->siguiente_view = "lista";
-
-        return $alta;
+        $link = "./index.php?seccion=gt_orden_compra&accion=partidas&registro_id=".$this->registro_id;
+        $link.="&session_id=$this->session_id";
+        header('Location:' . $link);
+        exit;
     }
 
 
