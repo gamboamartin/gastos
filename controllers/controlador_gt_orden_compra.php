@@ -80,13 +80,15 @@ class controlador_gt_orden_compra extends _ctl_base {
     protected function campos_view(): array
     {
         $keys = new stdClass();
-        $keys->inputs = array('codigo', 'descripcion');
+        $keys->inputs = array('codigo', 'descripcion', 'cantidad', 'precio');
         $keys->telefonos = array();
         $keys->fechas = array();
         $keys->selects = array();
 
         $init_data = array();
-        //$init_data['gt_requisicion'] = "gamboamartin\\gastos";
+        $init_data['gt_cotizacion'] = "gamboamartin\\gastos";
+        $init_data['com_producto'] = "gamboamartin\\comercial";
+        $init_data['cat_sat_unidad'] = "gamboamartin\\cat_sat";
 
 
         $campos_view = $this->campos_view_base(init_data: $init_data, keys: $keys);
@@ -135,9 +137,9 @@ class controlador_gt_orden_compra extends _ctl_base {
 
     public function init_selects_inputs(): array
     {
-        //$keys_selects = $this->init_selects(keys_selects: array(), key: "gt_requisicion_id", label: "Requisicion", cols: 12);
-
-        return array();
+        $keys_selects = $this->init_selects(keys_selects: array(), key: "gt_cotizacion_id", label: "Cotización", cols: 12);
+        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "com_producto_id", label: "Producto");
+        return $this->init_selects(keys_selects: $keys_selects, key: "cat_sat_unidad_id", label: "Unidad");
     }
 
     protected function key_selects_txt(array $keys_selects): array
@@ -187,9 +189,13 @@ class controlador_gt_orden_compra extends _ctl_base {
                 mensaje: 'Error al generar salida de template', data: $r_modifica, header: $header, ws: $ws);
         }
 
+        $keys_selects = $this->init_selects_inputs();
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al inicializar selects', data: $keys_selects, header: $header,
+                ws: $ws);
+        }
 
-
-        $base = $this->base_upd(keys_selects: array(), params: array(), params_ajustados: array());
+        $base = $this->base_upd(keys_selects: $keys_selects, params: array(), params_ajustados: array());
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
