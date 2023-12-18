@@ -8,7 +8,8 @@ use PDO;
 class gt_orden_compra_cotizacion extends _modelo_parent_sin_codigo {
     public function __construct(PDO $link){
         $tabla = 'gt_orden_compra_cotizacion';
-        $columnas = array($tabla=>false, "gt_cotizacion" => $tabla, "gt_orden_compra" => $tabla, "gt_cotizacion_producto" => $tabla);
+        $columnas = array($tabla=>false, "gt_cotizacion" => $tabla, "gt_orden_compra" => $tabla, "gt_cotizacion_producto" => $tabla,
+            'com_producto' => "gt_cotizacion_producto", 'cat_sat_unidad' => "gt_cotizacion_producto");
         $campos_obligatorios = array();
 
         $no_duplicados = array();
