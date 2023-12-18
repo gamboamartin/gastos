@@ -179,4 +179,23 @@ class controlador_gt_orden_compra extends _ctl_base {
         return $r_modifica;
     }
 
+    public function partidas(bool $header, bool $ws = false): array|stdClass
+    {
+        $r_modifica = $this->init_modifica();
+        if (errores::$error) {
+            return $this->retorno_error(
+                mensaje: 'Error al generar salida de template', data: $r_modifica, header: $header, ws: $ws);
+        }
+
+
+
+        $base = $this->base_upd(keys_selects: array(), params: array(), params_ajustados: array());
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
+        }
+
+        return $r_modifica;
+    }
+
+
 }
