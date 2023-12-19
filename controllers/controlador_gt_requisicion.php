@@ -334,6 +334,22 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
 
+        $columns = array();
+        $columns["gt_requisicion_producto_id"]["titulo"] = "Id";
+        $columns["com_producto_descripcion"]["titulo"] = "Producto";
+        $columns["cat_sat_unidad_descripcion"]["titulo"] = "Unidad";
+        $columns["gt_requisicion_producto_cantidad"]["titulo"] = "Cantidad";
+        $columns["gt_requisicion_producto_precio"]["titulo"] = "Precio";
+        $columns["gt_requisicion_producto_id"]["titulo"] = "Total";
+        $columns["gt_requisicion_producto_id"]["titulo"] = "Acciones";
+
+        $datatables = $this->datatable_init(columns: $columns, filtro: array(), identificador: "#gt_requisicion_producto",
+            in: array(), multi_selects: true);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al inicializar datatable', data: $datatables,
+                header: $header, ws: $ws);
+        }
+
         return $r_modifica;
     }
 
