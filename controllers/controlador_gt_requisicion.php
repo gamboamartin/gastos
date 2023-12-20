@@ -340,11 +340,14 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
         $columns["cat_sat_unidad_descripcion"]["titulo"] = "Unidad";
         $columns["gt_requisicion_producto_cantidad"]["titulo"] = "Cantidad";
         $columns["gt_requisicion_producto_precio"]["titulo"] = "Precio";
-        $columns["gt_requisicion_producto_id"]["titulo"] = "Total";
-        $columns["gt_requisicion_producto_id"]["titulo"] = "Acciones";
+        $columns["gt_requisicion_producto_total"]["titulo"] = "Total";
+        $columns["elimina_bd"]["titulo"] = "Acciones";
 
-        $datatables = $this->datatable_init(columns: $columns, filtro: array(), identificador: "#gt_requisicion_producto",
-            in: array(), multi_selects: true);
+        $filtro = array('gt_requisicion_id');
+        $data["gt_requisicion.id"] = $this->registro_id;
+
+        $datatables = $this->datatable_init(columns: $columns, filtro: $filtro, identificador: "#gt_requisicion_producto",
+            data: $data, in: array(), multi_selects: true);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al inicializar datatable', data: $datatables,
                 header: $header, ws: $ws);
