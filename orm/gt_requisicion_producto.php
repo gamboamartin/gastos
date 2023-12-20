@@ -15,9 +15,12 @@ class gt_requisicion_producto extends _base_transacciones
 
         $no_duplicados = array();
 
+        $columnas_extra = array();
+        $columnas_extra['gt_requisicion_producto_total'] =
+            "IFNULL ( IFNULL(gt_requisicion_producto.cantidad, 0) * IFNULL(gt_requisicion_producto.precio, 1),0)";
 
         parent::__construct(link: $link, tabla: $tabla, campos_obligatorios: $campos_obligatorios,
-            columnas: $columnas, no_duplicados: $no_duplicados);
+            columnas: $columnas, columnas_extra: $columnas_extra, no_duplicados: $no_duplicados);
 
         $this->NAMESPACE = __NAMESPACE__;
     }
