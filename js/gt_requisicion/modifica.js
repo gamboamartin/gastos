@@ -151,7 +151,7 @@ const main = (seccion, identificador) => {
 }
 
 const main_productos = (seccion, identificador) => {
-    const ruta_load = get_url(seccion, "data_ajax", {ws: 1});
+    const ruta_load = get_url(seccion, "get_data", {ws: 1});
 
 
     return new DataTable(`#${identificador}`, {
@@ -161,7 +161,10 @@ const main_productos = (seccion, identificador) => {
             "url": ruta_load,
             'data': function (data) {
                 data.filtros = {
-                    filtro: []
+                    filtro: [{
+                        "key": "gt_cotizacion_producto.gt_requisicion_id",
+                        "valor": registro_id
+                    }]
                 }
             },
             "error": function (jqXHR, textStatus, errorThrown) {
