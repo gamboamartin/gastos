@@ -153,6 +153,25 @@
         </div>
     </div>
 
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="widget widget-box box-container widget-mylistings">
+                    <div class="widget-header"
+                         style="display: flex;justify-content: space-between;align-items: center;">
+                        <h2>Registro de cotizaciones</h2>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="gt_cotizacion_producto" class="table mb-0 table-striped table-sm "></table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 </main>
 
 

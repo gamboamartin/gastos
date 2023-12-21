@@ -154,17 +154,14 @@ const main_productos = (seccion, identificador) => {
     const ruta_load = get_url(seccion, "data_ajax", {ws: 1});
 
 
-    return new DataTable(`#table-${identificador}`, {
+    return new DataTable(`#${identificador}`, {
         dom: 'Bfrtip',
         retrieve: true,
         ajax: {
             "url": ruta_load,
             'data': function (data) {
                 data.filtros = {
-                    filtro: [{
-                        "key": "gt_requisicion.id",
-                        "valor": registro_id
-                    }]
+                    filtro: []
                 }
             },
             "error": function (jqXHR, textStatus, errorThrown) {
@@ -207,7 +204,7 @@ const main_productos = (seccion, identificador) => {
 }
 
 const table_1 = main('gt_requisitores', 'requisitor');
-const table_2 = main_productos('gt_requisicion_producto', 'productos');
+const table_2 = main_productos('gt_cotizacion_producto', 'gt_cotizacion_producto');
 table_1.on('click', 'button', function (e) {
     const url = $(this).data("url");
 
@@ -228,7 +225,6 @@ table_1.on('click', 'button', function (e) {
         }
     });
 });
-
 table_2.on('click', 'button', function (e) {
     const url = $(this).data("url");
 
