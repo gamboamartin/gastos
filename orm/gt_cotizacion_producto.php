@@ -10,7 +10,8 @@ class gt_cotizacion_producto extends _base_transacciones
     public function __construct(PDO $link)
     {
         $tabla = 'gt_cotizacion_producto';
-        $columnas = array($tabla => false, 'gt_cotizacion' => $tabla, 'com_producto' => $tabla, 'cat_sat_unidad' => $tabla);
+        $columnas = array($tabla => false, 'gt_cotizacion' => $tabla, 'com_producto' => $tabla, 'cat_sat_unidad' => $tabla,
+            'gt_tipo_cotizacion' => 'gt_cotizacion', 'gt_proveedor' => 'gt_cotizacion');
         $campos_obligatorios = array();
 
         $no_duplicados = array();

@@ -171,6 +171,8 @@ const main_productos = (seccion, identificador) => {
         },
         columns: [
             {title: 'Id', data: `${seccion}_id`},
+            {title: 'Tipo', data: `gt_tipo_cotizacion_descripcion`},
+            {title: 'Proveedor', data: `gt_proveedor_descripcion`},
             {title: 'Producto', data: `com_producto_descripcion`},
             {title: 'Unidad', data: `cat_sat_unidad_descripcion`},
             {title: 'Cantidad', data: `${seccion}_cantidad`},
@@ -180,13 +182,13 @@ const main_productos = (seccion, identificador) => {
         ],
         columnDefs: [
             {
-                targets: 5,
+                targets: 7,
                 render: function (data, type, row, meta) {
-                    return Number(row[`gt_requisicion_producto_cantidad`] * row[`gt_requisicion_producto_precio`]).toFixed(2);
+                    return Number(row[`${seccion}_cantidad`] * row[`${seccion}_precio`]).toFixed(2);
                 }
             },
             {
-                targets: 6,
+                targets: 8,
                 render: function (data, type, row, meta) {
                     let seccion = getParameterByName('seccion');
                     let accion = getParameterByName('accion');
