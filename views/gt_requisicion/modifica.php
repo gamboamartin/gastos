@@ -123,6 +123,36 @@
         </div>
     </div>
 
+    <div class="container requisitores">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="widget  widget-box box-container form-main widget-form-cart" id="form">
+                    <div class="widget-header"
+                         style="display: flex;justify-content: space-between;align-items: center;">
+                        <h2>Cotizacion</h2>
+                    </div>
+                    <form method="post" action="#" class="form-additional" id="frm-requisitor">
+
+                        <?php echo $controlador->inputs->gt_tipo_cotizacion_id; ?>
+                        <?php echo $controlador->inputs->gt_proveedor_id; ?>
+
+                        <div class="control-group btn-alta">
+                            <div class="controls">
+                                <button type="button" class="btn btn-success" value="modifica" name="btn_action_next"
+                                        id="btn-alta-requisitor">Alta
+                                </button>
+                                <br>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
 </main>
 
 
