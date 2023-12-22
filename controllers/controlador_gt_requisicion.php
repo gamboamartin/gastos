@@ -10,8 +10,11 @@ namespace gamboamartin\gastos\controllers;
 
 use base\controller\controler;
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_cotizacion;
+use gamboamartin\gastos\models\gt_cotizacion_producto;
 use gamboamartin\gastos\models\gt_requisicion;
 use gamboamartin\gastos\models\gt_requisicion_etapa;
+use gamboamartin\gastos\models\gt_requisicion_producto;
 use gamboamartin\gastos\models\gt_solicitud;
 use gamboamartin\gastos\models\gt_solicitud_etapa;
 use gamboamartin\proceso\models\pr_etapa_proceso;
@@ -399,6 +402,18 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
 
     public function producto_bd(bool $header, bool $ws = false): array|stdClass
     {
+        if (!isset($_POST['agregar_producto'])) {
+            return $this->retorno_error(mensaje: 'Error no existe agregar_producto', data: $_POST, header: $header,
+                ws: $ws);
+        }
+
+        $productos_seleccionados = explode(",", $_POST['agregar_producto']);
+
+        if (count($productos_seleccionados) === 0) {
+            return $this->retorno_error(mensaje: 'Error no ha seleccionado un producto', data: $_POST, header: $header,
+                ws: $ws);
+        }
+
         $this->link->beginTransaction();
 
         $siguiente_view = (new actions())->init_alta_bd();
@@ -412,8 +427,69 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
             unset($_POST['btn_action_next']);
         }
 
+        $datos = (new gt_requisicion($this->link))->registro(registro_id :$this->registro_id);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al obtener requisicion', data: $datos,
+                header: $header, ws: $ws);
+        }
 
-        return array();
+        $registro = array();
+        $registro['gt_centro_costo_id'] = $datos['gt_centro_costo_id'];
+        $registro['gt_tipo_cotizacion_id'] = $_POST['gt_tipo_cotizacion_id'];
+        $registro['gt_proveedor_id'] = $_POST['gt_proveedor_id'];
+        $registro['descripcion'] = $this->modelo->get_codigo_aleatorio(10);
+        $resultado = (new gt_cotizacion($this->link))->alta_registro(registro: $registro);
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al dar de alta cotizacion', data: $resultado,
+                header: $header, ws: $ws);
+        }
+
+        foreach ($productos_seleccionados as $producto) {
+            $filtro['gt_requisicion_id'] = $this->registro_id;
+            $filtro['com_producto_id'] = $producto;
+            $datos = (new gt_requisicion_producto($this->link))->filtro_and(filtro : $filtro);
+            if (errores::$error) {
+                $this->link->rollBack();
+                return $this->retorno_error(mensaje: 'Error al obtener producto de la requisicion', data: $datos,
+                    header: $header, ws: $ws);
+            }
+
+            if ($datos->n_registros <= 0){
+                $this->link->rollBack();
+                return $this->retorno_error(mensaje: 'Error no existe el producto asociado a la requisicion', data: $resultado,
+                    header: $header, ws: $ws);
+            }
+
+            $registro = array();
+            $registro['gt_cotizacion_id'] = $resultado->registro_id;
+            $registro['com_producto_id'] = $producto;
+            $registro['cat_sat_unidad_id'] = $datos->registros[0]['cat_sat_unidad_id'];
+            $registro['cantidad'] = $datos->registros[0]['gt_requisicion_producto_cantidad'];
+            $registro['precio'] = $datos->registros[0]['gt_requisicion_producto_precio'];
+            $resultado = (new gt_cotizacion_producto($this->link))->alta_registro(registro: $registro);
+            if (errores::$error) {
+                $this->link->rollBack();
+                return $this->retorno_error(mensaje: 'Error al dar de alta cotizacion producto', data: $resultado,
+                    header: $header, ws: $ws);
+            }
+
+        }
+
+        $this->link->commit();
+
+        if ($header) {
+            $this->retorno_base(registro_id: $this->registro_id, result: $resultado,
+                siguiente_view: "modifica", ws: $ws);
+        }
+        if ($ws) {
+            header('Content-Type: application/json');
+            echo json_encode($resultado, JSON_THROW_ON_ERROR);
+            exit;
+        }
+        $resultado->siguiente_view = "modifica";
+
+        return $resultado;
     }
 
 }

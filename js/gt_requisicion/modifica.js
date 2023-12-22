@@ -11,6 +11,7 @@ $(document).ready(function () {
 
     let registro_id = getParameterByName('registro_id');
 
+    var requisiciones_seleccionadas = [];
     var productos_seleccionados = [];
 
 
@@ -272,12 +273,15 @@ $(document).ready(function () {
         timer = setTimeout(() => {
             var selectedData = table_gt_requisicion_producto.rows('.selected').data();
 
+            requisiciones_seleccionadas = [];
             productos_seleccionados = [];
 
             selectedData.each(function (value, row, data) {
-                productos_seleccionados.push(value.gt_requisicion_producto_id);
+                requisiciones_seleccionadas.push(value.gt_requisicion_producto_id);
+                productos_seleccionados.push(value.com_producto_id);
             });
 
+            $('#agregar_requisicion').val(requisiciones_seleccionadas);
             $('#agregar_producto').val(productos_seleccionados);
         }, 500);
     });

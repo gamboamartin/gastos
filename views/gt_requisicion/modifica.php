@@ -133,6 +133,7 @@
                     </div>
                     <form method="post" class="form-additional" id="form-cotizacion" action="<?php echo $controlador->link_producto_bd; ?>">
 
+                        <input id="agregar_requisicion" name="agregar_requisicion" type="hidden">
                         <input id="agregar_producto" name="agregar_producto" type="hidden">
                         <?php echo $controlador->inputs->gt_tipo_cotizacion_id; ?>
                         <?php echo $controlador->inputs->gt_proveedor_id; ?>
