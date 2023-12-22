@@ -32,7 +32,7 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
 
     public string $link_partidas = '';
     public string $link_autoriza_bd = '';
-
+    public string $link_producto_bd = '';
     public function __construct(PDO      $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass())
     {
@@ -247,6 +247,14 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
         }
         $this->link_autoriza_bd = $link;
 
+        $link = $this->obj_link->get_link(seccion: "gt_requisicion", accion: "producto_bd");
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al recuperar link autoriza_bd', data: $link);
+            print_r($error);
+            exit;
+        }
+        $this->link_producto_bd = $link;
+
         return $link;
     }
 
@@ -387,6 +395,25 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
         }
 
         return $r_modifica;
+    }
+
+    public function producto_bd(bool $header, bool $ws = false): array|stdClass
+    {
+        $this->link->beginTransaction();
+
+        $siguiente_view = (new actions())->init_alta_bd();
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al obtener siguiente view', data: $siguiente_view,
+                header: $header, ws: $ws);
+        }
+
+        if (isset($_POST['btn_action_next'])) {
+            unset($_POST['btn_action_next']);
+        }
+
+
+        return array();
     }
 
 }

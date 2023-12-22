@@ -131,14 +131,15 @@
                          style="display: flex;justify-content: space-between;align-items: center;">
                         <h2>Cotizacion</h2>
                     </div>
-                    <form method="post" action="#" class="form-additional" id="frm-requisitor">
+                    <form method="post" class="form-additional" id="form-cotizacion" action="<?php echo $controlador->link_producto_bd; ?>">
 
+                        <input id="agregar_producto" name="agregar_producto" type="hidden">
                         <?php echo $controlador->inputs->gt_tipo_cotizacion_id; ?>
                         <?php echo $controlador->inputs->gt_proveedor_id; ?>
 
                         <div class="control-group btn-alta">
                             <div class="controls">
-                                <button type="button" class="btn btn-success" value="modifica" name="btn_action_next"
+                                <button type="submit" class="btn btn-success" value="modifica" name="btn_action_next"
                                         id="btn-alta-requisitor">Alta
                                 </button>
                                 <br>

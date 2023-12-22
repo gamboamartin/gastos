@@ -277,7 +277,16 @@ $(document).ready(function () {
             selectedData.each(function (value, row, data) {
                 productos_seleccionados.push(value.gt_requisicion_producto_id);
             });
+
+            $('#agregar_producto').val(productos_seleccionados);
         }, 500);
+    });
+
+    $('#form-cotizacion').on('submit', function(e){
+        if(productos_seleccionados.length === 0) {
+            e.preventDefault();
+            alert("Seleccione un producto");
+        }
     });
 
 });
