@@ -161,7 +161,7 @@ $(document).ready(function () {
     }
 
     const main_productos = (seccion, identificador) => {
-        const ruta_load = get_url(seccion, "get_data", {ws: 1});
+        const ruta_load = get_url(seccion, "data_ajax", {ws: 1});
 
 
         return new DataTable(`#${identificador}`, {
@@ -172,9 +172,18 @@ $(document).ready(function () {
                 'data': function (data) {
                     data.filtros = {
                         filtro: [{
-                            "key": "gt_cotizacion_producto.gt_requisicion_id",
+                            "key": "gt_cotizacion_requisicion.gt_requisicion_id",
                             "valor": registro_id
-                        }]
+                        }],
+                        extra_join: [
+                            {
+                                "entidad": "gt_cotizacion_requisicion",
+                                "key": "gt_cotizacion_id",
+                                "enlace": "gt_cotizacion",
+                                "key_enlace": "id",
+                                "renombre": "gt_cotizacion_requisicion"
+                            },
+                        ]
                     }
                 },
                 "error": function (jqXHR, textStatus, errorThrown) {
@@ -220,6 +229,7 @@ $(document).ready(function () {
 
     const table_1 = main('gt_requisitores', 'requisitor');
     const table_2 = main_productos('gt_cotizacion_producto', 'gt_cotizacion_producto');
+
     table_1.on('click', 'button', function (e) {
         const url = $(this).data("url");
 
