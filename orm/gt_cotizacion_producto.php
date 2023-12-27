@@ -16,13 +16,8 @@ class gt_cotizacion_producto extends _base_transacciones
 
         $no_duplicados = array();
 
-        $columnas_extra = array();
-        $columnas_extra['gt_cotizacion_producto_gt_requisicion_id'] =
-            "(SELECT gt_requisicion_id FROM gt_cotizacion_requisicion WHERE gt_cotizacion_requisicion.gt_cotizacion_id = gt_cotizacion.id)";
-
-
         parent::__construct(link: $link, tabla: $tabla, campos_obligatorios: $campos_obligatorios,
-            columnas: $columnas, columnas_extra: $columnas_extra, no_duplicados: $no_duplicados);
+            columnas: $columnas, no_duplicados: $no_duplicados);
 
         $this->NAMESPACE = __NAMESPACE__;
     }
