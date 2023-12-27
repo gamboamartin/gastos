@@ -90,7 +90,6 @@ class controlador_gt_orden_compra_cotizacion extends _ctl_base {
         $init_data = array();
         $init_data['gt_cotizacion'] = "gamboamartin\\gastos";
         $init_data['gt_orden_compra'] = "gamboamartin\\gastos";
-        $init_data['gt_cotizacion_producto'] = "gamboamartin\\gastos";
 
         $campos_view = $this->campos_view_base(init_data: $init_data, keys: $keys);
         if (errores::$error) {
@@ -141,7 +140,6 @@ class controlador_gt_orden_compra_cotizacion extends _ctl_base {
     public function init_selects_inputs(): array
     {
         $key_selects = $this->init_selects(keys_selects: array(), key: "gt_orden_compra_id", label: "Orden Compra", cols: 12);
-        $key_selects = $this->init_selects(keys_selects: $key_selects, key: "gt_cotizacion_producto_id", label: "Partida", cols: 12);
         return $this->init_selects(keys_selects: $key_selects, key: "gt_cotizacion_id", label: "Cotización", cols: 12);
     }
 
@@ -178,7 +176,6 @@ class controlador_gt_orden_compra_cotizacion extends _ctl_base {
 
         $keys_selects['gt_cotizacion_id']->id_selected = $this->registro['gt_cotizacion_id'];
         $keys_selects['gt_orden_compra_id']->id_selected = $this->registro['gt_orden_compra_id'];
-        $keys_selects['gt_cotizacion_producto_id']->id_selected = $this->registro['gt_cotizacion_producto_id'];
 
         $base = $this->base_upd(keys_selects: $keys_selects, params: array(), params_ajustados: array());
         if (errores::$error) {

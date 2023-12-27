@@ -2,6 +2,5 @@
 <?php use config\views; ?>
 <?php echo $controlador->inputs->gt_cotizacion_id; ?>
 <?php echo $controlador->inputs->gt_orden_compra_id; ?>
-<?php echo $controlador->inputs->gt_cotizacion_producto_id; ?>
 <?php echo $controlador->inputs->descripcion; ?>
 <?php include (new views())->ruta_templates.'botons/submit/alta_bd.php';?>
