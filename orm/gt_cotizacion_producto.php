@@ -16,8 +16,12 @@ class gt_cotizacion_producto extends _base_transacciones
 
         $no_duplicados = array();
 
+        $columnas_extra = array();
+        $columnas_extra['gt_cotizacion_producto_total'] =
+            "IFNULL ( IFNULL(gt_cotizacion_producto.cantidad, 0) * IFNULL(gt_cotizacion_producto.precio, 1),0)";
+
         parent::__construct(link: $link, tabla: $tabla, campos_obligatorios: $campos_obligatorios,
-            columnas: $columnas, no_duplicados: $no_duplicados);
+            columnas: $columnas, columnas_extra: $columnas_extra, no_duplicados: $no_duplicados);
 
         $this->NAMESPACE = __NAMESPACE__;
     }
