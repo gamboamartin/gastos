@@ -76,6 +76,55 @@
         </div>
     </div>
 
+    <div class="container requisitores">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="widget  widget-box box-container form-main widget-form-cart" id="form">
+                    <div class="widget-header"
+                         style="display: flex;justify-content: space-between;align-items: center;">
+                        <h2>Orden de Compra</h2>
+                    </div>
+                    <form method="post" class="form-additional" id="form-cotizacion" action="<?php echo $controlador->link_producto_bd; ?>">
+
+                        <input id="agregar_producto" name="agregar_producto" type="hidden">
+                        <?php echo $controlador->inputs->descripcion2; ?>
+
+                        <div class="control-group btn-alta">
+                            <div class="controls">
+                                <button type="submit" class="btn btn-success" value="modifica" name="btn_action_next"
+                                        id="btn-alta-requisitor">Alta
+                                </button>
+                                <br>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="widget widget-box box-container widget-mylistings">
+                    <div class="widget-header"
+                         style="display: flex;justify-content: space-between;align-items: center;">
+                        <h2>Registro de Ordenes de Compra</h2>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="gt_orden_compra_producto" class="table mb-0 table-striped table-sm "></table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 </main>
 
 

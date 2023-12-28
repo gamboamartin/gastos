@@ -35,6 +35,8 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
     public string $link_partidas = '';
     public string $link_autoriza_bd = '';
 
+    public string $link_producto_bd = '';
+
     public function __construct(PDO      $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass())
     {
@@ -97,7 +99,7 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
     protected function campos_view(array $inputs = array()): array
     {
         $keys = new stdClass();
-        $keys->inputs = array('codigo', 'descripcion', 'cantidad', 'precio');
+        $keys->inputs = array('codigo', 'descripcion', 'cantidad', 'precio', 'descripcion2');
         $keys->telefonos = array();
         $keys->fechas = array('fecha');
         $keys->selects = array();
@@ -166,6 +168,14 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
         }
         $this->link_partidas = $link;
 
+        $link = $this->obj_link->get_link(seccion: "gt_cotizacion", accion: "producto_bd");
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al recuperar link producto_bd', data: $link);
+            print_r($error);
+            exit;
+        }
+        $this->link_producto_bd = $link;
+
         return $link;
     }
 
@@ -215,6 +225,12 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
 
         $keys_selects = (new \base\controller\init())->key_select_txt(cols: 6, key: 'fecha',
             keys_selects: $keys_selects, place_holder: 'Fecha');
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
+        }
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'descripcion2',
+            keys_selects: $keys_selects, place_holder: 'Descripción');
         if (errores::$error) {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
         }

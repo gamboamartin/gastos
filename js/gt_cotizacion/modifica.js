@@ -66,17 +66,28 @@ const main_productos = (seccion, identificador) => {
     const ruta_load = get_url(seccion, "data_ajax", {ws: 1});
 
 
-    return new DataTable(`#table-${identificador}`, {
+    return new DataTable(`#${identificador}`, {
         dom: 'Bfrtip',
         retrieve: true,
         ajax: {
             "url": ruta_load,
             'data': function (data) {
                 data.filtros = {
-                    filtro: [{
-                        "key": "gt_cotizacion.id",
-                        "valor": registro_id
-                    }]
+                    filtro: [
+                        {
+                            "key": "gt_orden_compra_cotizacion.gt_cotizacion_id",
+                            "valor": registro_id
+                        }
+                    ],
+                    extra_join: [
+                        {
+                            "entidad": "gt_orden_compra_cotizacion",
+                            "key": "gt_orden_compra_id",
+                            "enlace": "gt_orden_compra",
+                            "key_enlace": "id",
+                            "renombre": "gt_orden_compra_cotizacion"
+                        },
+                    ]
                 }
             },
             "error": function (jqXHR, textStatus, errorThrown) {
@@ -97,7 +108,7 @@ const main_productos = (seccion, identificador) => {
             {
                 targets: 5,
                 render: function (data, type, row, meta) {
-                    return Number(row[`gt_cotizacion_producto_cantidad`] * row[`gt_cotizacion_producto_precio`]).toFixed(2);
+                    return Number(row[`${seccion}_cantidad`] * row[`${seccion}_precio`]).toFixed(2);
                 }
             },
             {
@@ -109,8 +120,8 @@ const main_productos = (seccion, identificador) => {
 
                     let url = $(location).attr('href');
                     url = url.replace(accion, "elimina_bd");
-                    url = url.replace(seccion, `gt_cotizacion_producto`);
-                    url = url.replace(registro_id, row[`gt_cotizacion_producto_id`]);
+                    url = url.replace(seccion, `gt_orden_compra_producto`);
+                    url = url.replace(registro_id, row[`gt_orden_compra_producto_id`]);
                     return `<button  data-url="${url}" class="btn btn-danger btn-sm">Elimina</button>`;
                 }
             }
@@ -119,7 +130,8 @@ const main_productos = (seccion, identificador) => {
 }
 
 
-const table_1 = main_productos('gt_cotizacion_producto', 'productos');
+const table_2 = main_productos('gt_orden_compra_producto', 'gt_orden_compra_producto');
+
 
 table_1.on('click', 'button', function (e) {
     const url = $(this).data("url");
