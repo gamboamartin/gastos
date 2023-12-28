@@ -230,8 +230,6 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
                 mensaje: 'Error al generar salida de template', data: $r_modifica, header: $header, ws: $ws);
         }
 
-
-
         $keys_selects = $this->init_selects_inputs();
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al inicializar selects', data: $keys_selects, header: $header,
@@ -256,6 +254,25 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
         $base = $this->base_upd(keys_selects: $keys_selects, params: array(), params_ajustados: array());
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
+        }
+
+        $columns = array();
+        $columns["gt_cotizacion_producto_id"]["titulo"] = "Id";
+        $columns["com_producto_descripcion"]["titulo"] = "Producto";
+        $columns["cat_sat_unidad_descripcion"]["titulo"] = "Unidad";
+        $columns["gt_cotizacion_producto_cantidad"]["titulo"] = "Cantidad";
+        $columns["gt_cotizacion_producto_precio"]["titulo"] = "Precio";
+        $columns["gt_cotizacion_producto_total"]["titulo"] = "Total";
+        $columns["elimina_bd"]["titulo"] = "Acciones";
+
+        $filtro = array('gt_cotizacion_id');
+        $data["gt_cotizacion.id"] = $this->registro_id;
+
+        $datatables = $this->datatable_init(columns: $columns, filtro: $filtro, identificador: "#gt_cotizacion_producto",
+            data: $data, in: array(), multi_selects: true);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al inicializar datatable', data: $datatables,
+                header: $header, ws: $ws);
         }
 
         return $r_modifica;
