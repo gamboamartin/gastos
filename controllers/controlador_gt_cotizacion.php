@@ -11,6 +11,9 @@ namespace gamboamartin\gastos\controllers;
 use base\controller\controler;
 use gamboamartin\errores\errores;
 use gamboamartin\gastos\models\gt_cotizacion;
+use gamboamartin\gastos\models\gt_cotizacion_producto;
+use gamboamartin\gastos\models\gt_orden_compra;
+use gamboamartin\gastos\models\gt_orden_compra_producto;
 use gamboamartin\gastos\models\gt_requisicion;
 use gamboamartin\gastos\models\gt_requisicion_etapa;
 use gamboamartin\gastos\models\gt_solicitud;
@@ -325,5 +328,88 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
         }
 
         return $r_modifica;
+    }
+
+    public function producto_bd(bool $header, bool $ws = false): array|stdClass
+    {
+        if (!isset($_POST['agregar_producto'])) {
+            return $this->retorno_error(mensaje: 'Error no existe agregar_producto', data: $_POST, header: $header,
+                ws: $ws);
+        }
+
+        $productos_seleccionados = explode(",", $_POST['agregar_producto']);
+
+        if (count($productos_seleccionados) === 0) {
+            return $this->retorno_error(mensaje: 'Error no ha seleccionado un producto', data: $_POST, header: $header,
+                ws: $ws);
+        }
+
+        $this->link->beginTransaction();
+
+        $siguiente_view = (new actions())->init_alta_bd();
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al obtener siguiente view', data: $siguiente_view,
+                header: $header, ws: $ws);
+        }
+
+        if (isset($_POST['btn_action_next'])) {
+            unset($_POST['btn_action_next']);
+        }
+
+        $registro = array();
+        $registro['descripcion'] = $_POST['descripcion2'];
+        $resultado = (new gt_orden_compra($this->link))->alta_registro(registro: $registro);
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al dar de alta orden compra', data: $resultado,
+                header: $header, ws: $ws);
+        }
+
+        foreach ($productos_seleccionados as $producto) {
+            $filtro['gt_cotizacion_id'] = $this->registro_id;
+            $filtro['com_producto_id'] = $producto;
+            $datos = (new gt_cotizacion_producto($this->link))->filtro_and(filtro : $filtro);
+            if (errores::$error) {
+                $this->link->rollBack();
+                return $this->retorno_error(mensaje: 'Error al obtener producto de la cotizacion', data: $datos,
+                    header: $header, ws: $ws);
+            }
+
+            if ($datos->n_registros <= 0){
+                $this->link->rollBack();
+                return $this->retorno_error(mensaje: 'Error no existe el producto asociado a la cotizacion', data: $resultado,
+                    header: $header, ws: $ws);
+            }
+
+            $registro = array();
+            $registro['gt_orden_compra_id'] = $resultado->registro_id;
+            $registro['com_producto_id'] = $producto;
+            $registro['cat_sat_unidad_id'] = $datos->registros[0]['cat_sat_unidad_id'];
+            $registro['cantidad'] = $datos->registros[0]['gt_cotizacion_producto_cantidad'];
+            $registro['precio'] = $datos->registros[0]['gt_cotizacion_producto_precio'];
+            $resultado = (new gt_orden_compra_producto($this->link))->alta_registro(registro: $registro);
+            if (errores::$error) {
+                $this->link->rollBack();
+                return $this->retorno_error(mensaje: 'Error al dar de alta orden compra producto', data: $resultado,
+                    header: $header, ws: $ws);
+            }
+
+        }
+
+        $this->link->commit();
+
+        if ($header) {
+            $this->retorno_base(registro_id: $this->registro_id, result: $resultado,
+                siguiente_view: "modifica", ws: $ws);
+        }
+        if ($ws) {
+            header('Content-Type: application/json');
+            echo json_encode($resultado, JSON_THROW_ON_ERROR);
+            exit;
+        }
+        $resultado->siguiente_view = "modifica";
+
+        return $resultado;
     }
 }
