@@ -84,7 +84,7 @@
                          style="display: flex;justify-content: space-between;align-items: center;">
                         <h2>Orden de Compra</h2>
                     </div>
-                    <form method="post" class="form-additional" id="form-cotizacion" action="<?php echo $controlador->link_producto_bd; ?>">
+                    <form method="post" class="form-additional" id="form-orden" action="<?php echo $controlador->link_producto_bd; ?>">
 
                         <input id="agregar_producto" name="agregar_producto" type="hidden">
                         <?php echo $controlador->inputs->descripcion2; ?>

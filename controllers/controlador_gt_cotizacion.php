@@ -359,6 +359,7 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
 
         $registro = array();
         $registro['descripcion'] = $_POST['descripcion2'];
+        $registro['codigo'] = $this->modelo->get_codigo_aleatorio();
         $resultado = (new gt_orden_compra($this->link))->alta_registro(registro: $registro);
         if (errores::$error) {
             $this->link->rollBack();
@@ -367,6 +368,7 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
         }
 
         foreach ($productos_seleccionados as $producto) {
+
             $filtro['gt_cotizacion_id'] = $this->registro_id;
             $filtro['com_producto_id'] = $producto;
             $datos = (new gt_cotizacion_producto($this->link))->filtro_and(filtro : $filtro);
