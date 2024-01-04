@@ -12,6 +12,7 @@ use base\controller\controler;
 use gamboamartin\errores\errores;
 use gamboamartin\gastos\models\gt_cotizacion;
 use gamboamartin\gastos\models\gt_cotizacion_producto;
+use gamboamartin\gastos\models\gt_cotizacion_requisicion;
 use gamboamartin\gastos\models\gt_requisicion;
 use gamboamartin\gastos\models\gt_requisicion_etapa;
 use gamboamartin\gastos\models\gt_requisicion_producto;
@@ -473,7 +474,18 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
                 return $this->retorno_error(mensaje: 'Error al dar de alta cotizacion producto', data: $resultado,
                     header: $header, ws: $ws);
             }
+        }
 
+        $registro = array();
+        $registro['gt_cotizacion_id'] = $resultado->registro_id;
+        $registro['gt_requisicion_id'] = $this->registro_id;
+        $registro['descripcion'] = $this->modelo->get_codigo_aleatorio(10);
+        $registro['codigo'] = $this->modelo->get_codigo_aleatorio(10);
+        $resultado = (new gt_cotizacion_requisicion($this->link))->alta_registro(registro: $registro);
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al dar de alta relacion orden de compra y cotizacion', data: $resultado,
+                header: $header, ws: $ws);
         }
 
         $this->link->commit();
