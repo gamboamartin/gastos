@@ -134,6 +134,7 @@
                         <?php echo $controlador->inputs->com_producto_id; ?>
                         <?php echo $controlador->inputs->cat_sat_unidad_id; ?>
                         <?php echo $controlador->inputs->cantidad; ?>
+                        <?php echo $controlador->inputs->precio; ?>
                         <div class="control-group btn-alta">
                             <div class="controls">
                                 <button type="button" class="btn btn-success" value="producto" name="btn_action_next"
