@@ -190,6 +190,31 @@ $(document).ready(function () {
         }
     });
 
+    let getData = async (url, acciones) => {
+        fetch(url)
+            .then(response => response.json())
+            .then(data => acciones(data))
+            .catch(err => {
+                alert('Error al ejecutar');
+                console.error("ERROR: ", err.message)
+            });
+    }
+
+    sl_com_producto.change(function () {
+        let selected = $(this).find('option:selected');
+
+        let url = get_url("gt_cotizacion_producto","get_precio_promedio", {com_producto_id: selected.val()}, 0);
+
+        getData(url,(data) => {
+            txt_precio.val('');
+
+            if (data.n_registros > 0) {
+                txt_precio.val(data.registros[data.n_registros - 1].gt_cotizacion_producto_precio);
+            }
+        });
+
+    });
+
 });
 
 

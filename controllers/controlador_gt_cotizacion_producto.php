@@ -144,6 +144,19 @@ class controlador_gt_cotizacion_producto extends _ctl_base {
         return $this->init_selects(keys_selects: $keys_selects, key: "cat_sat_unidad_id", label: "Unidad");
     }
 
+    public function get_precio_promedio(bool $header, bool $ws = true): array|stdClass
+    {
+        $keys['com_producto'] = array('id','descripcion','codigo','codigo_bis');
+
+        $salida = $this->get_out(header: $header,keys: $keys, ws: $ws);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al generar salida',data:  $salida,header: $header,ws: $ws);
+
+        }
+
+        return $salida;
+    }
+
     protected function key_selects_txt(array $keys_selects): array
     {
         $keys_selects = (new \base\controller\init())->key_select_txt(cols: 4, key: 'codigo',
