@@ -307,6 +307,39 @@ table_3.on('click', 'button', function (e) {
     });
 });
 
+let getData = async (url, acciones) => {
+    fetch(url)
+        .then(response => response.json())
+        .then(data => acciones(data))
+        .catch(err => {
+            alert('Error al ejecutar');
+            console.error("ERROR: ", err.message)
+        });
+}
+
+sl_com_producto.change(function () {
+    let selected = $(this).find('option:selected');
+
+    let url = get_url("gt_solicitud_producto","get_precio_promedio", {com_producto_id: selected.val()}, 0);
+
+    getData(url,(data) => {
+        txt_precio.val('');
+
+        if (data.n_registros > 0) {
+            let total = 0.0;
+            $.each(data.registros, function( index, registro ) {
+                total += parseFloat(registro.gt_solicitud_producto_precio);
+            });
+
+            let promedio = total / data.n_registros;
+            txt_precio.val(promedio.toFixed(3));
+        }
+    });
+
+});
+
+
+
 
 
 
