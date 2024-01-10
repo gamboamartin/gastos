@@ -379,6 +379,25 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
 
+        $columns = array();
+        $columns["gt_solicitud_producto_id"]["titulo"] = "Id";
+        $columns["com_producto_descripcion"]["titulo"] = "Producto";
+        $columns["cat_sat_unidad_descripcion"]["titulo"] = "Unidad";
+        $columns["gt_solicitud_producto_cantidad"]["titulo"] = "Cantidad";
+        $columns["gt_solicitud_producto_precio"]["titulo"] = "Precio";
+        $columns["gt_solicitud_producto_total"]["titulo"] = "Total";
+        $columns["elimina_bd"]["titulo"] = "Acciones";
+
+        $filtro = array('gt_solicitud_id');
+        $data["gt_solicitud.id"] = $this->registro_id;
+
+        $datatables = $this->datatable_init(columns: $columns, filtro: $filtro, identificador: "#gt_solicitud_producto",
+            data: $data, in: array(), multi_selects: true);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al inicializar datatable', data: $datatables,
+                header: $header, ws: $ws);
+        }
+
         return $r_modifica;
     }
 
