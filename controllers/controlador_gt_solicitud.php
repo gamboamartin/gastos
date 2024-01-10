@@ -33,6 +33,8 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
     public string $link_partidas = '';
     public string $link_autoriza_bd = '';
 
+    public string $link_producto_bd = '';
+
     public function __construct(PDO      $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass())
     {
@@ -216,7 +218,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
     protected function campos_view(array $inputs = array()): array
     {
         $keys = new stdClass();
-        $keys->inputs = array('codigo', 'descripcion', 'cantidad', 'precio');
+        $keys->inputs = array('codigo', 'descripcion', 'cantidad', 'precio', 'descripcion2');
         $keys->telefonos = array();
         $keys->fechas = array('fecha');
         $keys->selects = array();
@@ -226,6 +228,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         $init_data['gt_tipo_solicitud'] = "gamboamartin\\gastos";
         $init_data['gt_solicitante'] = "gamboamartin\\gastos";
         $init_data['gt_autorizante'] = "gamboamartin\\gastos";
+        $init_data['gt_tipo_requisicion'] = "gamboamartin\\gastos";
         $init_data['em_empleado'] = "gamboamartin\\empleado";
         $init_data['com_producto'] = "gamboamartin\\comercial";
         $init_data['cat_sat_unidad'] = "gamboamartin\\cat_sat";
@@ -290,6 +293,14 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         }
         $this->link_autoriza_bd = $link;
 
+        $link = $this->obj_link->get_link(seccion: "gt_solicitud", accion: "producto_bd");
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al recuperar link producto_bd', data: $link);
+            print_r($error);
+            exit;
+        }
+        $this->link_producto_bd = $link;
+
         return $link;
     }
 
@@ -312,6 +323,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_solicitante_id", label: "Solicitante", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_autorizante_id", label: "Autorizante", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_tipo_solicitud_id", label: "Tipo Solicitud", cols: 12);
+        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_tipo_requisicion_id", label: "Tipo Requisición", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "com_producto_id", label: "Producto", cols: 12);
         return $this->init_selects(keys_selects: $keys_selects, key: "cat_sat_unidad_id", label: "Unidad", cols: 12);
     }
@@ -338,6 +350,12 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
 
         $keys_selects = (new \base\controller\init())->key_select_txt(cols: 6, key: 'fecha',
             keys_selects: $keys_selects, place_holder: 'Fecha');
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
+        }
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'descripcion2',
+            keys_selects: $keys_selects, place_holder: 'Descripción');
         if (errores::$error) {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
         }
