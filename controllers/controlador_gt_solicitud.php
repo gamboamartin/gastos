@@ -11,8 +11,10 @@ namespace gamboamartin\gastos\controllers;
 use base\controller\controler;
 use gamboamartin\errores\errores;
 use gamboamartin\gastos\models\gt_requisicion;
+use gamboamartin\gastos\models\gt_requisicion_producto;
 use gamboamartin\gastos\models\gt_solicitud;
 use gamboamartin\gastos\models\gt_solicitud_etapa;
+use gamboamartin\gastos\models\gt_solicitud_producto;
 use gamboamartin\gastos\models\gt_solicitud_requisicion;
 use gamboamartin\gastos\models\gt_tipo_requisicion;
 use gamboamartin\proceso\models\pr_etapa_proceso;
@@ -449,6 +451,110 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         }
 
         return $r_modifica;
+    }
+
+    public function producto_bd(bool $header, bool $ws = false): array|stdClass
+    {
+        if (!isset($_POST['agregar_producto'])) {
+            return $this->retorno_error(mensaje: 'Error no existe agregar_producto', data: $_POST, header: $header,
+                ws: $ws);
+        }
+
+        $productos_seleccionados = explode(",", $_POST['agregar_producto']);
+
+        if (count($productos_seleccionados) === 0) {
+            return $this->retorno_error(mensaje: 'Error no ha seleccionado un producto', data: $_POST, header: $header,
+                ws: $ws);
+        }
+
+        $this->link->beginTransaction();
+
+        $siguiente_view = (new actions())->init_alta_bd();
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al obtener siguiente view', data: $siguiente_view,
+                header: $header, ws: $ws);
+        }
+
+        if (isset($_POST['btn_action_next'])) {
+            unset($_POST['btn_action_next']);
+        }
+
+        $datos = (new gt_solicitud($this->link))->registro(registro_id :$this->registro_id);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al obtener solicitud', data: $datos,
+                header: $header, ws: $ws);
+        }
+
+        $registro = array();
+        $registro['gt_centro_costo_id'] = $datos['gt_centro_costo_id'];
+        $registro['gt_tipo_requisicion_id'] = $_POST['gt_tipo_requisicion_id'];
+        $registro['descripcion'] = $this->modelo->get_codigo_aleatorio(10);
+        $gt_requisicion = (new gt_requisicion($this->link))->alta_registro(registro: $registro);
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al dar de alta requisicion', data: $gt_requisicion,
+                header: $header, ws: $ws);
+        }
+
+        foreach ($productos_seleccionados as $producto) {
+
+            $filtro['gt_solicitud_id'] = $this->registro_id;
+            $filtro['com_producto_id'] = $producto;
+            $datos = (new gt_solicitud_producto($this->link))->filtro_and(filtro : $filtro);
+            if (errores::$error) {
+                $this->link->rollBack();
+                return $this->retorno_error(mensaje: 'Error al obtener producto de la solicitud', data: $datos,
+                    header: $header, ws: $ws);
+            }
+
+            if ($datos->n_registros <= 0){
+                $this->link->rollBack();
+                return $this->retorno_error(mensaje: 'Error no existe el producto asociado a la solicitud', data: $datos,
+                    header: $header, ws: $ws);
+            }
+
+            $registro = array();
+            $registro['gt_requisicion_id'] = $gt_requisicion->registro_id;
+            $registro['com_producto_id'] = $producto;
+            $registro['cat_sat_unidad_id'] = $datos->registros[0]['cat_sat_unidad_id'];
+            $registro['cantidad'] = $datos->registros[0]['gt_solicitud_producto_cantidad'];
+            $registro['precio'] = $datos->registros[0]['gt_solicitud_producto_precio'];
+            $resultado = (new gt_requisicion_producto($this->link))->alta_registro(registro: $registro);
+            if (errores::$error) {
+                $this->link->rollBack();
+                return $this->retorno_error(mensaje: 'Error al dar de alta requisicion producto', data: $resultado,
+                    header: $header, ws: $ws);
+            }
+
+        }
+
+        $registro = array();
+        $registro['gt_solicitud_id'] = $this->registro_id;
+        $registro['gt_requisicion_id'] = $gt_requisicion->registro_id;
+        $registro['descripcion'] = $_POST['descripcion2'];
+        $registro['codigo'] = $this->modelo->get_codigo_aleatorio();
+        $resultado = (new gt_solicitud_requisicion($this->link))->alta_registro(registro: $registro);
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al dar de alta relacion solicitud y requisicion', data: $resultado,
+                header: $header, ws: $ws);
+        }
+
+        $this->link->commit();
+
+        if ($header) {
+            $this->retorno_base(registro_id: $this->registro_id, result: $resultado,
+                siguiente_view: "modifica", ws: $ws);
+        }
+        if ($ws) {
+            header('Content-Type: application/json');
+            echo json_encode($resultado, JSON_THROW_ON_ERROR);
+            exit;
+        }
+        $resultado->siguiente_view = "modifica";
+
+        return $resultado;
     }
 
 
