@@ -201,7 +201,7 @@ $(document).ready(function () {
         const ruta_load = get_url(seccion, "data_ajax", {ws: 1});
 
 
-        return new DataTable(`#table-${identificador}`, {
+        return new DataTable(`#${identificador}`, {
             dom: 'Bfrtip',
             retrieve: true,
             ajax: {
@@ -209,9 +209,18 @@ $(document).ready(function () {
                 'data': function (data) {
                     data.filtros = {
                         filtro: [{
-                            "key": "gt_solicitud.id",
+                            "key": "gt_solicitud_requisicion.gt_solicitud_id",
                             "valor": registro_id
-                        }]
+                        }],
+                        extra_join: [
+                            {
+                                "entidad": "gt_solicitud_requisicion",
+                                "key": "gt_solicitud_id",
+                                "enlace": "gt_requisicion",
+                                "key_enlace": "id",
+                                "renombre": "gt_solicitud_requisicion"
+                            },
+                        ]
                     }
                 },
                 "error": function (jqXHR, textStatus, errorThrown) {
@@ -221,8 +230,9 @@ $(document).ready(function () {
             },
             columns: [
                 {title: 'Id', data: `${seccion}_id`},
+                {title: 'Tipo', data: `gt_tipo_requisicion_descripcion`},
                 {title: 'Producto', data: `com_producto_descripcion`},
-                {title: 'Producto', data: `cat_sat_unidad_descripcion`},
+                {title: 'Unidad', data: `cat_sat_unidad_descripcion`},
                 {title: 'Cantidad', data: `${seccion}_cantidad`},
                 {title: 'Precio', data: `${seccion}_precio`},
                 {title: 'Total', data: null},
@@ -230,13 +240,13 @@ $(document).ready(function () {
             ],
             columnDefs: [
                 {
-                    targets: 5,
+                    targets: 6,
                     render: function (data, type, row, meta) {
                         return Number(row[`${seccion}_cantidad`] * row[`${seccion}_precio`]).toFixed(2);
                     }
                 },
                 {
-                    targets: 6,
+                    targets: 7,
                     render: function (data, type, row, meta) {
                         let seccion = getParameterByName('seccion');
                         let accion = getParameterByName('accion');
@@ -244,8 +254,8 @@ $(document).ready(function () {
 
                         let url = $(location).attr('href');
                         url = url.replace(accion, "elimina_bd");
-                        url = url.replace(seccion, `gt_solicitud_producto`);
-                        url = url.replace(registro_id, row[`gt_solicitud_producto_id`]);
+                        url = url.replace(seccion, `gt_requisicion_producto`);
+                        url = url.replace(registro_id, row[`gt_requisicion_producto_id`]);
                         return `<button  data-url="${url}" class="btn btn-danger btn-sm">Elimina</button>`;
                     }
                 }
@@ -255,8 +265,7 @@ $(document).ready(function () {
 
     const table_1 = main('gt_autorizantes', 'autorizante');
     const table_2 = main('gt_solicitantes', 'solicitante');
-    const table_3 = main_productos('gt_solicitud_producto', 'productos');
-
+    const table_3 = main_productos('gt_requisicion_producto', 'gt_requisicion_producto');
 
     table_1.on('click', 'button', function (e) {
         const url = $(this).data("url");
