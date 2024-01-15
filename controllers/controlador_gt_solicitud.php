@@ -279,14 +279,6 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
             exit;
         }
 
-        $link = $this->obj_link->get_link(seccion: "gt_solicitud", accion: "partidas");
-        if (errores::$error) {
-            $error = $this->errores->error(mensaje: 'Error al recuperar link partidas', data: $link);
-            print_r($error);
-            exit;
-        }
-        $this->link_partidas = $link;
-
         $link = $this->obj_link->get_link(seccion: "gt_solicitud", accion: "autoriza_bd");
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al recuperar link autoriza_bd', data: $link);
@@ -374,7 +366,6 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         }
 
 
-
         $keys_selects = $this->init_selects_inputs();
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al inicializar selects', data: $keys_selects, header: $header,
@@ -421,36 +412,52 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         return $r_modifica;
     }
 
-
-    public function partidas(bool $header, bool $ws = false): array|stdClass
+    private function alta_requisicion(array $datos, int $gt_tipo_requisicion_id)
     {
-        $r_modifica = $this->init_modifica();
+        $registro = array();
+        $registro['gt_centro_costo_id'] = $datos['gt_centro_costo_id'];
+        $registro['gt_tipo_requisicion_id'] = $gt_tipo_requisicion_id;
+        $registro['descripcion'] = $this->modelo->get_codigo_aleatorio(10);
+        $alta = (new gt_requisicion($this->link))->alta_registro(registro: $registro);
         if (errores::$error) {
-            return $this->retorno_error(
-                mensaje: 'Error al generar salida de template', data: $r_modifica, header: $header, ws: $ws);
+            $this->link->rollBack();
+            return $this->errores->error(mensaje: "Error al ejecutar alta",data: $alta);
         }
 
-        $keys_selects = $this->init_selects_inputs();
+        return $alta;
+    }
+
+    private function alta_requisicion_producto(stdClass $gt_requisicion, int $producto, stdClass $datos)
+    {
+        $registro = array();
+        $registro['gt_requisicion_id'] = $gt_requisicion->registro_id;
+        $registro['com_producto_id'] = $producto;
+        $registro['cat_sat_unidad_id'] = $datos->registros[0]['cat_sat_unidad_id'];
+        $registro['cantidad'] = $datos->registros[0]['gt_solicitud_producto_cantidad'];
+        $registro['precio'] = $datos->registros[0]['gt_solicitud_producto_precio'];
+        $alta = (new gt_requisicion_producto($this->link))->alta_registro(registro: $registro);
         if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al inicializar selects', data: $keys_selects, header: $header,
-                ws: $ws);
+            $this->link->rollBack();
+            return $this->errores->error(mensaje: "Error al ejecutar alta",data: $alta);
         }
 
-        $keys_selects['gt_centro_costo_id']->id_selected = $this->registro['gt_centro_costo_id'];
-        $keys_selects['gt_tipo_solicitud_id']->id_selected = $this->registro['gt_tipo_solicitud_id'];
+        return $alta;
+    }
 
-        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'descripcion',
-            keys_selects: $keys_selects, place_holder: 'Descripción');
-        $keys_selects['descripcion']->disabled = true;
-        $keys_selects['gt_centro_costo_id']->disabled = true;
-        $keys_selects['gt_tipo_solicitud_id']->disabled = true;
-
-        $base = $this->base_upd(keys_selects: $keys_selects, params: array(), params_ajustados: array());
+    private function alta_solicitud_requisicion(stdClass $gt_requisicion)
+    {
+        $registro = array();
+        $registro['gt_solicitud_id'] = $this->registro_id;
+        $registro['gt_requisicion_id'] = $gt_requisicion->registro_id;
+        $registro['descripcion'] = $_POST['descripcion2'];
+        $registro['codigo'] = $this->modelo->get_codigo_aleatorio();
+        $alta = (new gt_solicitud_requisicion($this->link))->alta_registro(registro: $registro);
         if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
+            $this->link->rollBack();
+            return $this->errores->error(mensaje: "Error al ejecutar alta",data: $alta);
         }
 
-        return $r_modifica;
+        return $alta;
     }
 
     public function producto_bd(bool $header, bool $ws = false): array|stdClass
@@ -486,13 +493,8 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
                 header: $header, ws: $ws);
         }
 
-        $registro = array();
-        $registro['gt_centro_costo_id'] = $datos['gt_centro_costo_id'];
-        $registro['gt_tipo_requisicion_id'] = $_POST['gt_tipo_requisicion_id'];
-        $registro['descripcion'] = $this->modelo->get_codigo_aleatorio(10);
-        $gt_requisicion = (new gt_requisicion($this->link))->alta_registro(registro: $registro);
+        $gt_requisicion = $this->alta_requisicion(datos: $datos,gt_tipo_requisicion_id: $_POST['gt_tipo_requisicion_id']);
         if (errores::$error) {
-            $this->link->rollBack();
             return $this->retorno_error(mensaje: 'Error al dar de alta requisicion', data: $gt_requisicion,
                 header: $header, ws: $ws);
         }
@@ -514,203 +516,33 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
                     header: $header, ws: $ws);
             }
 
-            $registro = array();
-            $registro['gt_requisicion_id'] = $gt_requisicion->registro_id;
-            $registro['com_producto_id'] = $producto;
-            $registro['cat_sat_unidad_id'] = $datos->registros[0]['cat_sat_unidad_id'];
-            $registro['cantidad'] = $datos->registros[0]['gt_solicitud_producto_cantidad'];
-            $registro['precio'] = $datos->registros[0]['gt_solicitud_producto_precio'];
-            $resultado = (new gt_requisicion_producto($this->link))->alta_registro(registro: $registro);
+            $gt_requisicion_producto = $this->alta_requisicion_producto(gt_requisicion: $gt_requisicion,producto: $producto,datos: $datos);
             if (errores::$error) {
-                $this->link->rollBack();
-                return $this->retorno_error(mensaje: 'Error al dar de alta requisicion producto', data: $resultado,
+                return $this->retorno_error(mensaje: 'Error al dar de alta requisicion producto', data: $gt_requisicion_producto,
                     header: $header, ws: $ws);
             }
-
         }
 
-        $registro = array();
-        $registro['gt_solicitud_id'] = $this->registro_id;
-        $registro['gt_requisicion_id'] = $gt_requisicion->registro_id;
-        $registro['descripcion'] = $_POST['descripcion2'];
-        $registro['codigo'] = $this->modelo->get_codigo_aleatorio();
-        $resultado = (new gt_solicitud_requisicion($this->link))->alta_registro(registro: $registro);
+        $gt_solicitud_requisicion = $this->alta_solicitud_requisicion(gt_requisicion: $gt_requisicion);
         if (errores::$error) {
-            $this->link->rollBack();
-            return $this->retorno_error(mensaje: 'Error al dar de alta relacion solicitud y requisicion', data: $resultado,
+            return $this->retorno_error(mensaje: 'Error al dar de alta relacion solicitud y requisicion', data: $gt_solicitud_requisicion,
                 header: $header, ws: $ws);
         }
 
         $this->link->commit();
 
         if ($header) {
-            $this->retorno_base(registro_id: $this->registro_id, result: $resultado,
+            $this->retorno_base(registro_id: $this->registro_id, result: $gt_solicitud_requisicion,
                 siguiente_view: "modifica", ws: $ws);
         }
         if ($ws) {
             header('Content-Type: application/json');
-            echo json_encode($resultado, JSON_THROW_ON_ERROR);
+            echo json_encode($gt_solicitud_requisicion, JSON_THROW_ON_ERROR);
             exit;
         }
-        $resultado->siguiente_view = "modifica";
+        $gt_solicitud_requisicion->siguiente_view = "modifica";
 
-        return $resultado;
+        return $gt_solicitud_requisicion;
     }
-
-
-
-    public function asignar_solicitante(bool $header, bool $ws = false): array|string
-    {
-
-        $r_modifica =  parent::modifica($header, $ws); // TODO: Change the autogenerated stub
-        if(errores::$error){
-            return $this->retorno_error(mensaje: 'Error al generar template',data:  $r_modifica, header: $header,ws:$ws);
-        }
-        if($this->registro_id<=0){
-            return $this->retorno_error(mensaje: 'Error registro_id debe ser mayor a 0', data: $this->registro_id,
-                header:  $header, ws: $ws);
-        }
-
-        if(!isset($this->row_upd)){
-            $this->row_upd = new stdClass();
-        }
-        if(!isset($this->row_upd->status)){
-            $this->row_upd->status = '';
-        }
-
-        $this->row_upd = (object)($this->modelo->registro(registro_id: $this->registro_id));
-
-        $select = (new gt_solicitante_html(html: $this->html_base))->select_gt_solicitante_id(cols:12,con_registros: true,
-            id_selected: -1, link: $this->link,required: true);
-        if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al generar select', data: $select, header: $header, ws: $ws);
-        }
-
-        $this->inputs->select = new stdClass();
-        $this->inputs->select->gt_solicitante_id = $select;
-
-
-        $select = (new gt_solicitud_html(html: $this->html_base))->select_gt_solicitud_id(cols:12,con_registros: true,
-            id_selected: $this->row_upd->gt_solicitud_id , link: $this->link,required: true, disabled: true);
-        if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al generar select', data: $select, header: $header, ws: $ws);
-        }
-
-        $this->inputs->select->gt_solicitud_id = $select;
-
-
-
-
-        return array();
-    }
-
-    public function asignar_autorizante(bool $header, bool $ws = false): array|string
-    {
-
-        $r_modifica =  parent::modifica($header, $ws); // TODO: Change the autogenerated stub
-        if(errores::$error){
-            return $this->retorno_error(mensaje: 'Error al generar template',data:  $r_modifica, header: $header,ws:$ws);
-        }
-        if($this->registro_id<=0){
-            return $this->retorno_error(mensaje: 'Error registro_id debe ser mayor a 0', data: $this->registro_id,
-                header:  $header, ws: $ws);
-        }
-
-        if(!isset($this->row_upd)){
-            $this->row_upd = new stdClass();
-        }
-        if(!isset($this->row_upd->status)){
-            $this->row_upd->status = '';
-        }
-
-        $this->row_upd = (object)($this->modelo->registro(registro_id: $this->registro_id));
-
-        $select = (new gt_autorizante_html(html: $this->html_base))->select_gt_autorizante_id(cols:12,con_registros: true,
-            id_selected: -1, link: $this->link,required: true);
-        if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al generar select', data: $select, header: $header, ws: $ws);
-        }
-
-        $this->inputs->select = new stdClass();
-        $this->inputs->select->gt_autorizante_id = $select;
-
-
-        $select = (new gt_solicitud_html(html: $this->html_base))->select_gt_solicitud_id(cols: 12, con_registros: true,
-            id_selected: $this->row_upd->gt_solicitud_id, link: $this->link, disabled: true, required: true);
-        if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al generar select', data: $select, header: $header, ws: $ws);
-        }
-
-        $this->inputs->select->gt_solicitud_id = $select;
-
-
-
-
-        return array();
-    }
-
-    protected function inputs_children(stdClass $registro): array|stdClass{
-
-        $gt_solicitud_id = (new gt_solicitud_html(html: $this->html_base))->select_gt_solicitud_id(
-            cols:12,con_registros: true,id_selected:  $registro->gt_solicitud_id,link:  $this->link, disabled: true);
-
-        if(errores::$error){
-            return $this->errores->error(mensaje: 'Error al obtener gt_tipo_solicitud_id',data:  $gt_solicitud_id);
-        }
-
-
-
-        $this->inputs = new stdClass();
-        $this->inputs->select = new stdClass();
-        $this->inputs->select->gt_solicitud_id = $gt_solicitud_id;
-
-
-        return $this->inputs;
-    }
-
-    public function solicitantes(bool $header = true, bool $ws = false): array|stdClass|string
-    {
-
-        $data_view = new stdClass();
-        $data_view->names = array('Id','Solicitud', 'Solicitante','Acciones');
-        $data_view->keys_data = array('gt_solicitantes_id','gt_solicitud_codigo','gt_solicitante_codigo');
-        $data_view->key_actions = 'acciones';
-        $data_view->namespace_model = 'gamboamartin\\gastos\\models';
-        $data_view->name_model_children = 'gt_solicitantes';
-
-
-        $contenido_table = $this->contenido_children(data_view: $data_view, next_accion: __FUNCTION__);
-        if(errores::$error){
-            return $this->retorno_error(
-                mensaje: 'Error al obtener tbody',data:  $contenido_table, header: $header,ws:  $ws);
-        }
-
-
-        return $contenido_table;
-
-    }
-
-    public function autorizantes(bool $header = true, bool $ws = false): array|stdClass|string
-    {
-
-        $data_view = new stdClass();
-        $data_view->names = array('Id','Solicitud', 'Autorizante','Acciones');
-        $data_view->keys_data = array('gt_autorizantes_id','gt_solicitud_codigo','gt_autorizante_codigo');
-        $data_view->key_actions = 'acciones';
-        $data_view->namespace_model = 'gamboamartin\\gastos\\models';
-        $data_view->name_model_children = 'gt_autorizantes';
-
-
-        $contenido_table = $this->contenido_children(data_view: $data_view, next_accion: __FUNCTION__);
-        if(errores::$error){
-            return $this->retorno_error(
-                mensaje: 'Error al obtener tbody',data:  $contenido_table, header: $header,ws:  $ws);
-        }
-
-
-        return $contenido_table;
-
-    }
-
 
 }
