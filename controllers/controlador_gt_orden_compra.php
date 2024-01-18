@@ -236,6 +236,38 @@ class controlador_gt_orden_compra extends _ctl_base {
         return $r_modifica;
     }
 
+    private function alta_cotizacion_producto(array $datos)
+    {
+        $contizacion_producto['gt_cotizacion_id'] = $datos['gt_cotizacion_id'];
+        $contizacion_producto['com_producto_id'] = $datos['com_producto_id'];
+        $contizacion_producto['cat_sat_unidad_id'] = $datos['cat_sat_unidad_id'];
+        $contizacion_producto['cantidad'] = $datos['cantidad'];
+        $contizacion_producto['precio'] = $datos['precio'];
+        $alta = (new gt_cotizacion_producto($this->link))->alta_registro(registro: $contizacion_producto);
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->errores->error(mensaje: "Error al ejecutar alta",data: $alta);
+        }
+
+        return $alta;
+    }
+
+    private function alta_orden_compra_cotizacion(stdClass $gt_cotizacion_producto, array $datos)
+    {
+        $orden_compra['gt_cotizacion_id'] = $datos['gt_cotizacion_id'];
+        $orden_compra['gt_orden_compra_id'] = $this->registro_id;
+        $orden_compra['gt_cotizacion_producto_id'] = $gt_cotizacion_producto->registro_id;
+        $orden_compra['descripcion'] = $this->modelo->get_codigo_aleatorio(10);
+
+        $alta = (new gt_orden_compra_cotizacion($this->link))->alta_registro(registro: $orden_compra);
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->errores->error(mensaje: "Error al ejecutar alta",data: $alta);
+        }
+
+        return $alta;
+    }
+
     public function partidas_bd(bool $header, bool $ws = false): array|stdClass
     {
         $this->link->beginTransaction();
@@ -251,28 +283,15 @@ class controlador_gt_orden_compra extends _ctl_base {
             unset($_POST['btn_action_next']);
         }
 
-        $contizacion_producto['gt_cotizacion_id'] = $_POST['gt_cotizacion_id'];
-        $contizacion_producto['com_producto_id'] = $_POST['com_producto_id'];
-        $contizacion_producto['cat_sat_unidad_id'] = $_POST['cat_sat_unidad_id'];
-        $contizacion_producto['cantidad'] = $_POST['cantidad'];
-        $contizacion_producto['precio'] = $_POST['precio'];
-
-        $alta = (new gt_cotizacion_producto($this->link))->alta_registro(registro: $contizacion_producto);
+        $gt_cotizacion_producto = $this->alta_cotizacion_producto(datos: $_POST);
         if (errores::$error) {
-            $this->link->rollBack();
-            return $this->retorno_error(mensaje: 'Error al dar de alta cotizacion producto', data: $alta,
+            return $this->retorno_error(mensaje: 'Error al dar de alta cotizacion producto', data: $gt_cotizacion_producto,
                 header: $header, ws: $ws);
         }
 
-        $orden_compra['gt_cotizacion_id'] = $_POST['gt_cotizacion_id'];
-        $orden_compra['gt_orden_compra_id'] = $this->registro_id;
-        $orden_compra['gt_cotizacion_producto_id'] = $alta->registro_id;
-        $orden_compra['descripcion'] = $this->modelo->get_codigo_aleatorio();
-
-        $alta = (new gt_orden_compra_cotizacion($this->link))->alta_registro(registro: $orden_compra);
+        $gt_orden_compra_cotizacion = $this->alta_cotizacion_producto(datos: $_POST);
         if (errores::$error) {
-            $this->link->rollBack();
-            return $this->retorno_error(mensaje: 'Error al dar de alta cotizacion producto', data: $alta,
+            return $this->retorno_error(mensaje: 'Error al dar de alta orden compra cotizacion', data: $gt_orden_compra_cotizacion,
                 header: $header, ws: $ws);
         }
 
