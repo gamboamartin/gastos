@@ -21,7 +21,7 @@ $(document).ready(function () {
     var table_gt_solicitud_producto = $(tables).DataTable().search('gt_solicitud_producto');
     table_gt_solicitud_producto.search('').columns().search('').draw();
 
-    const table = (seccion, columns, filtro = []) => {
+    const table = (seccion, columns, filtro = [], extra_join = []) => {
         const ruta_load = get_url(seccion, "data_ajax", {ws: 1});
 
         return new DataTable(`#table-${seccion}`, {
@@ -31,7 +31,8 @@ $(document).ready(function () {
                 "url": ruta_load,
                 'data': function (data) {
                     data.filtros = {
-                        filtro: filtro
+                        filtro: filtro,
+                        extra_join: extra_join
                     }
                 },
                 "error": function (jqXHR, textStatus, errorThrown) {
@@ -113,6 +114,26 @@ $(document).ready(function () {
         {title: "Solicitante", data: 'em_empleado_nombre_completo'},
         {title: "Acciones", data: null},
     ], filtro);
+    const table_gt_requisicion_producto = table('gt_requisicion_producto', [
+        {title: 'Id', data: `gt_requisicion_producto_id`},
+        {title: 'Tipo', data: `gt_tipo_requisicion_descripcion`},
+        {title: 'Producto', data: `com_producto_descripcion`},
+        {title: 'Unidad', data: `cat_sat_unidad_descripcion`},
+        {title: 'Cantidad', data: `gt_requisicion_producto_cantidad`},
+        {title: 'Precio', data: `gt_requisicion_producto_precio`},
+        {title: 'Total', data: null},
+        {title: 'Acciones', data: null},
+    ], [{
+        "key": "gt_solicitud_requisicion.gt_solicitud_id",
+        "valor": registro_id
+    }], [{
+        "entidad": "gt_solicitud_requisicion",
+        "key": "gt_solicitud_id",
+        "enlace": "gt_requisicion",
+        "key_enlace": "id",
+        "renombre": "gt_solicitud_requisicion"
+    }]);
+
 
     btn_alta_autorizante.click(function () {
 
@@ -184,71 +205,6 @@ $(document).ready(function () {
         })
     });
 
-    const main_productos = (seccion, identificador) => {
-        const ruta_load = get_url(seccion, "data_ajax", {ws: 1});
-
-
-        return new DataTable(`#${identificador}`, {
-            dom: 'Bfrtip',
-            retrieve: true,
-            ajax: {
-                "url": ruta_load,
-                'data': function (data) {
-                    data.filtros = {
-                        filtro: [{
-                            "key": "gt_solicitud_requisicion.gt_solicitud_id",
-                            "valor": registro_id
-                        }],
-                        extra_join: [
-                            {
-                                "entidad": "gt_solicitud_requisicion",
-                                "key": "gt_solicitud_id",
-                                "enlace": "gt_requisicion",
-                                "key_enlace": "id",
-                                "renombre": "gt_solicitud_requisicion"
-                            },
-                        ]
-                    }
-                },
-                "error": function (jqXHR, textStatus, errorThrown) {
-                    let response = jqXHR.responseText;
-                    console.log(response)
-                }
-            },
-            columns: [
-                {title: 'Id', data: `${seccion}_id`},
-                {title: 'Tipo', data: `gt_tipo_requisicion_descripcion`},
-                {title: 'Producto', data: `com_producto_descripcion`},
-                {title: 'Unidad', data: `cat_sat_unidad_descripcion`},
-                {title: 'Cantidad', data: `${seccion}_cantidad`},
-                {title: 'Precio', data: `${seccion}_precio`},
-                {title: 'Total', data: null},
-                {title: 'Acciones', data: null},
-            ],
-            columnDefs: [
-                {
-                    targets: 6,
-                    render: function (data, type, row, meta) {
-                        return Number(row[`${seccion}_cantidad`] * row[`${seccion}_precio`]).toFixed(2);
-                    }
-                },
-                {
-                    targets: 7,
-                    render: function (data, type, row, meta) {
-                        let seccion = getParameterByName('seccion');
-                        let accion = getParameterByName('accion');
-                        let registro_id = getParameterByName('registro_id');
-
-                        let url = $(location).attr('href');
-                        url = url.replace(accion, "elimina_bd");
-                        url = url.replace(seccion, `gt_requisicion_producto`);
-                        url = url.replace(registro_id, row[`gt_requisicion_producto_id`]);
-                        return `<button  data-url="${url}" class="btn btn-danger btn-sm">Elimina</button>`;
-                    }
-                }
-            ]
-        });
-    }
 
     btn_alta_producto.click(function () {
 
@@ -310,9 +266,8 @@ $(document).ready(function () {
         });
     });
 
-    const table_3 = main_productos('gt_requisicion_producto', 'gt_requisicion_producto');
 
-    table_3.on('click', 'button', function (e) {
+    table_gt_requisicion_producto.on('click', 'button', function (e) {
         const url = $(this).data("url");
 
         $.ajax({
@@ -386,8 +341,8 @@ $(document).ready(function () {
         }, 500);
     });
 
-    $('#form-orden').on('submit', function(e){
-        if(productos_seleccionados.length === 0) {
+    $('#form-orden').on('submit', function (e) {
+        if (productos_seleccionados.length === 0) {
             e.preventDefault();
             alert("Seleccione un producto");
         }
