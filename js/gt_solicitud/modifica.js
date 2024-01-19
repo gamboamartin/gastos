@@ -21,6 +21,98 @@ $(document).ready(function () {
     var table_gt_solicitud_producto = $(tables).DataTable().search('gt_solicitud_producto');
     table_gt_solicitud_producto.search('').columns().search('').draw();
 
+    const table = (seccion, columns, filtro = []) => {
+        const ruta_load = get_url(seccion, "data_ajax", {ws: 1});
+
+        return new DataTable(`#table-${seccion}`, {
+            dom: 'Bfrtip',
+            retrieve: true,
+            ajax: {
+                "url": ruta_load,
+                'data': function (data) {
+                    data.filtros = {
+                        filtro: filtro
+                    }
+                },
+                "error": function (jqXHR, textStatus, errorThrown) {
+                    let response = jqXHR.responseText;
+                    console.log(response)
+                }
+            },
+            columns: columns,
+            columnDefs: [
+                {
+                    targets: columns.length - 1,
+                    render: function (data, type, row, meta) {
+                        let sec = getParameterByName('seccion');
+                        let acc = getParameterByName('accion');
+                        let registro_id = getParameterByName('registro_id');
+
+                        let url = $(location).attr('href');
+                        url = url.replace(acc, "elimina_bd");
+                        url = url.replace(sec, seccion);
+                        url = url.replace(registro_id, row[`${seccion}_id`]);
+                        return `<button  data-url="${url}" class="btn btn-danger btn-sm">Elimina</button>`;
+                    }
+                }
+            ]
+        });
+    }
+
+    const alta = (seccion, data = {}, acciones) => {
+        let url = get_url(seccion, "alta_bd", {});
+
+        $.ajax({
+            url: url,
+            data: data,
+            type: 'POST',
+            success: function (json) {
+                acciones();
+
+                if (json.hasOwnProperty("error")) {
+                    alert(json.mensaje_limpio)
+                }
+            },
+            error: function (xhr, status) {
+                alert('Error, ocurrio un error al ejecutar la peticion');
+                console.log({xhr, status})
+            }
+        });
+    }
+
+    const eliminar = (acciones) => {
+        $.ajax({
+            url: url,
+            type: 'POST',
+            success: function (json) {
+                acciones();
+
+                if (json.includes('error')) {
+                    alert("Error al eliminar el regstro")
+                }
+            },
+            error: function (xhr, status) {
+                alert('Error, ocurrio un error al ejecutar la peticion');
+                console.log({xhr, status})
+            }
+        });
+    }
+
+    let filtro = [{
+        "key": "gt_solicitud.id",
+        "valor": registro_id
+    }];
+
+    const table_gt_autorizantes = table('gt_autorizantes', [
+        {title: "Id", data: `gt_autorizantes_id`},
+        {title: "Autorizante", data: 'em_empleado_nombre_completo'},
+        {title: "Acciones", data: null},
+    ], filtro);
+    const table_gt_solicitantes = table('gt_solicitantes', [
+        {title: "Id", data: `gt_solicitantes_id`},
+        {title: "Solicitante", data: 'em_empleado_nombre_completo'},
+        {title: "Acciones", data: null},
+    ], filtro);
 
     btn_alta_autorizante.click(function () {
 
@@ -31,25 +123,16 @@ $(document).ready(function () {
             return;
         }
 
-        let url = get_url("gt_autorizantes", "alta_bd", {});
+        let data = {gt_autorizante_id: autorizante, gt_solicitud_id: registro_id};
 
-        $.ajax({
-            url: url,
-            data: {gt_autorizante_id: autorizante, gt_solicitud_id: registro_id},
-            type: 'POST',
-            success: function (json) {
-                sl_gt_autorizante.val('').change();
-                $('#table-autorizante').DataTable().clear().destroy();
-                main('gt_autorizantes', 'autorizante');
-
-                if (json.hasOwnProperty("error")) {
-                    alert(json.mensaje_limpio)
-                }
-            },
-            error: function (xhr, status) {
-                alert('Error, ocurrio un error al ejecutar la peticion');
-                console.log({xhr, status})
-            }
+        alta("gt_autorizantes", data, () => {
+            sl_gt_autorizante.val('').change();
+            table_gt_autorizantes.clear().destroy();
+            table('gt_autorizantes', [
+                {title: "Id", data: `gt_autorizantes_id`},
+                {title: "Autorizante", data: 'em_empleado_nombre_completo'},
+                {title: "Acciones", data: null},
+            ], filtro);
         });
     });
 
@@ -70,8 +153,12 @@ $(document).ready(function () {
             type: 'POST',
             success: function (json) {
                 sl_gt_soliciante.val('').change();
-                $('#table-solicitante').DataTable().clear().destroy();
-                main('gt_solicitantes', 'solicitante');
+                $('#table-gt_solicitantes').DataTable().clear().destroy();
+                table('gt_solicitantes', [
+                    {title: "Id", data: `gt_solicitantes_id`},
+                    {title: "Solicitante", data: 'em_empleado_nombre_completo'},
+                    {title: "Acciones", data: null},
+                ], filtro);
 
                 if (json.hasOwnProperty("error")) {
                     alert(json.mensaje_limpio)
@@ -84,311 +171,32 @@ $(document).ready(function () {
         });
     });
 
-    btn_alta_producto.click(function () {
-
-        let producto = sl_com_producto.find('option:selected').val();
-        let unidad = sl_cat_sat_unidad.find('option:selected').val();
-        let cantidad = txt_cantidad.val();
-        let precio = txt_precio.val();
-
-        if (producto === "") {
-            alert("Seleccione un producto");
-            return;
-        }
-
-        if (unidad === "") {
-            alert("Seleccione una unidad");
-            return;
-        }
-
-        if (cantidad === "") {
-            alert("Ingrese una cantidad");
-            return;
-        }
-
-        if (precio === "") {
-            alert("Ingrese un precio");
-            return;
-        }
-
-        let url = get_url("gt_solicitud_producto", "alta_bd", {});
-
-        $.ajax({
-            url: url,
-            data: {
-                com_producto_id: producto,
-                cat_sat_unidad_id: unidad,
-                cantidad: cantidad,
-                precio: precio,
-                gt_solicitud_id: registro_id
-            },
-            type: 'POST',
-            success: function (json) {
-                sl_com_producto.val('').change();
-                sl_cat_sat_unidad.val('').change();
-                txt_cantidad.val('');
-                txt_precio.val('');
-
-                if (json.hasOwnProperty("error")) {
-                    alert(json.mensaje_limpio)
-                    return;
-                }
-
-                $('#table-productos').DataTable().clear().destroy();
-                main_productos('gt_solicitud_producto', 'productos');
-            },
-            error: function (xhr, status) {
-                alert('Error, ocurrio un error al ejecutar la peticion');
-                console.log({xhr, status})
-            }
-        });
-    });
-
-    const main = (seccion, identificador) => {
-        const ruta_load = get_url(seccion, "data_ajax", {ws: 1});
-
-
-        let table = new DataTable(`#table-${identificador}`, {
-            dom: 'Bfrtip',
-            retrieve: true,
-            ajax: {
-                "url": ruta_load,
-                'data': function (data) {
-                    data.filtros = {
-                        filtro: [{
-                            "key": "gt_solicitud.id",
-                            "valor": registro_id
-                        }]
-                    }
-                },
-                "error": function (jqXHR, textStatus, errorThrown) {
-                    let response = jqXHR.responseText;
-                    console.log(response)
-                }
-            },
-            columns: [
-                {title: 'Id', data: `gt_${identificador}s_id`},
-                {title: identificador, data: 'em_empleado_nombre'},
-                {title: 'Acciones', data: null},
-            ],
-            columnDefs: [
-                {
-                    targets: 1,
-                    render: function (data, type, row, meta) {
-                        return `${row.em_empleado_ap} ${row.em_empleado_am} ${row.em_empleado_nombre}`;
-                    }
-                },
-                {
-                    targets: 2,
-                    render: function (data, type, row, meta) {
-                        let seccion = getParameterByName('seccion');
-                        let accion = getParameterByName('accion');
-                        let registro_id = getParameterByName('registro_id');
-
-                        let url = $(location).attr('href');
-                        url = url.replace(accion, "elimina_bd");
-                        url = url.replace(seccion, `gt_${identificador}s`);
-                        url = url.replace(registro_id, row[`gt_${identificador}s_id`]);
-                        return `<button  data-url="${url}" class="btn btn-danger btn-sm">Elimina</button>`;
-                    }
-                }
-            ]
-        });
-
-        return table;
-    }
-    const main_productos = (seccion, identificador) => {
-        const ruta_load = get_url(seccion, "data_ajax", {ws: 1});
-
-
-        return new DataTable(`#${identificador}`, {
-            dom: 'Bfrtip',
-            retrieve: true,
-            ajax: {
-                "url": ruta_load,
-                'data': function (data) {
-                    data.filtros = {
-                        filtro: [{
-                            "key": "gt_solicitud_requisicion.gt_solicitud_id",
-                            "valor": registro_id
-                        }],
-                        extra_join: [
-                            {
-                                "entidad": "gt_solicitud_requisicion",
-                                "key": "gt_solicitud_id",
-                                "enlace": "gt_requisicion",
-                                "key_enlace": "id",
-                                "renombre": "gt_solicitud_requisicion"
-                            },
-                        ]
-                    }
-                },
-                "error": function (jqXHR, textStatus, errorThrown) {
-                    let response = jqXHR.responseText;
-                    console.log(response)
-                }
-            },
-            columns: [
-                {title: 'Id', data: `${seccion}_id`},
-                {title: 'Tipo', data: `gt_tipo_requisicion_descripcion`},
-                {title: 'Producto', data: `com_producto_descripcion`},
-                {title: 'Unidad', data: `cat_sat_unidad_descripcion`},
-                {title: 'Cantidad', data: `${seccion}_cantidad`},
-                {title: 'Precio', data: `${seccion}_precio`},
-                {title: 'Total', data: null},
-                {title: 'Acciones', data: null},
-            ],
-            columnDefs: [
-                {
-                    targets: 6,
-                    render: function (data, type, row, meta) {
-                        return Number(row[`${seccion}_cantidad`] * row[`${seccion}_precio`]).toFixed(2);
-                    }
-                },
-                {
-                    targets: 7,
-                    render: function (data, type, row, meta) {
-                        let seccion = getParameterByName('seccion');
-                        let accion = getParameterByName('accion');
-                        let registro_id = getParameterByName('registro_id');
-
-                        let url = $(location).attr('href');
-                        url = url.replace(accion, "elimina_bd");
-                        url = url.replace(seccion, `gt_requisicion_producto`);
-                        url = url.replace(registro_id, row[`gt_requisicion_producto_id`]);
-                        return `<button  data-url="${url}" class="btn btn-danger btn-sm">Elimina</button>`;
-                    }
-                }
-            ]
-        });
-    }
-
-    const table_1 = main('gt_autorizantes', 'autorizante');
-    const table_2 = main('gt_solicitantes', 'solicitante');
-    const table_3 = main_productos('gt_requisicion_producto', 'gt_requisicion_producto');
-
-    table_1.on('click', 'button', function (e) {
+    table_gt_autorizantes.on('click', 'button', function (e) {
         const url = $(this).data("url");
 
-        $.ajax({
-            url: url,
-            type: 'POST',
-            success: function (json) {
-                $('#table-autorizante').DataTable().clear().destroy();
-                main('gt_autorizantes', 'autorizante');
-
-                if (json.includes('error')) {
-                    alert("Error al eliminar el regstro")
-                }
-            },
-            error: function (xhr, status) {
-                alert('Error, ocurrio un error al ejecutar la peticion');
-                console.log({xhr, status})
-            }
-        });
+        eliminar(() => {
+            table_gt_autorizantes.clear().destroy();
+            table('gt_autorizantes', [
+                {title: "Id", data: `gt_autorizantes_id`},
+                {title: "Autorizante", data: 'em_empleado_nombre_completo'},
+                {title: "Acciones", data: null},
+            ], filtro);
+        })
     });
 
-    table_2.on('click', 'button', function (e) {
+    table_gt_solicitantes.on('click', 'button', function (e) {
         const url = $(this).data("url");
 
-        $.ajax({
-            url: url,
-            type: 'POST',
-            success: function (json) {
-                $('#table-solicitante').DataTable().clear().destroy();
-                main('gt_solicitantes', 'solicitante');
-
-                if (json.includes('error')) {
-                    alert("Error al eliminar el regstro")
-                }
-            },
-            error: function (xhr, status) {
-                alert('Error, ocurrio un error al ejecutar la peticion');
-                console.log({xhr, status})
-            }
-        });
+        eliminar(() => {
+            table_gt_solicitantes.clear().destroy();
+            table('gt_solicitantes', [
+                {title: "Id", data: `gt_solicitantes_id`},
+                {title: "Solicitante", data: 'em_empleado_nombre_completo'},
+                {title: "Acciones", data: null},
+            ], filtro);
+        })
     });
 
-    table_3.on('click', 'button', function (e) {
-        const url = $(this).data("url");
-
-        $.ajax({
-            url: url,
-            type: 'POST',
-            success: function (json) {
-                if (json.includes('error')) {
-                    alert("Error al eliminar el regstro")
-                    return;
-                }
-
-                $('#table-productos').DataTable().clear().destroy();
-                main_productos('gt_solicitud_producto', 'productos');
-            },
-            error: function (xhr, status) {
-                alert('Error, ocurrio un error al ejecutar la peticion');
-                console.log({xhr, status})
-            }
-        });
-    });
-
-    let getData = async (url, acciones) => {
-        fetch(url)
-            .then(response => response.json())
-            .then(data => acciones(data))
-            .catch(err => {
-                alert('Error al ejecutar');
-                console.error("ERROR: ", err.message)
-            });
-    }
-
-    sl_com_producto.change(function () {
-        let selected = $(this).find('option:selected');
-
-        let url = get_url("gt_solicitud_producto", "get_precio_promedio", {com_producto_id: selected.val()}, 0);
-
-        getData(url, (data) => {
-            txt_precio.val('');
-
-            if (data.n_registros > 0) {
-                let total = 0.0;
-                $.each(data.registros, function (index, registro) {
-                    total += parseFloat(registro.gt_solicitud_producto_precio);
-                });
-
-                let promedio = total / data.n_registros;
-                txt_precio.val(promedio.toFixed(3));
-            }
-        });
-
-    });
-
-    let timer = null;
-
-    $('#gt_solicitud_producto').on('click', 'thead:first-child, tbody', function (event) {
-
-        if (timer) {
-            clearTimeout(timer);
-        }
-
-        timer = setTimeout(() => {
-            var selectedData = table_gt_solicitud_producto.rows('.selected').data();
-
-            productos_seleccionados = [];
-
-            selectedData.each(function (value, row, data) {
-                productos_seleccionados.push(value.com_producto_id);
-            });
-
-            $('#agregar_producto').val(productos_seleccionados);
-        }, 500);
-    });
-
-    $('#form-orden').on('submit', function(e){
-        if(productos_seleccionados.length === 0) {
-            e.preventDefault();
-            alert("Seleccione un producto");
-        }
-    });
 
 });
 
