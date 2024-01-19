@@ -10,7 +10,8 @@ class gt_requisicion_producto extends _base_transacciones
     public function __construct(PDO $link)
     {
         $tabla = 'gt_requisicion_producto';
-        $columnas = array($tabla => false, 'gt_requisicion' => $tabla, 'com_producto' => $tabla, 'cat_sat_unidad' => $tabla);
+        $columnas = array($tabla => false, 'gt_requisicion' => $tabla, 'com_producto' => $tabla, 'cat_sat_unidad' => $tabla,
+            'gt_tipo_requisicion' => 'gt_requisicion');
         $campos_obligatorios = array();
 
         $no_duplicados = array();

@@ -121,12 +121,9 @@ $(document).ready(function () {
         {title: 'Unidad', data: `cat_sat_unidad_descripcion`},
         {title: 'Cantidad', data: `gt_requisicion_producto_cantidad`},
         {title: 'Precio', data: `gt_requisicion_producto_precio`},
-        {title: 'Total', data: null},
+        {title: 'Total', data: `gt_requisicion_producto_total`},
         {title: 'Acciones', data: null},
-    ], [{
-        "key": "gt_solicitud_requisicion.gt_solicitud_id",
-        "valor": registro_id
-    }], [{
+    ], [], [{
         "entidad": "gt_solicitud_requisicion",
         "key": "gt_solicitud_id",
         "enlace": "gt_requisicion",
