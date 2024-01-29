@@ -176,33 +176,6 @@ $(document).ready(function () {
         });
     });
 
-    table_gt_autorizantes.on('click', 'button', function (e) {
-        const url = $(this).data("url");
-
-        eliminar(url, () => {
-            $('#table-gt_autorizantes').DataTable().clear().destroy();
-            table('gt_autorizantes', [
-                {title: "Id", data: `gt_autorizantes_id`},
-                {title: "Autorizante", data: 'em_empleado_nombre_completo'},
-                {title: "Acciones", data: null},
-            ], filtro);
-        })
-    });
-
-    table_gt_solicitantes.on('click', 'button', function (e) {
-        const url = $(this).data("url");
-
-        eliminar(url, () => {
-            $('#table-gt_solicitantes').DataTable().clear().destroy();
-            table('gt_solicitantes', [
-                {title: "Id", data: `gt_solicitantes_id`},
-                {title: "Solicitante", data: 'em_empleado_nombre_completo'},
-                {title: "Acciones", data: null},
-            ], filtro);
-        })
-    });
-
-
     btn_alta_producto.click(function () {
 
         let producto = sl_com_producto.find('option:selected').val();
@@ -230,39 +203,65 @@ $(document).ready(function () {
             return;
         }
 
-        let url = get_url("gt_solicitud_producto", "alta_bd", {});
+        let data = {
+            com_producto_id: producto,
+            cat_sat_unidad_id: unidad,
+            cantidad: cantidad,
+            precio: precio,
+            gt_solicitud_id: registro_id
+        };
 
-        $.ajax({
-            url: url,
-            data: {
-                com_producto_id: producto,
-                cat_sat_unidad_id: unidad,
-                cantidad: cantidad,
-                precio: precio,
-                gt_solicitud_id: registro_id
-            },
-            type: 'POST',
-            success: function (json) {
-                sl_com_producto.val('').change();
-                sl_cat_sat_unidad.val('').change();
-                txt_cantidad.val('');
-                txt_precio.val('');
+        alta("gt_solicitud_producto", data, () => {
+            sl_com_producto.val('').change();
+            sl_cat_sat_unidad.val('').change();
+            txt_cantidad.val('');
+            txt_precio.val('');
 
-                if (json.hasOwnProperty("error")) {
-                    alert(json.mensaje_limpio)
-                    return;
-                }
-
-                $('#table-productos').DataTable().clear().destroy();
-                main_productos('gt_solicitud_producto', 'productos');
-            },
-            error: function (xhr, status) {
-                alert('Error, ocurrio un error al ejecutar la peticion');
-                console.log({xhr, status})
-            }
+            $('#table-productos').DataTable().clear().destroy();
+            table('gt_requisicion_producto', [
+                {title: 'Id', data: `gt_requisicion_producto_id`},
+                {title: 'Tipo', data: `gt_tipo_requisicion_descripcion`},
+                {title: 'Producto', data: `com_producto_descripcion`},
+                {title: 'Unidad', data: `cat_sat_unidad_descripcion`},
+                {title: 'Cantidad', data: `gt_requisicion_producto_cantidad`},
+                {title: 'Precio', data: `gt_requisicion_producto_precio`},
+                {title: 'Total', data: `gt_requisicion_producto_total`},
+                {title: 'Acciones', data: null},
+            ], [], [{
+                "entidad": "gt_solicitud_requisicion",
+                "key": "gt_solicitud_id",
+                "enlace": "gt_requisicion",
+                "key_enlace": "id",
+                "renombre": "gt_solicitud_requisicion"
+            }]);
         });
     });
 
+    table_gt_autorizantes.on('click', 'button', function (e) {
+        const url = $(this).data("url");
+
+        eliminar(url, () => {
+            $('#table-gt_autorizantes').DataTable().clear().destroy();
+            table('gt_autorizantes', [
+                {title: "Id", data: `gt_autorizantes_id`},
+                {title: "Autorizante", data: 'em_empleado_nombre_completo'},
+                {title: "Acciones", data: null},
+            ], filtro);
+        })
+    });
+
+    table_gt_solicitantes.on('click', 'button', function (e) {
+        const url = $(this).data("url");
+
+        eliminar(url, () => {
+            $('#table-gt_solicitantes').DataTable().clear().destroy();
+            table('gt_solicitantes', [
+                {title: "Id", data: `gt_solicitantes_id`},
+                {title: "Solicitante", data: 'em_empleado_nombre_completo'},
+                {title: "Acciones", data: null},
+            ], filtro);
+        })
+    });
 
     table_gt_requisicion_producto.on('click', 'button', function (e) {
         const url = $(this).data("url");
