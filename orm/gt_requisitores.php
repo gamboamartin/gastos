@@ -18,9 +18,10 @@ class gt_requisitores extends _base_auto_soli
 
         $no_duplicados = array();
 
+        $columnas_extra['em_empleado_nombre_completo'] = 'CONCAT (IFNULL(em_empleado.nombre,"")," ",IFNULL(em_empleado.ap, "")," ",IFNULL(em_empleado.am,""))';
 
         parent::__construct(link: $link, tabla: $tabla, campos_obligatorios: $campos_obligatorios,
-            columnas: $columnas, no_duplicados: $no_duplicados);
+            columnas: $columnas, columnas_extra: $columnas_extra, no_duplicados: $no_duplicados);
 
         $this->NAMESPACE = __NAMESPACE__;
     }
