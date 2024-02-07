@@ -59,8 +59,7 @@ $(document).ready(function () {
                     return;
                 }
 
-                $('#table-productos').DataTable().clear().destroy();
-                main_productos('gt_cotizacion_producto', 'productos');
+                table_gt_cotizacion_producto.ajax.reload();
             },
             error: function (xhr, status) {
                 alert('Error, ocurrio un error al ejecutar la peticion');
