@@ -192,8 +192,7 @@ $(document).ready(function () {
                     return;
                 }
 
-                $('#table-productos').DataTable().clear().destroy();
-                main_productos('gt_requisicion_producto', 'productos');
+                table_gt_requisicion_producto.ajax.reload();
             },
             error: function (xhr, status) {
                 alert('Error, ocurrio un error al ejecutar la peticion');
