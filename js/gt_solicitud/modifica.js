@@ -217,23 +217,7 @@ $(document).ready(function () {
             txt_cantidad.val('');
             txt_precio.val('');
 
-            $('#table-productos').DataTable().clear().destroy();
-            table('gt_requisicion_producto', [
-                {title: 'Id', data: `gt_requisicion_producto_id`},
-                {title: 'Tipo', data: `gt_tipo_requisicion_descripcion`},
-                {title: 'Producto', data: `com_producto_descripcion`},
-                {title: 'Unidad', data: `cat_sat_unidad_descripcion`},
-                {title: 'Cantidad', data: `gt_requisicion_producto_cantidad`},
-                {title: 'Precio', data: `gt_requisicion_producto_precio`},
-                {title: 'Total', data: `gt_requisicion_producto_total`},
-                {title: 'Acciones', data: null},
-            ], [], [{
-                "entidad": "gt_solicitud_requisicion",
-                "key": "gt_solicitud_id",
-                "enlace": "gt_requisicion",
-                "key_enlace": "id",
-                "renombre": "gt_solicitud_requisicion"
-            }]);
+            table_gt_solicitud_producto.ajax.reload();
         });
     });
 
