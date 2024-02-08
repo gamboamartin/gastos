@@ -171,8 +171,8 @@ class controlador_gt_orden_compra extends _ctl_base {
     public function init_selects_inputs(): array
     {
         $keys_selects = $this->init_selects(keys_selects: array(), key: "gt_cotizacion_id", label: "Cotización", cols: 12);
-        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "com_producto_id", label: "Producto");
-        return $this->init_selects(keys_selects: $keys_selects, key: "cat_sat_unidad_id", label: "Unidad");
+        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "com_producto_id", label: "Producto", cols: 12);
+        return $this->init_selects(keys_selects: $keys_selects, key: "cat_sat_unidad_id", label: "Unidad", cols: 12);
     }
 
     protected function key_selects_txt(array $keys_selects): array
@@ -209,6 +209,25 @@ class controlador_gt_orden_compra extends _ctl_base {
         $base = $this->base_upd(keys_selects: $keys_selects, params: array(), params_ajustados: array());
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
+        }
+
+        $columns = array();
+        $columns["gt_orden_compra_producto_id"]["titulo"] = "Id";
+        $columns["com_producto_descripcion"]["titulo"] = "Producto";
+        $columns["cat_sat_unidad_descripcion"]["titulo"] = "Unidad";
+        $columns["gt_orden_compra_producto_cantidad"]["titulo"] = "Cantidad";
+        $columns["gt_orden_compra_producto_precio"]["titulo"] = "Precio";
+        //$columns["gt_orden_compra_producto_total"]["titulo"] = "Total";
+        $columns["elimina_bd"]["titulo"] = "Acciones";
+
+        $filtro = array('gt_orden_compra_id');
+        $data["gt_orden_compra_id.id"] = $this->registro_id;
+
+        $datatables = $this->datatable_init(columns: $columns, filtro: $filtro, identificador: "#gt_orden_compra_producto",
+            data: $data, in: array(), multi_selects: true);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al inicializar datatable', data: $datatables,
+                header: $header, ws: $ws);
         }
 
         return $r_modifica;
