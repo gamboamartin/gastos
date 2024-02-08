@@ -217,11 +217,11 @@ class controlador_gt_orden_compra extends _ctl_base {
         $columns["cat_sat_unidad_descripcion"]["titulo"] = "Unidad";
         $columns["gt_orden_compra_producto_cantidad"]["titulo"] = "Cantidad";
         $columns["gt_orden_compra_producto_precio"]["titulo"] = "Precio";
-        //$columns["gt_orden_compra_producto_total"]["titulo"] = "Total";
+        $columns["gt_orden_compra_producto_total"]["titulo"] = "Total";
         $columns["elimina_bd"]["titulo"] = "Acciones";
 
         $filtro = array('gt_orden_compra_id');
-        $data["gt_orden_compra_id.id"] = $this->registro_id;
+        $data["gt_orden_compra.id"] = $this->registro_id;
 
         $datatables = $this->datatable_init(columns: $columns, filtro: $filtro, identificador: "#gt_orden_compra_producto",
             data: $data, in: array(), multi_selects: true);
