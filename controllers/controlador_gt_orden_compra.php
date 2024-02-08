@@ -183,7 +183,7 @@ class controlador_gt_orden_compra extends _ctl_base {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
         }
 
-        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 8, key: 'descripcion',
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'descripcion',
             keys_selects: $keys_selects, place_holder: 'Descripción');
         if (errores::$error) {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
