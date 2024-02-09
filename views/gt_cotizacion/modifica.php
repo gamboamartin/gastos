@@ -117,7 +117,7 @@
                     </div>
 
                     <div class="table-responsive">
-                        <table id="gt_orden_compra_producto" class="table mb-0 table-striped table-sm "></table>
+                        <table id="gt_orden_compra_cotizacion" class="table mb-0 table-striped table-sm "></table>
                     </div>
                 </div>
             </div>

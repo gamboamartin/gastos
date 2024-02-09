@@ -85,15 +85,6 @@ $(document).ready(function () {
                                 "valor": registro_id
                             }
                         ],
-                        extra_join: [
-                            {
-                                "entidad": "gt_orden_compra_cotizacion",
-                                "key": "gt_orden_compra_id",
-                                "enlace": "gt_orden_compra",
-                                "key_enlace": "id",
-                                "renombre": "gt_orden_compra_cotizacion"
-                            },
-                        ]
                     }
                 },
                 "error": function (jqXHR, textStatus, errorThrown) {
@@ -102,33 +93,32 @@ $(document).ready(function () {
                 }
             },
             columns: [
-                {title: 'Id', data: `${seccion}_id`},
-                {title: 'Producto', data: `com_producto_descripcion`},
-                {title: 'Unidad', data: `cat_sat_unidad_descripcion`},
-                {title: 'Cantidad', data: `${seccion}_cantidad`},
-                {title: 'Precio', data: `${seccion}_precio`},
-                {title: 'Total', data: null},
+                {title: 'Id', data: `gt_orden_compra_id`},
+                {title: 'Orden Compra', data: `gt_orden_compra_descripcion`},
                 {title: 'Acciones', data: null},
             ],
             columnDefs: [
                 {
-                    targets: 5,
-                    render: function (data, type, row, meta) {
-                        return Number(row[`${seccion}_cantidad`] * row[`${seccion}_precio`]).toFixed(2);
-                    }
-                },
-                {
-                    targets: 6,
+                    targets: 2,
                     render: function (data, type, row, meta) {
                         let seccion = getParameterByName('seccion');
                         let accion = getParameterByName('accion');
                         let registro_id = getParameterByName('registro_id');
 
-                        let url = $(location).attr('href');
-                        url = url.replace(accion, "elimina_bd");
-                        url = url.replace(seccion, `gt_orden_compra_producto`);
-                        url = url.replace(registro_id, row[`gt_orden_compra_producto_id`]);
-                        return `<button  data-url="${url}" class="btn btn-danger btn-sm">Elimina</button>`;
+                        let url_elimina = $(location).attr('href');
+                        url_elimina = url_elimina.replace(accion, "elimina_bd");
+                        url_elimina = url_elimina.replace(seccion, `gt_orden_compra_cotizacion`);
+                        url_elimina = url_elimina.replace(registro_id, row[`gt_orden_compra_cotizacion_id`]);
+
+                        let url_actualiza = $(location).attr('href');
+                        url_actualiza = url_actualiza.replace(accion, "modifica");
+                        url_actualiza = url_actualiza.replace(seccion, "gt_orden_compra");
+                        url_actualiza = url_actualiza.replace(registro_id, row[`gt_orden_compra_id`]);
+
+                        let btn_actualiza = `<a href="${url_actualiza}" class="btn btn-warning btn-sm" style="margin: 0 15px;">Actualiza</a>`
+                        let btn_elimina = `<button  data-url="${url_elimina}" class="btn btn-danger btn-sm">Elimina</button>`;
+
+                        return `${btn_actualiza}${btn_elimina}`;
                     }
                 }
             ]
@@ -136,7 +126,7 @@ $(document).ready(function () {
     }
 
 
-    const table_2 = main_productos('gt_orden_compra_producto', 'gt_orden_compra_producto');
+    const table_2 = main_productos('gt_orden_compra_cotizacion', 'gt_orden_compra_cotizacion');
 
 
     table_2.on('click', 'button', function (e) {
