@@ -21,7 +21,26 @@ $(document).ready(function () {
     var table_gt_solicitud_producto = $(tables).DataTable().search('gt_solicitud_producto');
     table_gt_solicitud_producto.search('').columns().search('').draw();
 
-    const table = (seccion, columns, filtro = [], extra_join = []) => {
+    const table = (seccion, columns, filtro = [], extra_join = [], columnDefs = []) => {
+
+        let $columnDefs = columnDefs.length === 0 ? [
+            {
+                targets: columns.length - 1,
+                render: function (data, type, row, meta) {
+                    let sec = getParameterByName('seccion');
+                    let acc = getParameterByName('accion');
+                    let registro_id = getParameterByName('registro_id');
+
+                    let url = $(location).attr('href');
+                    url = url.replace(acc, "elimina_bd");
+                    url = url.replace(sec, seccion);
+                    url = url.replace(registro_id, row[`${seccion}_id`]);
+                    return `<button  data-url="${url}" class="btn btn-danger btn-sm">Elimina</button>`;
+                }
+            }
+        ] : columnDefs;
+
+
         const ruta_load = get_url(seccion, "data_ajax", {ws: 1});
 
         return new DataTable(`#table-${seccion}`, {
@@ -41,22 +60,7 @@ $(document).ready(function () {
                 }
             },
             columns: columns,
-            columnDefs: [
-                {
-                    targets: columns.length - 1,
-                    render: function (data, type, row, meta) {
-                        let sec = getParameterByName('seccion');
-                        let acc = getParameterByName('accion');
-                        let registro_id = getParameterByName('registro_id');
-
-                        let url = $(location).attr('href');
-                        url = url.replace(acc, "elimina_bd");
-                        url = url.replace(sec, seccion);
-                        url = url.replace(registro_id, row[`${seccion}_id`]);
-                        return `<button  data-url="${url}" class="btn btn-danger btn-sm">Elimina</button>`;
-                    }
-                }
-            ]
+            columnDefs: $columnDefs
         });
     }
 
@@ -122,6 +126,30 @@ $(document).ready(function () {
         {
             "key": "gt_solicitud_requisicion.gt_solicitud_id",
             "valor": registro_id
+        }
+    ],[], [
+        {
+            targets: 2,
+            render: function (data, type, row, meta) {
+                let seccion = getParameterByName('seccion');
+                let accion = getParameterByName('accion');
+                let registro_id = getParameterByName('registro_id');
+
+                let url_elimina = $(location).attr('href');
+                url_elimina = url_elimina.replace(accion, "elimina_bd");
+                url_elimina = url_elimina.replace(seccion, `gt_solicitud_requisicion`);
+                url_elimina = url_elimina.replace(registro_id, row[`gt_solicitud_requisicion_id`]);
+
+                let url_actualiza = $(location).attr('href');
+                url_actualiza = url_actualiza.replace(accion, "modifica");
+                url_actualiza = url_actualiza.replace(seccion, "gt_requisicion");
+                url_actualiza = url_actualiza.replace(registro_id, row[`gt_requisicion_id`]);
+
+                let btn_actualiza = `<a href="${url_actualiza}" class="btn btn-warning btn-sm" style="margin: 0 15px;">Actualiza</a>`
+                let btn_elimina = `<button  data-url="${url_elimina}" class="btn btn-danger btn-sm">Elimina</button>`;
+
+                return `${btn_actualiza}${btn_elimina}`;
+            }
         }
     ]);
 
