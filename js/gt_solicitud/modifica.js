@@ -114,22 +114,16 @@ $(document).ready(function () {
         {title: "Solicitante", data: 'em_empleado_nombre_completo'},
         {title: "Acciones", data: null},
     ], filtro);
-    const table_gt_requisicion_producto = table('gt_requisicion_producto', [
-        {title: 'Id', data: `gt_requisicion_producto_id`},
-        {title: 'Tipo', data: `gt_tipo_requisicion_descripcion`},
-        {title: 'Producto', data: `com_producto_descripcion`},
-        {title: 'Unidad', data: `cat_sat_unidad_descripcion`},
-        {title: 'Cantidad', data: `gt_requisicion_producto_cantidad`},
-        {title: 'Precio', data: `gt_requisicion_producto_precio`},
-        {title: 'Total', data: `gt_requisicion_producto_total`},
+    const table_gt_solicitud_requisicion = table('gt_solicitud_requisicion', [
+        {title: 'Id', data: `gt_requisicion_id`},
+        {title: 'Requisición ', data: `gt_requisicion_descripcion`},
         {title: 'Acciones', data: null},
-    ], [], [{
-        "entidad": "gt_solicitud_requisicion",
-        "key": "gt_solicitud_id",
-        "enlace": "gt_requisicion",
-        "key_enlace": "id",
-        "renombre": "gt_solicitud_requisicion"
-    }]);
+    ], [
+        {
+            "key": "gt_solicitud_requisicion.gt_solicitud_id",
+            "valor": registro_id
+        }
+    ]);
 
 
     btn_alta_autorizante.click(function () {
@@ -247,7 +241,7 @@ $(document).ready(function () {
         })
     });
 
-    table_gt_requisicion_producto.on('click', 'button', function (e) {
+    table_gt_solicitud_requisicion.on('click', 'button', function (e) {
         const url = $(this).data("url");
 
         $.ajax({

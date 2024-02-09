@@ -213,7 +213,7 @@
                     </div>
 
                     <div class="table-responsive">
-                        <table id="table-gt_requisicion_producto" class="table mb-0 table-striped table-sm "></table>
+                        <table id="table-gt_solicitud_requisicion" class="table mb-0 table-striped table-sm "></table>
                     </div>
                 </div>
             </div>
