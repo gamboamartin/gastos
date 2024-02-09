@@ -19,7 +19,25 @@ $(document).ready(function () {
     var table_gt_requisicion_producto = $(tables).DataTable().search('gt_requisicion_producto');
     table_gt_requisicion_producto.search('').columns().search('').draw();
 
-    const table = (seccion, columns, filtros = [], extra_join = []) => {
+    const table = (seccion, columns, filtros = [], extra_join = [], columnDefs = []) => {
+
+        let $columnDefs = columnDefs.length === 0 ? [
+            {
+                targets: columns.length - 1,
+                render: function (data, type, row, meta) {
+                    let sec = getParameterByName('seccion');
+                    let acc = getParameterByName('accion');
+                    let registro_id = getParameterByName('registro_id');
+
+                    let url = $(location).attr('href');
+                    url = url.replace(acc, "elimina_bd");
+                    url = url.replace(sec, seccion);
+                    url = url.replace(registro_id, row[`${seccion}_id`]);
+                    return `<button  data-url="${url}" class="btn btn-danger btn-sm">Elimina</button>`;
+                }
+            }
+        ] : columnDefs;
+
         const ruta_load = get_url(seccion, "data_ajax", {ws: 1});
 
         return new DataTable(`#table-${seccion}`, {
@@ -39,22 +57,7 @@ $(document).ready(function () {
                 }
             },
             columns: columns,
-            columnDefs: [
-                {
-                    targets: columns.length - 1,
-                    render: function (data, type, row, meta) {
-                        let sec = getParameterByName('seccion');
-                        let acc = getParameterByName('accion');
-                        let registro_id = getParameterByName('registro_id');
-
-                        let url = $(location).attr('href');
-                        url = url.replace(acc, "elimina_bd");
-                        url = url.replace(sec, seccion);
-                        url = url.replace(registro_id, row[`${seccion}_id`]);
-                        return `<button  data-url="${url}" class="btn btn-danger btn-sm">Elimina</button>`;
-                    }
-                }
-            ]
+            columnDefs: $columnDefs
         });
     }
 
@@ -108,23 +111,41 @@ $(document).ready(function () {
         {title: "Acciones", data: null},
     ], filtro);
 
-    const table_gt_cotizacion_producto = table('gt_cotizacion_producto', [
-        {title: 'Id', data: `gt_cotizacion_producto_id`},
+    const table_gt_cotizacion_producto = table('gt_cotizacion_requisicion', [
+        {title: 'Id', data: `gt_cotizacion_id`},
         {title: 'Tipo', data: `gt_tipo_cotizacion_descripcion`},
         {title: 'Proveedor', data: `gt_proveedor_descripcion`},
-        {title: 'Producto', data: `com_producto_descripcion`},
-        {title: 'Unidad', data: `cat_sat_unidad_descripcion`},
-        {title: 'Cantidad', data: `gt_cotizacion_producto_cantidad`},
-        {title: 'Precio', data: `gt_cotizacion_producto_precio`},
-        {title: 'Total', data: `gt_cotizacion_producto_total`},
         {title: 'Acciones', data: null},
-    ], [], [{
-        "entidad": "gt_cotizacion_requisicion",
-        "key": "gt_cotizacion_id",
-        "enlace": "gt_cotizacion",
-        "key_enlace": "id",
-        "renombre": "gt_cotizacion_requisicion"
-    }]);
+    ],  [
+        {
+            "key": "gt_cotizacion_requisicion.gt_requisicion_id",
+            "valor": registro_id
+        }
+    ],[], [
+        {
+            targets: 3,
+            render: function (data, type, row, meta) {
+                let seccion = getParameterByName('seccion');
+                let accion = getParameterByName('accion');
+                let registro_id = getParameterByName('registro_id');
+
+                let url_elimina = $(location).attr('href');
+                url_elimina = url_elimina.replace(accion, "elimina_bd");
+                url_elimina = url_elimina.replace(seccion, `gt_cotizacion_requisicion`);
+                url_elimina = url_elimina.replace(registro_id, row[`gt_cotizacion_requisicion_id`]);
+
+                let url_actualiza = $(location).attr('href');
+                url_actualiza = url_actualiza.replace(accion, "modifica");
+                url_actualiza = url_actualiza.replace(seccion, "gt_cotizacion");
+                url_actualiza = url_actualiza.replace(registro_id, row[`gt_cotizacion_id`]);
+
+                let btn_actualiza = `<a href="${url_actualiza}" class="btn btn-warning btn-sm" style="margin: 0 15px;">Actualiza</a>`
+                let btn_elimina = `<button  data-url="${url_elimina}" class="btn btn-danger btn-sm">Elimina</button>`;
+
+                return `${btn_actualiza}${btn_elimina}`;
+            }
+        }
+    ]);
 
     btn_alta_requisitor.click(function () {
 
@@ -179,7 +200,13 @@ $(document).ready(function () {
 
         $.ajax({
             url: url,
-            data: {com_producto_id: producto, cat_sat_unidad_id: unidad, cantidad: cantidad, precio: precio, gt_requisicion_id: registro_id},
+            data: {
+                com_producto_id: producto,
+                cat_sat_unidad_id: unidad,
+                cantidad: cantidad,
+                precio: precio,
+                gt_requisicion_id: registro_id
+            },
             type: 'POST',
             success: function (json) {
                 sl_com_producto.val('').change();
@@ -267,8 +294,8 @@ $(document).ready(function () {
         }, 500);
     });
 
-    $('#form-cotizacion').on('submit', function(e){
-        if(productos_seleccionados.length === 0) {
+    $('#form-cotizacion').on('submit', function (e) {
+        if (productos_seleccionados.length === 0) {
             e.preventDefault();
             alert("Seleccione un producto");
         }

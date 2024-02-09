@@ -166,7 +166,7 @@
                     </div>
 
                     <div class="table-responsive">
-                        <table id="table-gt_cotizacion_producto" class="table mb-0 table-striped table-sm "></table>
+                        <table id="table-gt_cotizacion_requisicion" class="table mb-0 table-striped table-sm "></table>
                     </div>
                 </div>
             </div>
