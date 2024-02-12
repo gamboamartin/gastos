@@ -396,9 +396,9 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
     /**
      * Funcion que de alta una cotizacion
      * @param array $datos datos de la requisicion
-     * @return array|string retorna el estado de la accion
+     * @return array|stdClass retorna el estado de la accion
      */
-    private function alta_cotizacion(array $datos) : array|string
+    private function alta_cotizacion(array $datos) : array|stdClass
     {
         $registro = array();
         $registro['gt_centro_costo_id'] = $datos['gt_centro_costo_id'];
@@ -419,9 +419,9 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
      * @param stdClass $gt_cotizacion datos de la cotizacion
      * @param int $producto id del producto a relacionar
      * @param stdClass $datos datos de la requisicion producto
-     * @return array|string retorna el estado de la accion
+     * @return array|stdClass retorna el estado de la accion
      */
-    private function alta_cotizacion_producto(stdClass $gt_cotizacion, int $producto, stdClass $datos) : array|string
+    private function alta_cotizacion_producto(stdClass $gt_cotizacion, int $producto, stdClass $datos) : array|stdClass
     {
         $registro = array();
         $registro['gt_cotizacion_id'] = $gt_cotizacion->registro_id;
@@ -441,9 +441,9 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
     /**
      * Funcion que de alta una cotizacion_requisicion
      * @param stdClass $gt_cotizacion datos de la cotizacion
-     * @return array|string retorna el estado de la accion
+     * @return array|stdClass retorna el estado de la accion
      */
-    private function alta_cotizacion_requisicion(stdClass $gt_cotizacion) : array|string
+    private function alta_cotizacion_requisicion(stdClass $gt_cotizacion) : array|stdClass
     {
         $registro = array();
         $registro['gt_cotizacion_id'] = $gt_cotizacion->registro_id;

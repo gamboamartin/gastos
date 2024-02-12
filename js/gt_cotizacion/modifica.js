@@ -94,12 +94,13 @@ $(document).ready(function () {
             },
             columns: [
                 {title: 'Id', data: `gt_orden_compra_id`},
+                {title: 'Tipo', data: `gt_tipo_orden_compra_descripcion`},
                 {title: 'Orden Compra', data: `gt_orden_compra_descripcion`},
                 {title: 'Acciones', data: null},
             ],
             columnDefs: [
                 {
-                    targets: 2,
+                    targets: 3,
                     render: function (data, type, row, meta) {
                         let seccion = getParameterByName('seccion');
                         let accion = getParameterByName('accion');

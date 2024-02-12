@@ -416,7 +416,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
      * Funcion que de alta una requisicion
      * @param array $datos datos de la solicitud
      * @param int $gt_tipo_requisicion_id id del tipo de requisicion a dar de alta
-     * @return array|string retorna el estado de la accion
+     * @return array|stdClass retorna el estado de la accion
      */
     private function alta_requisicion(array $datos, int $gt_tipo_requisicion_id) : array|stdClass
     {
@@ -438,9 +438,9 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
      * @param stdClass $gt_requisicion datos de la requisicion
      * @param int $producto id del producto a relacionar
      * @param stdClass $datos datos de la solicitud producto
-     * @return array|string retorna el estado de la accion
+     * @return array|stdClass retorna el estado de la accion
      */
-    private function alta_requisicion_producto(stdClass $gt_requisicion, int $producto, stdClass $datos) : array|string
+    private function alta_requisicion_producto(stdClass $gt_requisicion, int $producto, stdClass $datos) : array|stdClass
     {
         $registro = array();
         $registro['gt_requisicion_id'] = $gt_requisicion->registro_id;
@@ -460,9 +460,9 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
     /**
      * Funcion que de alta una solicitud_requisicion
      * @param stdClass $gt_requisicion datos de la requisicion
-     * @return array|string retorna el estado de la accion
+     * @return array|stdClass retorna el estado de la accion
      */
-    private function alta_solicitud_requisicion(stdClass $gt_requisicion) : array|string
+    private function alta_solicitud_requisicion(stdClass $gt_requisicion) : array|stdClass
     {
         $registro = array();
         $registro['gt_solicitud_id'] = $this->registro_id;

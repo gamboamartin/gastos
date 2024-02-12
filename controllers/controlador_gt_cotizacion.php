@@ -326,11 +326,12 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
     /**
      * Funcion que de alta una orden de compra
      * @param array $datos datos de la orden de compra
-     * @return array|string retorna el estado de la accion
+     * @return array|stdClass retorna el estado de la accion
      */
-    private function alta_orden_compra(array $datos) : array|string
+    private function alta_orden_compra(array $datos) : array|stdClass
     {
         $registro = array();
+        $registro['gt_tipo_orden_compra_id'] = $datos['gt_tipo_orden_compra_id'];
         $registro['descripcion'] = $datos['descripcion2'];
         $registro['codigo'] = $this->modelo->get_codigo_aleatorio();
         $alta = (new gt_orden_compra($this->link))->alta_registro(registro: $registro);
@@ -347,9 +348,9 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
      * @param stdClass $gt_orden_compra datos de la orden de compra
      * @param int $producto id del producto a relacionar
      * @param stdClass $datos datos de la cotizacion producto
-     * @return array|string retorna el estado de la accion
+     * @return array|stdClass retorna el estado de la accion
      */
-    private function alta_orden_compra_producto(stdClass $gt_orden_compra, int $producto, stdClass $datos) : array|string
+    private function alta_orden_compra_producto(stdClass $gt_orden_compra, int $producto, stdClass $datos) : array|stdClass
     {
         $registro = array();
         $registro['gt_orden_compra_id'] = $gt_orden_compra->registro_id;
@@ -369,9 +370,9 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
     /**
      * Funcion que de alta una orden_compra_cotizacion
      * @param stdClass $gt_orden_compra datos de la orden de compra
-     * @return array|string retorna el estado de la accion
+     * @return array|stdClass retorna el estado de la accion
      */
-    private function alta_orden_compra_cotizacion(stdClass $gt_orden_compra) : array|string
+    private function alta_orden_compra_cotizacion(stdClass $gt_orden_compra) : array|stdClass
     {
         $registro = array();
         $registro['gt_cotizacion_id'] = $this->registro_id;
