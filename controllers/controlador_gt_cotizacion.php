@@ -321,7 +321,12 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
         return $r_modifica;
     }
 
-    private function alta_orden_compra(array $datos)
+    /**
+     * Funcion que de alta una orden de compra
+     * @param array $datos datos de la orden de compra
+     * @return array|string retorna el estado de la accion
+     */
+    private function alta_orden_compra(array $datos) : array|string
     {
         $registro = array();
         $registro['descripcion'] = $datos['descripcion2'];
@@ -335,7 +340,14 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
         return $alta;
     }
 
-    private function alta_orden_compra_producto(stdClass $gt_orden_compra, int $producto, stdClass $datos)
+    /**
+     * Funcion que de alta una orden_compra_producto
+     * @param stdClass $gt_orden_compra datos de la orden de compra
+     * @param int $producto id del producto a relacionar
+     * @param stdClass $datos datos de la cotizacion producto
+     * @return array|string retorna el estado de la accion
+     */
+    private function alta_orden_compra_producto(stdClass $gt_orden_compra, int $producto, stdClass $datos) : array|string
     {
         $registro = array();
         $registro['gt_orden_compra_id'] = $gt_orden_compra->registro_id;
@@ -352,7 +364,12 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
         return $alta;
     }
 
-    private function alta_orden_compra_cotizacion(stdClass $gt_orden_compra)
+    /**
+     * Funcion que de alta una orden_compra_cotizacion
+     * @param stdClass $gt_orden_compra datos de la orden de compra
+     * @return array|string retorna el estado de la accion
+     */
+    private function alta_orden_compra_cotizacion(stdClass $gt_orden_compra) : array|string
     {
         $registro = array();
         $registro['gt_cotizacion_id'] = $this->registro_id;
