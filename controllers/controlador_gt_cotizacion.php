@@ -111,6 +111,7 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
         $init_data['gt_tipo_cotizacion'] = "gamboamartin\\gastos";
         $init_data['gt_proveedor'] = "gamboamartin\\gastos";
 
+        $init_data['gt_tipo_orden_compra'] = "gamboamartin\\gastos";
         $init_data['gt_requisitor'] = "gamboamartin\\gastos";
         $init_data['gt_autorizante'] = "gamboamartin\\gastos";
         $init_data['em_empleado'] = "gamboamartin\\empleado";
@@ -193,6 +194,7 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_requisitor_id", label: "Requisitor", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_autorizante_id", label: "Autorizante", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_tipo_cotizacion_id", label: "Tipo Cotización", cols: 12);
+        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_tipo_orden_compra_id", label: "Tipo Orden Compra", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "com_producto_id", label: "Producto", cols: 12);
         return $this->init_selects(keys_selects: $keys_selects, key: "cat_sat_unidad_id", label: "Unidad", cols: 12);
     }

@@ -87,6 +87,7 @@
                     <form method="post" class="form-additional" id="form-orden" action="<?php echo $controlador->link_producto_bd; ?>">
 
                         <input id="agregar_producto" name="agregar_producto" type="hidden">
+                        <?php echo $controlador->inputs->gt_tipo_orden_compra_id; ?>
                         <?php echo $controlador->inputs->descripcion2; ?>
 
                         <div class="control-group btn-alta">
