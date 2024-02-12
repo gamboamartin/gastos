@@ -99,6 +99,7 @@ class controlador_gt_orden_compra extends _ctl_base {
 
         $init_data = array();
         $init_data['gt_cotizacion'] = "gamboamartin\\gastos";
+        $init_data['gt_tipo_orden_compra'] = "gamboamartin\\gastos";
         $init_data['com_producto'] = "gamboamartin\\comercial";
         $init_data['cat_sat_unidad'] = "gamboamartin\\cat_sat";
 
@@ -171,6 +172,7 @@ class controlador_gt_orden_compra extends _ctl_base {
     public function init_selects_inputs(): array
     {
         $keys_selects = $this->init_selects(keys_selects: array(), key: "gt_cotizacion_id", label: "Cotización", cols: 12);
+        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_tipo_orden_compra_id", label: "Tipo Orden Compra", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "com_producto_id", label: "Producto", cols: 12);
         return $this->init_selects(keys_selects: $keys_selects, key: "cat_sat_unidad_id", label: "Unidad", cols: 12);
     }
