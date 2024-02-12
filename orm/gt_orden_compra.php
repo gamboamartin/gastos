@@ -10,7 +10,7 @@ use stdClass;
 class gt_orden_compra extends _modelo_parent_sin_codigo {
     public function __construct(PDO $link){
         $tabla = 'gt_orden_compra';
-        $columnas = array($tabla=>false);
+        $columnas = array($tabla=>false, "gt_tipo_orden_compra" => $tabla);
         $campos_obligatorios = array();
 
         $no_duplicados = array();

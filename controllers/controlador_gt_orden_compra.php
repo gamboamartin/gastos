@@ -208,6 +208,8 @@ class controlador_gt_orden_compra extends _ctl_base {
                 ws: $ws);
         }
 
+        $keys_selects['gt_tipo_orden_compra_id']->id_selected = $this->registro['gt_tipo_orden_compra_id'];
+
         $base = $this->base_upd(keys_selects: $keys_selects, params: array(), params_ajustados: array());
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
