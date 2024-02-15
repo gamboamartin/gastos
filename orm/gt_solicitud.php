@@ -29,15 +29,58 @@ class gt_solicitud extends _modelo_parent_sin_codigo
 
     public function alta_bd(array $keys_integra_ds = array('codigo', 'descripcion')): array|stdClass
     {
+        $acciones = $this->acciones_solicitante();
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al ejecutar acciones para el solicitante', data: $acciones);
+        }
 
         $r_alta_bd = parent::alta_bd($keys_integra_ds);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al insertar solicitud', data: $r_alta_bd);
         }
+
+        $acciones = $this->acciones_solicitantes(gt_solicitud_id: $r_alta_bd->registro_id, gt_solicitante_id: $acciones->registro_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al ejecutar acciones para el solicitante', data: $acciones);
+        }
+
         return $r_alta_bd;
     }
 
-    public function alta_solicitante(int $em_empleado_id) {
+    public function acciones_solicitante()
+    {
+        $existe = $this->existe_empleado_usuario(adm_usuario_id: $_SESSION['usuario_id']);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al comprobar si el usuario esta autorizado para hacer solicitudes',
+                data: $existe);
+        }
+
+        if ($existe->n_registros <= 0) {
+            return $this->error->error(mensaje: 'Error el usuario no cuenta con una relacion con un empleado autorizado',
+                data: $existe);
+        }
+
+        $alta_solicitante = $this->alta_solicitante(em_empleado_id: $existe->registros[0]['em_empleado_id']);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error insertar una soliciante',
+                data: $existe);
+        }
+
+        return $alta_solicitante;
+    }
+
+    public function acciones_solicitantes(int $gt_solicitud_id, int $gt_solicitante_id)
+    {
+        $alta_solicitantes = $this->alta_solicitantes(gt_solicitud_id: $gt_solicitud_id, gt_solicitante_id: $gt_solicitante_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error insertar relacion solicitud - solicitante', data: $alta_solicitantes);
+        }
+
+        return $alta_solicitantes;
+    }
+
+    public function alta_solicitante(int $em_empleado_id)
+    {
         $registros['codigo'] = $this->get_codigo_aleatorio();
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error generar codigo', data: $registros);
@@ -53,7 +96,8 @@ class gt_solicitud extends _modelo_parent_sin_codigo
         return $alta;
     }
 
-    public function alta_solicitantes(int $gt_solicitud_id, int $gt_solicitante_id) {
+    public function alta_solicitantes(int $gt_solicitud_id, int $gt_solicitante_id)
+    {
         $registros['codigo'] = $this->get_codigo_aleatorio();
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error generar codigo', data: $registros);
@@ -70,7 +114,20 @@ class gt_solicitud extends _modelo_parent_sin_codigo
         return $alta;
     }
 
-    public function convierte_requisicion(int $gt_solicitud_id, int $gt_requision_id) : array|stdClass
+    public function existe_empleado_usuario(int $adm_usuario_id): array|stdClass
+    {
+        $filtro['gt_empleado_usuario.adm_usuario_id'] = $adm_usuario_id;
+
+        $data = (new gt_empleado_usuario($this->link))->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al filtrar empleado usuario', data: $data);
+        }
+
+        return $data;
+    }
+
+
+    public function convierte_requisicion(int $gt_solicitud_id, int $gt_requision_id): array|stdClass
     {
         $alta = $this->alta_relacion_solicitud_requisicion(gt_solicitud_id: $gt_solicitud_id, gt_requision_id: $gt_requision_id);
         if (errores::$error) {
@@ -115,11 +172,11 @@ class gt_solicitud extends _modelo_parent_sin_codigo
         return $datos;
     }
 
-    public function alta_requisicion_productos(stdClass $datos, int $gt_requision_id) : array
+    public function alta_requisicion_productos(stdClass $datos, int $gt_requision_id): array
     {
         $registros = $datos->registros;
 
-        foreach ($registros as $registro){
+        foreach ($registros as $registro) {
             $alta['gt_requisicion_id'] = $gt_requision_id;
             $alta['com_producto_id'] = $registro['com_producto_id'];
             $alta['cat_sat_unidad_id'] = $registro['cat_sat_unidad_id'];
@@ -134,9 +191,6 @@ class gt_solicitud extends _modelo_parent_sin_codigo
 
         return $registros;
     }
-
-
-
 
 
 }
