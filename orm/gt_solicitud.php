@@ -27,6 +27,32 @@ class gt_solicitud extends _modelo_parent_sin_codigo
         $this->NAMESPACE = __NAMESPACE__;
     }
 
+    public function alta_bd(array $keys_integra_ds = array('codigo', 'descripcion')): array|stdClass
+    {
+
+        $r_alta_bd = parent::alta_bd($keys_integra_ds);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al insertar solicitud', data: $r_alta_bd);
+        }
+        return $r_alta_bd;
+    }
+
+    public function alta_solicitante(int $em_empleado_id) {
+        $registros['codigo'] = $this->get_codigo_aleatorio();
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error generar codigo', data: $registros);
+        }
+        $registros['descripcion'] = "Solicitud - solicitante";
+        $registros['em_empleado_id'] = $em_empleado_id;
+
+        $alta = (new gt_solicitante($this->link))->alta_registro(registro: $registros);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al dar de alta solicitante', data: $alta);
+        }
+
+        return $alta;
+    }
+
     public function convierte_requisicion(int $gt_solicitud_id, int $gt_requision_id) : array|stdClass
     {
         $alta = $this->alta_relacion_solicitud_requisicion(gt_solicitud_id: $gt_solicitud_id, gt_requision_id: $gt_requision_id);
