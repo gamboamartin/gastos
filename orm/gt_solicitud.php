@@ -53,6 +53,23 @@ class gt_solicitud extends _modelo_parent_sin_codigo
         return $alta;
     }
 
+    public function alta_solicitantes(int $gt_solicitud_id, int $gt_solicitante_id) {
+        $registros['codigo'] = $this->get_codigo_aleatorio();
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error generar codigo', data: $registros);
+        }
+        $registros['descripcion'] = "Solicitud - solicitante";
+        $registros['gt_solicitud_id'] = $gt_solicitud_id;
+        $registros['gt_solicitante_id'] = $gt_solicitante_id;
+
+        $alta = (new gt_solicitantes($this->link))->alta_registro(registro: $registros);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al dar de alta relacion solicitud - solicitante', data: $alta);
+        }
+
+        return $alta;
+    }
+
     public function convierte_requisicion(int $gt_solicitud_id, int $gt_requision_id) : array|stdClass
     {
         $alta = $this->alta_relacion_solicitud_requisicion(gt_solicitud_id: $gt_solicitud_id, gt_requision_id: $gt_requision_id);
