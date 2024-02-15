@@ -47,7 +47,11 @@ class gt_solicitud extends _modelo_parent_sin_codigo
         return $r_alta_bd;
     }
 
-    public function acciones_solicitante()
+    /**
+     * Funcion que ejecuta acciones correspondientes a un solicitante
+     * @return array|stdClass retorna el estado de la accion
+     */
+    public function acciones_solicitante() : array | stdClass
     {
         $existe = $this->existe_empleado_usuario(adm_usuario_id: $_SESSION['usuario_id']);
         if (errores::$error) {
@@ -69,7 +73,13 @@ class gt_solicitud extends _modelo_parent_sin_codigo
         return $alta_solicitante;
     }
 
-    public function acciones_solicitantes(int $gt_solicitud_id, int $gt_solicitante_id)
+    /**
+     * Funcion que ejecuta acciones correspondientes a la relacion entre una solicitud y un solicitante
+     * @param int $gt_solicitud_id id de la solicitud
+     * @param int $gt_solicitante_id id del solicitante
+     * @return array|stdClass retorna el estado de la accion
+     */
+    public function acciones_solicitantes(int $gt_solicitud_id, int $gt_solicitante_id) : array | stdClass
     {
         $alta_solicitantes = $this->alta_solicitantes(gt_solicitud_id: $gt_solicitud_id, gt_solicitante_id: $gt_solicitante_id);
         if (errores::$error) {
@@ -79,6 +89,11 @@ class gt_solicitud extends _modelo_parent_sin_codigo
         return $alta_solicitantes;
     }
 
+    /**
+     * Funcion que inserta un solicitante
+     * @param int $em_empleado_id id del empleado
+     * @return array|stdClass retorna el estado de la accion
+     */
     public function alta_solicitante(int $em_empleado_id)
     {
         $registros['codigo'] = $this->get_codigo_aleatorio();
@@ -96,6 +111,12 @@ class gt_solicitud extends _modelo_parent_sin_codigo
         return $alta;
     }
 
+    /**
+     * Funcion que inserta la relacion entre una solicitud y un solicitante
+     * @param int $gt_solicitud_id id de la solicitud
+     * @param int $gt_solicitante_id id del solicitante
+     * @return array|stdClass retorna el estado de la accion
+     */
     public function alta_solicitantes(int $gt_solicitud_id, int $gt_solicitante_id)
     {
         $registros['codigo'] = $this->get_codigo_aleatorio();
@@ -114,6 +135,11 @@ class gt_solicitud extends _modelo_parent_sin_codigo
         return $alta;
     }
 
+    /**
+     * Funcion para validar si existe la relacion entre un empleado-usuario
+     * @param int $adm_usuario_id id del usuario
+     * @return array|stdClass retorna el estado de la accion
+     */
     public function existe_empleado_usuario(int $adm_usuario_id): array|stdClass
     {
         $filtro['gt_empleado_usuario.adm_usuario_id'] = $adm_usuario_id;
