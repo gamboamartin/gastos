@@ -201,10 +201,10 @@ class controlador_gt_autorizante extends _ctl_base {
         $columns["gt_solicitud_etapa"]["titulo"] = "Etapa";
 
         $filtro = array('gt_autorizantes_id');
-        $data["gt_solicitud.id"] = $this->registro_id;
+        $data["gt_autorizante.id"] = $this->registro['gt_autorizante_id'];
 
-        $datatables = $this->datatable_init(columns: $columns, filtro: array(), identificador: "#gt_autorizantes",
-            data: array(), in: array(), multi_selects: true);
+        $datatables = $this->datatable_init(columns: $columns, filtro: $filtro, identificador: "#gt_autorizantes",
+            data: $data, in: array(), multi_selects: true);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al inicializar datatable', data: $datatables,
                 header: $header, ws: $ws);
