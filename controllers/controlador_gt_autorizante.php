@@ -199,6 +199,7 @@ class controlador_gt_autorizante extends _ctl_base {
         $columns["gt_tipo_solicitud_descripcion"]["titulo"] = "Tipo";
         $columns["gt_solicitud_descripcion"]["titulo"] = "Solicitud";
         $columns["gt_solicitud_etapa"]["titulo"] = "Etapa";
+        $columns["autoriza"]["titulo"] = "Acciones";
 
         $filtro = array('gt_autorizantes_id');
         $data["gt_autorizante.id"] = $this->registro['gt_autorizante_id'];
