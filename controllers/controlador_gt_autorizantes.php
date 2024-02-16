@@ -132,6 +132,13 @@ class controlador_gt_autorizantes extends _ctl_base {
             unset($_POST['btn_action_next']);
         }
 
+        $solicitud = $this->modelo->registro(registro_id: $this->registro_id);
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error no se pudo obtener los datos de solicitud', data: $solicitud,
+                header: $header, ws: $ws);
+        }
+
         $etapa = constantes::PR_ETAPA_AUTORIZADO->value;
         $filtro['pr_etapa.descripcion'] = $etapa;
         $etapa_proceso = (new pr_etapa_proceso($this->link))->filtro_and(filtro: $filtro);
@@ -144,12 +151,12 @@ class controlador_gt_autorizantes extends _ctl_base {
                 data: $etapa_proceso, header: $header, ws: $ws);
         }
 
-        $registro = $etapa_proceso->registros[0];
-
-        $registros['gt_solicitud_id'] = $this->registro_id;
-        $registros['pr_etapa_proceso_id'] = $registro['pr_etapa_proceso_id'];
+        $registros = array();
+        $registros['gt_solicitud_id'] = $solicitud['gt_solicitud_id'];
+        $registros['pr_etapa_proceso_id'] = $etapa_proceso->registros[0]['pr_etapa_proceso_id'];
         $registros['fecha'] = $_POST['fecha'];
-
+        $registros['descripcion'] = "Autorizacion";
+        $registros['codigo'] = $this->modelo->get_codigo_aleatorio(12);
         $alta = (new gt_solicitud_etapa($this->link))->alta_registro(registro: $registros);
         if (errores::$error) {
             $this->link->rollBack();
@@ -167,23 +174,14 @@ class controlador_gt_autorizantes extends _ctl_base {
         }
 
         if ($tipo_requisicion->n_registros <= 0){
-            return $this->retorno_error(mensaje: "Error no existe El tipo de requisicion: $tipo",
+            return $this->retorno_error(mensaje: "Error no existe el tipo de requisicion: $tipo",
                 data: $etapa_proceso, header: $header, ws: $ws);
-        }
-
-        $registro = $tipo_requisicion->registros[0];
-
-        $solicitud = (new gt_solicitud($this->link))->registro(registro_id: $this->registro_id);
-        if (errores::$error) {
-            $this->link->rollBack();
-            return $this->retorno_error(mensaje: 'Error no se pudo obtener los datos de solicitud', data: $solicitud,
-                header: $header, ws: $ws);
         }
 
         $registros = array();
         $registros['gt_centro_costo_id'] = $solicitud['gt_centro_costo_id'];
-        $registros['gt_tipo_requisicion_id'] = $registro['gt_tipo_requisicion_id'];
-        $registros['etapa'] = $solicitud['gt_solicitud_etapa'];
+        $registros['gt_tipo_requisicion_id'] = $tipo_requisicion->registros[0]['gt_tipo_requisicion_id'];
+        $registros['etapa'] = 'ALTA';
         $registros['descripcion'] = "Solicitud de requisición";
         $alta = (new gt_requisicion($this->link))->alta_registro(registro: $registros);
         if (errores::$error) {
@@ -193,7 +191,7 @@ class controlador_gt_autorizantes extends _ctl_base {
         }
 
         $registros = array();
-        $registros['gt_solicitud_id'] = $this->registro_id;
+        $registros['gt_solicitud_id'] = $solicitud['gt_solicitud_id'];
         $registros['gt_requisicion_id'] = $alta->registro_id;
         $alta = (new gt_solicitud_requisicion($this->link))->alta_registro(registro: $registros);
         if (errores::$error) {
