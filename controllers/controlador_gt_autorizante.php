@@ -75,7 +75,7 @@ class controlador_gt_autorizante extends _ctl_base {
         $keys = new stdClass();
         $keys->inputs = array('codigo', 'descripcion');
         $keys->telefonos = array();
-        $keys->fechas = array();
+        $keys->fechas = array('fecha');
         $keys->selects = array();
 
         $init_data = array();
@@ -146,6 +146,12 @@ class controlador_gt_autorizante extends _ctl_base {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
         }
 
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 6, key: 'fecha',
+            keys_selects: $keys_selects, place_holder: 'Fecha');
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
+        }
+
         return $keys_selects;
     }
 
@@ -166,6 +172,24 @@ class controlador_gt_autorizante extends _ctl_base {
         $keys_selects['em_empleado_id']->id_selected = $this->registro['em_empleado_id'];
 
         $base = $this->base_upd(keys_selects: $keys_selects, params: array(), params_ajustados: array());
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
+        }
+
+        return $r_modifica;
+    }
+
+    public function solicitudes(bool $header, bool $ws = false): array|stdClass
+    {
+        $this->accion_titulo = 'Solicitudes';
+
+        $r_modifica = $this->init_modifica();
+        if (errores::$error) {
+            return $this->retorno_error(
+                mensaje: 'Error al generar salida de template', data: $r_modifica, header: $header, ws: $ws);
+        }
+
+        $base = $this->base_upd(keys_selects: array(), params: array(), params_ajustados: array());
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
