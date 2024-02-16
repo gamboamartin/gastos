@@ -194,6 +194,22 @@ class controlador_gt_autorizante extends _ctl_base {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
 
+        $columns = array();
+        $columns["gt_solicitud_id"]["titulo"] = "Id";
+        $columns["gt_tipo_solicitud_descripcion"]["titulo"] = "Tipo";
+        $columns["gt_solicitud_descripcion"]["titulo"] = "Solicitud";
+        $columns["gt_solicitud_etapa"]["titulo"] = "Etapa";
+
+        $filtro = array('gt_autorizantes_id');
+        $data["gt_solicitud.id"] = $this->registro_id;
+
+        $datatables = $this->datatable_init(columns: $columns, filtro: array(), identificador: "#gt_autorizantes",
+            data: array(), in: array(), multi_selects: true);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al inicializar datatable', data: $datatables,
+                header: $header, ws: $ws);
+        }
+
         return $r_modifica;
     }
 

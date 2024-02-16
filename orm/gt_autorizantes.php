@@ -11,7 +11,7 @@ class gt_autorizantes extends _base_auto_soli
     {
         $tabla = 'gt_autorizantes';
         $columnas = array($tabla => false, 'gt_solicitud' => $tabla, 'gt_autorizante' => $tabla,
-            "em_empleado" => 'gt_autorizante', "gt_centro_costo" => 'gt_solicitud');
+            "em_empleado" => 'gt_autorizante', "gt_centro_costo" => 'gt_solicitud', 'gt_tipo_solicitud' => 'gt_solicitud');
         $campos_obligatorios = array();
 
         $no_duplicados = array();

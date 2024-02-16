@@ -3,27 +3,24 @@
 
 <main class="main section-color-primary">
     <div class="container">
-
         <div class="row">
+            <div class="col-md-12">
+                <?php include (new views())->ruta_templates . "head/title.php"; ?>
+                <div class="widget widget-box box-container widget-mylistings">
 
-            <div class="col-lg-12">
+                    <div class="widget-header"
+                         style="display: flex;justify-content: space-between;align-items: center;">
+                        <h2>Registro de solicitudes</h2>
+                    </div>
 
-                <div class="widget  widget-box box-container form-main widget-form-cart" id="form" style="display: flex;">
-
-                    <form method="post" action="<?php echo $controlador->link_modifica_bd; ?>" class="form-additional">
-                        <?php include (new views())->ruta_templates . "head/title.php"; ?>
-                        <?php include (new views())->ruta_templates . "head/subtitulo.php"; ?>
-                        <?php include (new views())->ruta_templates . "mensajes.php"; ?>
-
-
-                    </form>
+                    <div class="table-responsive">
+                        <table id="gt_autorizantes" class="datatables table mb-0 table-striped table-sm "></table>
+                    </div>
                 </div>
-
             </div>
 
         </div>
     </div>
-
 
 
 </main>
