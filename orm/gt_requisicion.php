@@ -29,18 +29,38 @@ class gt_requisicion extends _modelo_parent_sin_codigo
 
     public function alta_bd(array $keys_integra_ds = array('codigo', 'descripcion')): array|stdClass
     {
+        $gt_solicitud_id = $this->registro['gt_solicitud_id'];
+
         $acciones = $this->acciones_solicitud();
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al ejecutar acciones para solicitud', data: $acciones);
         }
-
 
         $r_alta_bd = parent::alta_bd($keys_integra_ds);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al insertar requisicion', data: $r_alta_bd);
         }
 
+        $relacon = $this->alta_relacion_solicitud_requisicion(gt_solicitud_id: $gt_solicitud_id,
+            gt_requisicion_id: $r_alta_bd->registro_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al insertar relacion entre solicitud y requisicion', data: $relacon);
+        }
+
         return $r_alta_bd;
+    }
+
+    public function alta_relacion_solicitud_requisicion(int $gt_solicitud_id, int $gt_requisicion_id): array|stdClass
+    {
+        $registros = array();
+        $registros['gt_solicitud_id'] = $gt_solicitud_id;
+        $registros['gt_requisicion_id'] = $gt_requisicion_id;
+        $alta = (new gt_solicitud_requisicion($this->link))->alta_registro(registro: $registros);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al ejecutar insercion de datos para solicitud y requisicion', data: $alta);
+        }
+
+        return $alta;
     }
 
     public function acciones_solicitud(): array
