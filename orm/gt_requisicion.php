@@ -29,16 +29,50 @@ class gt_requisicion extends _modelo_parent_sin_codigo
 
     public function alta_bd(array $keys_integra_ds = array('codigo', 'descripcion')): array|stdClass
     {
-        $this->registro = $this->inicializa_campos($this->registro);
+        $acciones = $this->acciones_solicitud();
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al inicializar campo base', data: $this->registro);
+            return $this->error->error(mensaje: 'Error al ejecutar acciones para solicitud', data: $acciones);
         }
+
 
         $r_alta_bd = parent::alta_bd($keys_integra_ds);
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al insertar autorizante', data: $r_alta_bd);
+            return $this->error->error(mensaje: 'Error al insertar requisicion', data: $r_alta_bd);
         }
+
         return $r_alta_bd;
     }
+
+    public function acciones_solicitud(): array
+    {
+        $resultado = $this->verificar_estado_solicitud(registros: $this->registro);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al verificar etapa de la solicitud', data: $resultado);
+        }
+
+        $this->registro = $this->limpia_campos_extras(registro: $this->registro, campos_limpiar: array("gt_solicitud_id"));
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al limpiar campos', data: $this->registro);
+        }
+
+        return $this->registro;
+    }
+
+    public function verificar_estado_solicitud(array $registros): array|stdClass
+    {
+        $filtro['gt_solicitud_etapa.gt_solicitud_id'] = $registros['gt_solicitud_id'];
+        $filtro['gt_solicitud.etapa'] = "AUTORIZADO";
+        $etapa = (new gt_solicitud_etapa($this->link))->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al filtrar etapa de la solicitud', data: $etapa);
+        }
+
+        if ($etapa->n_registros <= 0) {
+            return $this->error->error(mensaje: 'Error la solicitud no se encuentra AUTORIZADA', data: $etapa);
+        }
+
+        return $etapa;
+    }
+
 
 }
