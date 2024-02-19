@@ -27,4 +27,18 @@ class gt_requisicion extends _modelo_parent_sin_codigo
         $this->NAMESPACE = __NAMESPACE__;
     }
 
+    public function alta_bd(array $keys_integra_ds = array('codigo', 'descripcion')): array|stdClass
+    {
+        $this->registro = $this->inicializa_campos($this->registro);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al inicializar campo base', data: $this->registro);
+        }
+
+        $r_alta_bd = parent::alta_bd($keys_integra_ds);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al insertar autorizante', data: $r_alta_bd);
+        }
+        return $r_alta_bd;
+    }
+
 }

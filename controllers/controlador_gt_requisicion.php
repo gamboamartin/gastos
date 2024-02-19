@@ -190,6 +190,7 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
         $init_data['cat_sat_unidad'] = "gamboamartin\\cat_sat";
         $init_data['gt_tipo_cotizacion'] = "gamboamartin\\gastos";
         $init_data['gt_proveedor'] = "gamboamartin\\gastos";
+        $init_data['gt_solicitud'] = "gamboamartin\\gastos";
 
         $campos_view = $this->campos_view_base(init_data: $init_data, keys: $keys);
         if (errores::$error) {
@@ -276,6 +277,7 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "com_producto_id", label: "Producto", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_tipo_cotizacion_id", label: "Tipo Cotizacion", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_proveedor_id", label: "Proovedor", cols: 12);
+        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_solicitud_id", label: "Solicitud", cols: 12);
         return $this->init_selects(keys_selects: $keys_selects, key: "cat_sat_unidad_id", label: "Unidad", cols: 12);
     }
 
