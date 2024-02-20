@@ -22,6 +22,74 @@ class gt_orden_compra extends _modelo_parent_sin_codigo {
         $this->NAMESPACE = __NAMESPACE__;
     }
 
+    public function alta_bd(array $keys_integra_ds = array('codigo', 'descripcion')): array|stdClass
+    {
+        $gt_cotizacion_id = $this->registro['gt_cotizacion_id'];
+
+        $acciones = $this->acciones_cotizacion();
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al ejecutar acciones para cotizacion', data: $acciones);
+        }
+
+        $r_alta_bd = parent::alta_bd($keys_integra_ds);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al insertar orden compra', data: $r_alta_bd);
+        }
+
+        $relacon = $this->alta_relacion_cotizacion_orden_compra(gt_cotizacion_id: $gt_cotizacion_id,
+            gt_orden_compra_id: $r_alta_bd->registro_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al insertar relacion entre cotizacion y orden de compra', data: $relacon);
+        }
+
+        return $r_alta_bd;
+    }
+
+    public function alta_relacion_cotizacion_orden_compra(int $gt_cotizacion_id, int $gt_orden_compra_id): array|stdClass
+    {
+        $registros = array();
+        $registros['gt_cotizacion_id'] = $gt_cotizacion_id;
+        $registros['gt_orden_compra_id'] = $gt_orden_compra_id;
+        $alta = (new gt_orden_compra_cotizacion($this->link))->alta_registro(registro: $registros);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al ejecutar insercion de datos para cotizacion y orden de compra',
+                data: $alta);
+        }
+
+        return $alta;
+    }
+
+    public function acciones_cotizacion(): array
+    {
+        $resultado = $this->verificar_estado_cotizacion(registros: $this->registro);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al verificar etapa de la cotizacion', data: $resultado);
+        }
+
+        $this->registro = $this->limpia_campos_extras(registro: $this->registro, campos_limpiar: array("gt_cotizacion_id"));
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al limpiar campos', data: $this->registro);
+        }
+
+        return $this->registro;
+    }
+
+    public function verificar_estado_cotizacion(array $registros): array|stdClass
+    {
+        $filtro['gt_solicitud_etapa.gt_solicitud_id'] = $registros['gt_solicitud_id'];
+        $filtro['gt_solicitud.etapa'] = "AUTORIZADO";
+        $etapa = (new gt_solicitud_etapa($this->link))->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al filtrar etapa de la solicitud', data: $etapa);
+        }
+
+        if ($etapa->n_registros <= 0) {
+            return $this->error->error(mensaje: 'Error la solicitud no se encuentra AUTORIZADA', data: $etapa);
+        }
+
+        return $etapa;
+    }
+
     public function genera_orden_compra(int $gt_cotizacion_id) : array|stdClass
     {
         $productos = $this->cotizacion_productos(gt_cotizacion_id: $gt_cotizacion_id);

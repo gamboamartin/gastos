@@ -103,7 +103,6 @@ class controlador_gt_orden_compra extends _ctl_base {
         $init_data['com_producto'] = "gamboamartin\\comercial";
         $init_data['cat_sat_unidad'] = "gamboamartin\\cat_sat";
 
-
         $campos_view = $this->campos_view_base(init_data: $init_data, keys: $keys);
         if (errores::$error) {
             return $this->errores->error(mensaje: 'Error al inicializar campo view', data: $campos_view);
