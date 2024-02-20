@@ -76,15 +76,15 @@ class gt_orden_compra extends _modelo_parent_sin_codigo {
 
     public function verificar_estado_cotizacion(array $registros): array|stdClass
     {
-        $filtro['gt_solicitud_etapa.gt_solicitud_id'] = $registros['gt_solicitud_id'];
-        $filtro['gt_solicitud.etapa'] = "AUTORIZADO";
-        $etapa = (new gt_solicitud_etapa($this->link))->filtro_and(filtro: $filtro);
+        $filtro['gt_cotizacion_etapa.gt_cotizacion_id'] = $registros['gt_cotizacion_id'];
+        $filtro['gt_cotizacion.etapa'] = "AUTORIZADO";
+        $etapa = (new gt_cotizacion_etapa($this->link))->filtro_and(filtro: $filtro);
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al filtrar etapa de la solicitud', data: $etapa);
+            return $this->error->error(mensaje: 'Error al filtrar etapa de la cotizacion', data: $etapa);
         }
 
         if ($etapa->n_registros <= 0) {
-            return $this->error->error(mensaje: 'Error la solicitud no se encuentra AUTORIZADA', data: $etapa);
+            return $this->error->error(mensaje: 'Error la cotizacion no se encuentra AUTORIZADA', data: $etapa);
         }
 
         return $etapa;
