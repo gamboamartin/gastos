@@ -179,6 +179,7 @@ class controlador_gt_autorizantes extends _ctl_base {
         }
 
         $registros = array();
+        $registros['gt_solicitud_id'] = $solicitud['gt_solicitud_id'];
         $registros['gt_centro_costo_id'] = $solicitud['gt_centro_costo_id'];
         $registros['gt_tipo_requisicion_id'] = $tipo_requisicion->registros[0]['gt_tipo_requisicion_id'];
         $registros['etapa'] = 'ALTA';
@@ -187,16 +188,6 @@ class controlador_gt_autorizantes extends _ctl_base {
         if (errores::$error) {
             $this->link->rollBack();
             return $this->retorno_error(mensaje: 'Error al dar de alta requisicion', data: $alta,
-                header: $header, ws: $ws);
-        }
-
-        $registros = array();
-        $registros['gt_solicitud_id'] = $solicitud['gt_solicitud_id'];
-        $registros['gt_requisicion_id'] = $alta->registro_id;
-        $alta = (new gt_solicitud_requisicion($this->link))->alta_registro(registro: $registros);
-        if (errores::$error) {
-            $this->link->rollBack();
-            return $this->retorno_error(mensaje: 'Error al dar de alta relacion solicitud y requisicion', data: $alta,
                 header: $header, ws: $ws);
         }
 
