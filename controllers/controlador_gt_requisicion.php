@@ -18,6 +18,7 @@ use gamboamartin\gastos\models\gt_requisicion_etapa;
 use gamboamartin\gastos\models\gt_requisicion_producto;
 use gamboamartin\gastos\models\gt_solicitud;
 use gamboamartin\gastos\models\gt_solicitud_etapa;
+use gamboamartin\gastos\models\gt_tipo_cotizacion;
 use gamboamartin\proceso\models\pr_etapa_proceso;
 use gamboamartin\system\_ctl_parent_sin_codigo;
 use gamboamartin\system\actions;
@@ -152,7 +153,7 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
         $alta = (new gt_requisicion_etapa($this->link))->alta_registro(registro: $registros);
         if (errores::$error) {
             $this->link->rollBack();
-            return $this->retorno_error(mensaje: 'Error al dar de alta solicitud etapa', data: $alta,
+            return $this->retorno_error(mensaje: 'Error al dar de alta requisicion etapa', data: $alta,
                 header: $header, ws: $ws);
         }
 

@@ -157,7 +157,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         }
 
         $filtro = array();
-        $tipo = constantes::GT_TIPO_REQUISICION_DEFAULT->value;
+        $tipo = constantes::GT_TIPO_DEFAULT->value;
         $filtro['gt_tipo_requisicion.descripcion'] = $tipo;
         $tipo_requisicion = (new gt_tipo_requisicion($this->link))->filtro_and(filtro: $filtro);
         if (errores::$error) {
