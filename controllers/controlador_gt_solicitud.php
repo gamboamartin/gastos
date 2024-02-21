@@ -184,7 +184,8 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         $registros['gt_centro_costo_id'] = $solicitud['gt_centro_costo_id'];
         $registros['gt_tipo_requisicion_id'] = $registro['gt_tipo_requisicion_id'];
         $registros['etapa'] = 'ALTA';
-        $registros['descripcion'] = "Solicitud de requisición";
+        $registros['codigo'] = $this->modelo->get_codigo_aleatorio(12);
+        $registros['descripcion'] = "Solicitud de requisición - ".$registros['codigo'];
         $alta = (new gt_requisicion($this->link))->alta_registro(registro: $registros);
         if (errores::$error) {
             $this->link->rollBack();
