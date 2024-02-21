@@ -37,7 +37,6 @@ class gt_solicitud_etapa extends _base_transacciones
             return $this->error->error(mensaje: 'Error al ejecutar acciones de solicitud', data: $acciones);
         }
 
-
         return $r_alta_bd;
     }
 

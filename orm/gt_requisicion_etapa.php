@@ -29,19 +29,18 @@ class gt_requisicion_etapa extends _base_transacciones
     {
         $r_alta_bd = parent::alta_bd($keys_integra_ds);
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al insertar solicitud etapa', data: $r_alta_bd);
+            return $this->error->error(mensaje: 'Error al insertar requisicion etapa', data: $r_alta_bd);
         }
 
-        /*$acciones = $this->acciones_solicitud(registros: $this->registro);
+        $acciones = $this->acciones_requisicion(registros: $this->registro);
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al ejecutar acciones de solicitud', data: $acciones);
-        }*/
-
+            return $this->error->error(mensaje: 'Error al ejecutar acciones de la requisicion', data: $acciones);
+        }
 
         return $r_alta_bd;
     }
 
-    public function acciones_solicitud(array $registros): array|stdClass
+    public function acciones_requisicion(array $registros): array|stdClass
     {
         $etapa_proceso = (new pr_etapa_proceso($this->link))->registro(registro_id: $registros['pr_etapa_proceso_id']);
         if (errores::$error) {
@@ -50,9 +49,9 @@ class gt_requisicion_etapa extends _base_transacciones
 
         $registro['etapa'] = $etapa_proceso['pr_etapa_descripcion'];
 
-        $update = (new gt_solicitud($this->link))->modifica_bd(registro: $registro,id: $registros['gt_requisicion_id']);
+        $update = (new gt_requisicion($this->link))->modifica_bd(registro: $registro,id: $registros['gt_requisicion_id']);
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al modificar etapa de solicitud', data: $update);
+            return $this->error->error(mensaje: 'Error al modificar etapa de la requisicion', data: $update);
         }
 
         return $update;
