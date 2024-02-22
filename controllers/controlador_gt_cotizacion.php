@@ -11,6 +11,7 @@ namespace gamboamartin\gastos\controllers;
 use base\controller\controler;
 use gamboamartin\errores\errores;
 use gamboamartin\gastos\models\gt_cotizacion;
+use gamboamartin\gastos\models\gt_cotizacion_etapa;
 use gamboamartin\gastos\models\gt_cotizacion_producto;
 use gamboamartin\gastos\models\gt_orden_compra;
 use gamboamartin\gastos\models\gt_orden_compra_cotizacion;
@@ -96,6 +97,81 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
         }
 
         return $r_alta;
+    }
+
+    public function autoriza(bool $header, bool $ws = false): array|stdClass
+    {
+        $this->accion_titulo = 'Autoriza';
+
+        $r_modifica = $this->init_modifica();
+        if (errores::$error) {
+            return $this->retorno_error(
+                mensaje: 'Error al generar salida de template', data: $r_modifica, header: $header, ws: $ws);
+        }
+
+        $this->row_upd->fecha = date("Y-m-d");
+
+        $base = $this->base_upd(keys_selects: array(), params: array(), params_ajustados: array());
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
+        }
+
+        return $r_modifica;
+    }
+
+    public function autoriza_bd(bool $header, bool $ws = false): array|stdClass
+    {
+        $this->link->beginTransaction();
+
+        $siguiente_view = (new actions())->init_alta_bd();
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al obtener siguiente view', data: $siguiente_view,
+                header: $header, ws: $ws);
+        }
+
+        if (isset($_POST['btn_action_next'])) {
+            unset($_POST['btn_action_next']);
+        }
+
+        $etapa = constantes::PR_ETAPA_AUTORIZADO->value;
+        $filtro['pr_etapa.descripcion'] = $etapa;
+        $etapa_proceso = (new pr_etapa_proceso($this->link))->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al integrar base', data: $etapa_proceso, header: $header, ws: $ws);
+        }
+
+        if ($etapa_proceso->n_registros <= 0){
+            return $this->retorno_error(mensaje: "Error no existe la relacion de etapa proceso: $etapa",
+                data: $etapa_proceso, header: $header, ws: $ws);
+        }
+
+        $registro = $etapa_proceso->registros[0];
+
+        $registros['gt_cotizacion_id'] = $this->registro_id;
+        $registros['pr_etapa_proceso_id'] = $registro['pr_etapa_proceso_id'];
+        $registros['fecha'] = $_POST['fecha'];
+        $alta = (new gt_cotizacion_etapa($this->link))->alta_registro(registro: $registros);
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al dar de alta cotizacion etapa', data: $alta,
+                header: $header, ws: $ws);
+        }
+
+        $this->link->commit();
+
+        if ($header) {
+            $this->retorno_base(registro_id: $this->registro_id, result: $alta,
+                siguiente_view: "lista", ws: $ws);
+        }
+        if ($ws) {
+            header('Content-Type: application/json');
+            echo json_encode($alta, JSON_THROW_ON_ERROR);
+            exit;
+        }
+        $alta->siguiente_view = "lista";
+
+        return $alta;
     }
 
     protected function campos_view(array $inputs = array()): array
