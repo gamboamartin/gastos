@@ -32,7 +32,29 @@ class gt_cotizacion_etapa extends _base_transacciones
             return $this->error->error(mensaje: 'Error al insertar solicitud etapa', data: $r_alta_bd);
         }
 
+        $acciones = $this->acciones_cotizacion(registros: $this->registro);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al ejecutar acciones de la cotizacion', data: $acciones);
+        }
+
         return $r_alta_bd;
+    }
+
+    public function acciones_cotizacion(array $registros): array|stdClass
+    {
+        $etapa_proceso = (new pr_etapa_proceso($this->link))->registro(registro_id: $registros['pr_etapa_proceso_id']);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al ejecutar filtro en etapa proceso', data: $etapa_proceso);
+        }
+
+        $registro['etapa'] = $etapa_proceso['pr_etapa_descripcion'];
+
+        $update = (new gt_cotizacion($this->link))->modifica_bd(registro: $registro,id: $registros['gt_cotizacion_id']);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al modificar etapa de la cotizacion', data: $update);
+        }
+
+        return $update;
     }
 
     protected function inicializa_campos(array $registros): array
