@@ -2,10 +2,12 @@
 namespace gamboamartin\gastos\models;
 
 use base\orm\_modelo_parent_sin_codigo;
+use gamboamartin\errores\errores;
 use PDO;
 
 
-class gt_orden_compra_cotizacion extends _modelo_parent_sin_codigo {
+class gt_orden_compra_cotizacion extends _base_auto_soli {
+
     public function __construct(PDO $link){
         $tabla = 'gt_orden_compra_cotizacion';
         $columnas = array($tabla=>false, "gt_cotizacion" => $tabla, "gt_orden_compra" => $tabla, "gt_tipo_orden_compra" => "gt_orden_compra");
@@ -19,4 +21,19 @@ class gt_orden_compra_cotizacion extends _modelo_parent_sin_codigo {
 
         $this->NAMESPACE = __NAMESPACE__;
     }
+
+    protected function inicializa_campos(array $registros): array
+    {
+        $registros['codigo'] = $this->get_codigo_aleatorio();
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error generar codigo', data: $registros);
+        }
+
+        $registros['codigo'] .= $registros['gt_solicitud_id'];
+        $registros['descripcion'] = $registros['codigo'];
+
+        return $registros;
+    }
+
+
 }
