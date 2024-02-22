@@ -38,6 +38,7 @@ use stdClass;
 class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
 
     public string $link_partidas = '';
+    public string $link_autoriza_bd = '';
     public string $link_producto_bd = '';
 
     public function __construct(PDO      $link, html $html = new \gamboamartin\template_1\html(),
@@ -239,6 +240,14 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
             print_r($error);
             exit;
         }
+
+        $link = $this->obj_link->get_link(seccion: "gt_cotizacion", accion: "autoriza_bd");
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al recuperar link autoriza_bd', data: $link);
+            print_r($error);
+            exit;
+        }
+        $this->link_autoriza_bd = $link;
 
         $link = $this->obj_link->get_link(seccion: "gt_cotizacion", accion: "producto_bd");
         if (errores::$error) {
