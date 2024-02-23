@@ -89,12 +89,32 @@ class controlador_gt_orden_compra extends _ctl_base {
         return $r_alta;
     }
 
+    public function autoriza(bool $header, bool $ws = false): array|stdClass
+    {
+        $this->accion_titulo = 'Autoriza';
+
+        $r_modifica = $this->init_modifica();
+        if (errores::$error) {
+            return $this->retorno_error(
+                mensaje: 'Error al generar salida de template', data: $r_modifica, header: $header, ws: $ws);
+        }
+
+        $this->row_upd->fecha = date("Y-m-d");
+
+        $base = $this->base_upd(keys_selects: array(), params: array(), params_ajustados: array());
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
+        }
+
+        return $r_modifica;
+    }
+
     protected function campos_view(): array
     {
         $keys = new stdClass();
         $keys->inputs = array('codigo', 'descripcion', 'cantidad', 'precio');
         $keys->telefonos = array();
-        $keys->fechas = array();
+        $keys->fechas = array('fecha');
         $keys->selects = array();
 
         $init_data = array();
@@ -187,6 +207,12 @@ class controlador_gt_orden_compra extends _ctl_base {
 
         $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'descripcion',
             keys_selects: $keys_selects, place_holder: 'Descripción');
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
+        }
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 6, key: 'fecha',
+            keys_selects: $keys_selects, place_holder: 'Fecha');
         if (errores::$error) {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
         }
