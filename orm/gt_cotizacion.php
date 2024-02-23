@@ -50,6 +50,12 @@ class gt_cotizacion extends _modelo_parent_sin_codigo
         return $r_alta_bd;
     }
 
+    /**
+     * Da de alta una relacion entre requisicion y cotizacion
+     * @param int $gt_requisicion_id id de la requisicion
+     * @param int $gt_cotizacion_id id de la cotizacion
+     * @return array|stdClass retorna el estado del alta
+     */
     public function alta_relacion_requisicion_cotizacion(int $gt_requisicion_id, int $gt_cotizacion_id,): array|stdClass
     {
         $registros = array();
@@ -64,6 +70,10 @@ class gt_cotizacion extends _modelo_parent_sin_codigo
         return $alta;
     }
 
+    /**
+     * Ejecuta acciones para una requisicion
+     * @return array retorna los registros procesados
+     */
     public function acciones_requisicion(): array
     {
         $resultado = $this->verificar_estado_requisicion(registros: $this->registro);
@@ -79,6 +89,12 @@ class gt_cotizacion extends _modelo_parent_sin_codigo
         return $this->registro;
     }
 
+
+    /**
+     * Verifica el estado de una requisicion
+     * @param array $registros registros enviados
+     * @return array|stdClass retorna los registros del estado de la etapa
+     */
     public function verificar_estado_requisicion(array $registros): array|stdClass
     {
         $filtro['gt_requisicion_etapa.gt_requisicion_id'] = $registros['gt_requisicion_id'];
