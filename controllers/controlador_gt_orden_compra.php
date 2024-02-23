@@ -32,6 +32,7 @@ use stdClass;
 class controlador_gt_orden_compra extends _ctl_base {
 
     public string $link_partida_bd = '';
+    public string $link_autoriza_bd = '';
 
     public function __construct(PDO      $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass())
@@ -164,6 +165,14 @@ class controlador_gt_orden_compra extends _ctl_base {
             print_r($error);
             exit;
         }
+
+        $link = $this->obj_link->get_link(seccion: "gt_orden_compra", accion: "autoriza_bd");
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al recuperar link autoriza_bd', data: $link);
+            print_r($error);
+            exit;
+        }
+        $this->link_autoriza_bd = $link;
 
         $link = $this->obj_link->get_link(seccion: "gt_orden_compra", accion: "partidas_bd");
         if (errores::$error) {
