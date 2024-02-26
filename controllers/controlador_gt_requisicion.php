@@ -525,26 +525,20 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
             }
         }
 
-        $gt_cotizacion_requisicion = $this->alta_cotizacion_requisicion(gt_cotizacion: $gt_cotizacion);
-        if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al dar de alta relacion cotizacion y requisicion', data: $gt_cotizacion_requisicion,
-                header: $header, ws: $ws);
-        }
-
         $this->link->commit();
 
         if ($header) {
-            $this->retorno_base(registro_id: $this->registro_id, result: $gt_cotizacion_requisicion,
+            $this->retorno_base(registro_id: $this->registro_id, result: $gt_cotizacion,
                 siguiente_view: "modifica", ws: $ws);
         }
         if ($ws) {
             header('Content-Type: application/json');
-            echo json_encode($gt_cotizacion_requisicion, JSON_THROW_ON_ERROR);
+            echo json_encode($gt_cotizacion, JSON_THROW_ON_ERROR);
             exit;
         }
-        $gt_cotizacion_requisicion->siguiente_view = "modifica";
+        $gt_cotizacion->siguiente_view = "modifica";
 
-        return $gt_cotizacion_requisicion;
+        return $gt_cotizacion;
     }
 
 }
