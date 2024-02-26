@@ -404,6 +404,7 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
     private function alta_cotizacion(array $datos) : array|stdClass
     {
         $registro = array();
+        $registro['gt_requisicion_id'] = $datos['gt_requisicion_id'];
         $registro['gt_centro_costo_id'] = $datos['gt_centro_costo_id'];
         $registro['gt_tipo_cotizacion_id'] = $_POST['gt_tipo_cotizacion_id'];
         $registro['gt_proveedor_id'] = $_POST['gt_proveedor_id'];
