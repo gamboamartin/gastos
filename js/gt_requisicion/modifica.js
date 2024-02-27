@@ -270,35 +270,9 @@ $(document).ready(function () {
         });
     });
 
-    let timer = null;
 
-    $('#gt_requisicion_producto').on('click', 'thead:first-child, tbody', function (event) {
-
-        if (timer) {
-            clearTimeout(timer);
-        }
-
-        timer = setTimeout(() => {
-            var selectedData = table_gt_requisicion_producto.rows('.selected').data();
-
-            requisiciones_seleccionadas = [];
-            productos_seleccionados = [];
-
-            selectedData.each(function (value, row, data) {
-                requisiciones_seleccionadas.push(value.gt_requisicion_producto_id);
-                productos_seleccionados.push(value.com_producto_id);
-            });
-
-            $('#agregar_requisicion').val(requisiciones_seleccionadas);
-            $('#agregar_producto').val(productos_seleccionados);
-        }, 500);
-    });
-
-    $('#form-cotizacion').on('submit', function (e) {
-        if (productos_seleccionados.length === 0) {
-            e.preventDefault();
-            alert("Seleccione un producto");
-        }
+    seleccionar_tabla('#gt_requisicion_producto', table_gt_requisicion_producto, '#agregar_producto', function (seleccionados) {
+        alta_productos('#form-cotizacion', seleccionados);
     });
 
 });
