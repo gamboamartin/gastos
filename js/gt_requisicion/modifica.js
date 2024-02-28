@@ -11,7 +11,6 @@ $(document).ready(function () {
 
     let registro_id = getParameterByName('registro_id');
 
-
     var tables = $.fn.dataTable.tables(true);
     var table_gt_requisicion_producto = $(tables).DataTable().search('gt_requisicion_producto');
     table_gt_requisicion_producto.search('').columns().search('').draw();
@@ -38,8 +37,6 @@ $(document).ready(function () {
         }
     ];
 
-    const table_gt_requisitores = table('gt_requisitores', columns_gt_requisitores, filtro_gt_requisitores);
-
     const columns_gt_cotizacion_producto = [
         {
             title: 'Id',
@@ -58,6 +55,7 @@ $(document).ready(function () {
             data: null
         }
     ];
+
 
     const filtro_gt_cotizacion_producto = [
         {
@@ -94,11 +92,11 @@ $(document).ready(function () {
         ]
     }
 
+    const table_gt_requisitores = table('gt_requisitores', columns_gt_requisitores, filtro_gt_requisitores);
     const table_gt_cotizacion_producto = table('gt_cotizacion_requisicion', columns_gt_cotizacion_producto, filtro_gt_cotizacion_producto,
         [], callback_gt_cotizacion_producto);
 
-    btn_alta_requisitor.click(function () {
-
+    const callback_data_requisitor = () => {
         let requisitor = sl_gt_requisitor.find('option:selected').val();
 
         if (requisitor === "") {
@@ -106,21 +104,15 @@ $(document).ready(function () {
             return;
         }
 
-        let data = {gt_requisitor_id: requisitor, gt_requisicion_id: registro_id};
+        return {gt_requisitor_id: requisitor, gt_requisicion_id: registro_id};
+    }
 
-        alta("gt_requisitores", data, () => {
-            sl_gt_requisitor.val('').change();
-            $('#table-gt_requisitores').DataTable().clear().destroy();
-            table('gt_requisitores', [
-                {title: "Id", data: `gt_requisitores_id`},
-                {title: "Requisitor", data: 'em_empleado_nombre_completo'},
-                {title: "Acciones", data: null},
-            ], filtro);
-        });
-    });
+    const callback_respuesta_requisitor = () => {
+        sl_gt_requisitor.val('').change();
+        table_gt_requisitores.ajax.reload();
+    }
 
-    btn_alta_producto.click(function () {
-
+    const callback_data_producto = () => {
         let producto = sl_com_producto.find('option:selected').val();
         let unidad = sl_cat_sat_unidad.find('option:selected').val();
         let cantidad = txt_cantidad.val();
@@ -146,80 +138,28 @@ $(document).ready(function () {
             return;
         }
 
-        let url = get_url("gt_requisicion_producto", "alta_bd", {});
+        return {
+            com_producto_id: producto,
+            cat_sat_unidad_id: unidad,
+            cantidad: cantidad,
+            precio: precio,
+            gt_requisicion_id: registro_id
+        };
+    }
 
-        $.ajax({
-            url: url,
-            data: {
-                com_producto_id: producto,
-                cat_sat_unidad_id: unidad,
-                cantidad: cantidad,
-                precio: precio,
-                gt_requisicion_id: registro_id
-            },
-            type: 'POST',
-            success: function (json) {
-                sl_com_producto.val('').change();
-                sl_cat_sat_unidad.val('').change();
-                txt_cantidad.val('');
-                txt_precio.val('');
+    const callback_respuesta_producto = () => {
+        sl_com_producto.val('').change();
+        sl_cat_sat_unidad.val('').change();
+        txt_cantidad.val('');
+        txt_precio.val('');
+        table_gt_requisicion_producto.ajax.reload();
+    }
 
-                if (json.hasOwnProperty("error")) {
-                    alert(json.mensaje_limpio)
-                    return;
-                }
+    alta_registro(btn_alta_requisitor, "gt_requisitores", callback_data_requisitor, callback_respuesta_requisitor);
+    alta_registro(btn_alta_producto, "gt_requisicion_producto", callback_data_producto, callback_respuesta_producto);
 
-                table_gt_requisicion_producto.ajax.reload();
-            },
-            error: function (xhr, status) {
-                alert('Error, ocurrio un error al ejecutar la peticion');
-                console.log({xhr, status})
-            }
-        });
-    });
-
-    table_gt_requisitores.on('click', 'button', function (e) {
-        const url = $(this).data("url");
-
-        $.ajax({
-            url: url,
-            type: 'POST',
-            success: function (json) {
-                $('#table-requisitor').DataTable().clear().destroy();
-
-
-                if (json.includes('error')) {
-                    alert("Error al eliminar el regstro")
-                }
-            },
-            error: function (xhr, status) {
-                alert('Error, ocurrio un error al ejecutar la peticion');
-                console.log({xhr, status})
-            }
-        });
-    });
-    table_gt_cotizacion_producto.on('click', 'button', function (e) {
-        const url = $(this).data("url");
-
-        $.ajax({
-            url: url,
-            type: 'POST',
-            success: function (json) {
-                if (json.includes('error')) {
-                    alert("Error al eliminar el regstro")
-                    return;
-                }
-
-                $('#table-productos').DataTable().clear().destroy();
-                main_productos('gt_solicitud_producto', 'productos');
-            },
-            error: function (xhr, status) {
-                alert('Error, ocurrio un error al ejecutar la peticion');
-                console.log({xhr, status})
-            }
-        });
-    });
-
+    elimina_registro(table_gt_requisitores);
+    elimina_registro(table_gt_cotizacion_producto);
 
     seleccionar_tabla('#gt_requisicion_producto', table_gt_requisicion_producto, '#agregar_producto', function (seleccionados) {
         alta_productos('#form-cotizacion', seleccionados);
