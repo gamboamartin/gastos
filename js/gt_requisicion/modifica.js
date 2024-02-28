@@ -37,7 +37,7 @@ $(document).ready(function () {
         }
     ];
 
-    const columns_gt_cotizacion_producto = [
+    const columns_gt_cotizacion_requisicion = [
         {
             title: 'Id',
             data: `gt_cotizacion_id`
@@ -57,14 +57,14 @@ $(document).ready(function () {
     ];
 
 
-    const filtro_gt_cotizacion_producto = [
+    const filtro_gt_cotizacion_requisicion = [
         {
             "key": "gt_cotizacion_requisicion.gt_requisicion_id",
             "valor": registro_id
         }
     ];
 
-    const callback_gt_cotizacion_producto = (seccion, columns) => {
+    const callback_gt_cotizacion_requisicion = (seccion, columns) => {
         return [
             {
                 targets: 3,
@@ -93,8 +93,8 @@ $(document).ready(function () {
     }
 
     const table_gt_requisitores = table('gt_requisitores', columns_gt_requisitores, filtro_gt_requisitores);
-    const table_gt_cotizacion_producto = table('gt_cotizacion_requisicion', columns_gt_cotizacion_producto, filtro_gt_cotizacion_producto,
-        [], callback_gt_cotizacion_producto);
+    const table_gt_cotizacion_requisicion = table('gt_cotizacion_requisicion', columns_gt_cotizacion_requisicion,
+        filtro_gt_cotizacion_requisicion, [], callback_gt_cotizacion_requisicion);
 
     const callback_data_requisitor = () => {
         let requisitor = sl_gt_requisitor.find('option:selected').val();
@@ -159,7 +159,7 @@ $(document).ready(function () {
     alta_registro(btn_alta_producto, "gt_requisicion_producto", callback_data_producto, callback_respuesta_producto);
 
     elimina_registro(table_gt_requisitores);
-    elimina_registro(table_gt_cotizacion_producto);
+    elimina_registro(table_gt_cotizacion_requisicion);
 
     seleccionar_tabla('#gt_requisicion_producto', table_gt_requisicion_producto, '#agregar_producto', function (seleccionados) {
         alta_productos('#form-cotizacion', seleccionados);
