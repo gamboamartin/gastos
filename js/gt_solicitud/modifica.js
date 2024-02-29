@@ -15,8 +15,6 @@ $(document).ready(function () {
 
     let registro_id = getParameterByName('registro_id');
 
-    var productos_seleccionados = [];
-
     var tables = $.fn.dataTable.tables(true);
     var table_gt_solicitud_producto = $(tables).DataTable().search('gt_solicitud_producto');
     table_gt_solicitud_producto.search('').columns().search('').draw();

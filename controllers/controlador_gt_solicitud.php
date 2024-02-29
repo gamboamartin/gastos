@@ -413,6 +413,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
     private function alta_requisicion(array $datos, int $gt_tipo_requisicion_id) : array|stdClass
     {
         $registro = array();
+        $registro['gt_solicitud_id'] = $datos['gt_solicitud_id'];
         $registro['gt_centro_costo_id'] = $datos['gt_centro_costo_id'];
         $registro['gt_tipo_requisicion_id'] = $gt_tipo_requisicion_id;
         $registro['descripcion'] = $this->modelo->get_codigo_aleatorio(10);
@@ -503,7 +504,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
                 header: $header, ws: $ws);
         }
 
-        $gt_requisicion = $this->alta_requisicion(datos: $datos,gt_tipo_requisicion_id: $_POST['gt_tipo_requisicion_id']);
+        $gt_requisicion = $this->alta_requisicion(datos: $datos, gt_tipo_requisicion_id: $_POST['gt_tipo_requisicion_id']);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al dar de alta requisicion', data: $gt_requisicion,
                 header: $header, ws: $ws);
@@ -533,26 +534,20 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
             }
         }
 
-        $gt_solicitud_requisicion = $this->alta_solicitud_requisicion(gt_requisicion: $gt_requisicion);
-        if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al dar de alta relacion solicitud y requisicion', data: $gt_solicitud_requisicion,
-                header: $header, ws: $ws);
-        }
-
         $this->link->commit();
 
         if ($header) {
-            $this->retorno_base(registro_id: $this->registro_id, result: $gt_solicitud_requisicion,
+            $this->retorno_base(registro_id: $this->registro_id, result: $gt_requisicion,
                 siguiente_view: "modifica", ws: $ws);
         }
         if ($ws) {
             header('Content-Type: application/json');
-            echo json_encode($gt_solicitud_requisicion, JSON_THROW_ON_ERROR);
+            echo json_encode($gt_requisicion, JSON_THROW_ON_ERROR);
             exit;
         }
-        $gt_solicitud_requisicion->siguiente_view = "modifica";
+        $gt_requisicion->siguiente_view = "modifica";
 
-        return $gt_solicitud_requisicion;
+        return $gt_requisicion;
     }
 
 }
