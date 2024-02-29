@@ -415,11 +415,12 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
      * @param array $datos datos de la orden de compra
      * @return array|stdClass retorna el estado de la accion
      */
-    private function alta_orden_compra(array $datos) : array|stdClass
+    private function alta_orden_compra(array $datos,array $post) : array|stdClass
     {
         $registro = array();
-        $registro['gt_tipo_orden_compra_id'] = $datos['gt_tipo_orden_compra_id'];
-        $registro['descripcion'] = $datos['descripcion2'];
+        $registro['gt_cotizacion_id'] = $datos['gt_cotizacion_id'];
+        $registro['gt_tipo_orden_compra_id'] = $post['gt_tipo_orden_compra_id'];
+        $registro['descripcion'] = $post['descripcion2'];
         $registro['codigo'] = $this->modelo->get_codigo_aleatorio();
         $alta = (new gt_orden_compra($this->link))->alta_registro(registro: $registro);
         if (errores::$error) {
@@ -502,7 +503,13 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
             unset($_POST['btn_action_next']);
         }
 
-        $gt_orden_compra = $this->alta_orden_compra(datos: $_POST);
+        $datos = (new gt_cotizacion($this->link))->registro(registro_id :$this->registro_id);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al obtener cotizacion', data: $datos,
+                header: $header, ws: $ws);
+        }
+
+        $gt_orden_compra = $this->alta_orden_compra(datos: $datos, post: $_POST);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al dar de alta orden compra', data: $gt_orden_compra,
                 header: $header, ws: $ws);
@@ -533,25 +540,19 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
             }
         }
 
-        $gt_orden_compra_cotizacion = $this->alta_orden_compra_cotizacion(gt_orden_compra: $gt_orden_compra);
-        if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al dar de alta relacion compra y cotizacion', data: $gt_orden_compra_cotizacion,
-                header: $header, ws: $ws);
-        }
-
         $this->link->commit();
 
         if ($header) {
-            $this->retorno_base(registro_id: $this->registro_id, result: $gt_orden_compra_cotizacion,
+            $this->retorno_base(registro_id: $this->registro_id, result: $gt_orden_compra,
                 siguiente_view: "modifica", ws: $ws);
         }
         if ($ws) {
             header('Content-Type: application/json');
-            echo json_encode($gt_orden_compra_cotizacion, JSON_THROW_ON_ERROR);
+            echo json_encode($gt_orden_compra, JSON_THROW_ON_ERROR);
             exit;
         }
-        $gt_orden_compra_cotizacion->siguiente_view = "modifica";
+        $gt_orden_compra->siguiente_view = "modifica";
 
-        return $gt_orden_compra_cotizacion;
+        return $gt_orden_compra;
     }
 }
