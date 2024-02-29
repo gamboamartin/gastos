@@ -179,7 +179,7 @@
                          style="display: flex;justify-content: space-between;align-items: center;">
                         <h2>Requisicion</h2>
                     </div>
-                    <form method="post" class="form-additional" id="form-orden" action="<?php echo $controlador->link_producto_bd; ?>">
+                    <form method="post" class="form-additional" id="form-requisicion" action="<?php echo $controlador->link_producto_bd; ?>">
 
                         <input id="agregar_producto" name="agregar_producto" type="hidden">
                         <?php echo $controlador->inputs->gt_tipo_requisicion_id; ?>
