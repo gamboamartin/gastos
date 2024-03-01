@@ -6,23 +6,26 @@
 
         <div class="row">
 
-            <div class="col-lg-12">
+            <div class="col-md-12">
 
-                <div class="widget  widget-box box-container form-main widget-form-cart" id="form" style="display: flex;">
+                <div class="widget  widget-box box-container form-main widget-form-cart" id="form" >
 
-                    <form method="post" action="<?php echo $controlador->link_modifica_bd; ?>" class="form-additional">
-                        <?php include (new views())->ruta_templates . "head/title.php"; ?>
-                        <?php include (new views())->ruta_templates . "head/subtitulo.php"; ?>
-                        <?php include (new views())->ruta_templates . "mensajes.php"; ?>
+                    <?php include (new views())->ruta_templates . "head/title.php"; ?>
+                    <?php include (new views())->ruta_templates . "head/subtitulo.php"; ?>
+                    <?php include (new views())->ruta_templates . "mensajes.php"; ?>
 
 
-                    </form>
+                    <div class="table-responsive">
+                        <table id="gt_orden_compra" class="datatables table mb-0 table-striped table-sm "></table>
+                    </div>
                 </div>
 
             </div>
 
         </div>
     </div>
+
+
 
 </main>
 
