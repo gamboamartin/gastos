@@ -14,18 +14,16 @@
                     <?php include (new views())->ruta_templates . "head/subtitulo.php"; ?>
                     <?php include (new views())->ruta_templates . "mensajes.php"; ?>
 
-
                     <div class="table-responsive">
-                        <table id="gt_orden_compra" class="datatables table mb-0 table-striped table-sm "></table>
+                        <table id="table-gt_orden_compra" class="table mb-0 table-striped table-sm "></table>
                     </div>
+
                 </div>
 
             </div>
 
         </div>
     </div>
-
-
 
 </main>
 

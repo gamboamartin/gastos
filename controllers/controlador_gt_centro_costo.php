@@ -187,21 +187,6 @@ class controlador_gt_centro_costo extends _ctl_base {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
 
-        $columns = array();
-        $columns["gt_orden_compra_id"]["titulo"] = "Id";
-
-
-
-        $filtro = array('gt_solicitud_id');
-        $data["gt_solicitud.id"] = $this->registro_id;
-
-        $datatables = $this->datatable_init(columns: $columns, filtro: array(), identificador: "#gt_orden_compra",
-            data: array(), in: array(), multi_selects: true);
-        if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al inicializar datatable', data: $datatables,
-                header: $header, ws: $ws);
-        }
-
         return $r_modifica;
     }
 
