@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+    let registro_id = getParameterByName('registro_id');
+
     const columns_gt_orden_compra = [
         {
             title: "Id",
@@ -14,12 +16,12 @@ $(document).ready(function () {
             data: 'gt_orden_compra_descripcion'
         },
         {
-            title: "Etapa",
-            data: "gt_orden_compra_etapa"
+            title: "Proveedor",
+            data: "gt_proveedor_descripcion"
         },
         {
-            title: "Cotizacion",
-            data: "gt_orden_compra_cotizacion_gt_cotizacion_id"
+            title: "Etapa",
+            data: "gt_orden_compra_etapa"
         }
     ];
 
@@ -27,6 +29,10 @@ $(document).ready(function () {
         {
             "key": "gt_orden_compra.etapa",
             "valor": 'AUTORIZADA'
+        },
+        {
+            "key": "gt_cotizacion.gt_centro_costo_id",
+            "valor": registro_id
         }
     ];
 
@@ -37,11 +43,25 @@ $(document).ready(function () {
             "enlace": "gt_orden_compra",
             "key_enlace": "id",
             "renombre": "gt_orden_compra_cotizacion"
+        },
+        {
+            "entidad": "gt_cotizacion",
+            "key": "id",
+            "enlace": "gt_orden_compra_cotizacion",
+            "key_enlace": "gt_cotizacion_id",
+            "renombre": "gt_cotizacion"
+        },
+        {
+            "entidad": "gt_proveedor",
+            "key": "id",
+            "enlace": "gt_cotizacion",
+            "key_enlace": "gt_proveedor_id",
+            "renombre": "gt_proveedor"
         }
     ];
 
     const table_gt_orden_compra = table('gt_orden_compra', columns_gt_orden_compra, filtro_gt_orden_compra, extra_join_gt_orden_compra, function () {
-        
+
     });
 
 });
