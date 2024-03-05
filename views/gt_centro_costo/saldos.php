@@ -18,12 +18,30 @@
                         <table id="table-gt_orden_compra" class="table mb-0 table-striped table-sm "></table>
                     </div>
 
+
+
                 </div>
 
             </div>
 
         </div>
     </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class=" card">
+                    <div class="card-body">
+                        <h5 class="card-title">Saldos Totales</h5>
+                        <p class="card-text">$ <?php echo number_format($controlador->saldos, 2); ?></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 
 </main>
 
