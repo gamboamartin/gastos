@@ -191,7 +191,7 @@ class controlador_gt_centro_costo extends _ctl_base {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
 
-        $this->saldos = $this->obtener_saldo(gt_centro_costo_id: $this->registro_id);
+        $this->saldos = (new gt_centro_costo($this->link))->total_ordenes_cotizacion(gt_centro_costo_id: $this->registro_id);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al obtener saldo', data: $this->saldos, header: $header, ws: $ws);
         }
