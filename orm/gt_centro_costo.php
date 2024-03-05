@@ -27,14 +27,84 @@ class gt_centro_costo extends _modelo_parent
 
     }
 
-    public function obtener_ordenes(int $gt_centro_costo_id): array|stdClass
+    public function ordenes_cotizacion(int $gt_centro_costo_id): array|stdClass|float
     {
         $cotizaciones = $this->obtener_cotizaciones(gt_centro_costo_id: $gt_centro_costo_id);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al obtener cotizaciones', data: $cotizaciones);
         }
 
-        return $cotizaciones->registros;
+        $aplanados = $this->aplanar($cotizaciones->registros, "gt_cotizacion_id");
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al aplanar datos por gt_cotizacion_id', data: $aplanados);
+        }
+
+        $total = 0.0;
+
+        foreach ($aplanados as $elemento) {
+            $gt_orden_compra_id = $this->obtener_orden_compra_cotizacion(gt_cotizacion_id: $elemento);
+            if (errores::$error) {
+                return $this->error->error(mensaje: 'Error al obtener gt_orden_compra_id', data: $gt_orden_compra_id);
+            }
+
+            if ($gt_orden_compra_id > -1) {
+                $suma = $this->suma_productos_orden_compra(gt_orden_compra_id: $gt_orden_compra_id);
+                if (errores::$error) {
+                    return $this->error->error(mensaje: 'Error al totales de productos de la orden de compra', data: $suma);
+                }
+
+                $total += $suma;
+            }
+        }
+
+        return number_format(num: $total, decimals: 2);
+    }
+
+    public function suma_productos_orden_compra(int $gt_orden_compra_id): array|stdClass|float
+    {
+        $campos = array("gt_orden_compra_producto_total");
+        $filtro = ['gt_orden_compra_producto.gt_orden_compra_id' => $gt_orden_compra_id];
+        $datos = (new gt_orden_compra_producto($this->link))->filtro_and(
+            columnas: $campos,
+            filtro: $filtro
+        );
+        if (errores::$error) {
+            return $this->error->error('Error al obtener los datos de la orden de compra', $datos);
+        }
+
+        $suma = $this->sumar(datos: $datos->registros, columna: "gt_orden_compra_producto_total");
+        if (errores::$error) {
+            return $this->error->error('Error al sumar valores', $suma);
+        }
+
+        return number_format(num: $suma, decimals: 2);
+    }
+
+    function sumar(array $datos, string $columna): float
+    {
+        $valores = $this->aplanar(datos: $datos, columna: $columna);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al aplanar datos por $columna', data: $valores);
+        }
+
+        return number_format(num: array_sum($valores), decimals: 2);
+    }
+
+
+    public function obtener_orden_compra_cotizacion(int $gt_cotizacion_id): array|stdClass|int
+    {
+        $filtro = ['gt_orden_compra_cotizacion.gt_cotizacion_id' => $gt_cotizacion_id];
+        $orden = (new gt_orden_compra_cotizacion($this->link))->filtro_and(
+            columnas: ['gt_orden_compra_id'],
+            filtro: $filtro
+        );
+        if (errores::$error) {
+            return $this->error->error('Error filtrar orden compra cotizacion', $orden);
+        }
+
+        $registro = $orden->registros[0] ?? null;
+
+        return $registro ? $registro['gt_orden_compra_id'] : -1;
     }
 
     /**
@@ -48,7 +118,7 @@ class gt_centro_costo extends _modelo_parent
     public function obtener_cotizaciones(int $gt_centro_costo_id): array|stdClass
     {
         $filtro['gt_cotizacion.gt_centro_costo_id'] = $gt_centro_costo_id;
-        $cotizaciones = (new gt_cotizacion($this->link))->filtro_and(filtro: $filtro, limit: 2);
+        $cotizaciones = (new gt_cotizacion($this->link))->filtro_and(filtro: $filtro);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error filtrar cotizacion', data: $cotizaciones);
         }
@@ -64,16 +134,11 @@ class gt_centro_costo extends _modelo_parent
      *
      * @return array Retorna un array que contiene todos los valores de la columna especificada.
      */
-    function aplanar(array $datos, string $columna) : array {
-        $salida = array();
-
-        foreach ($datos as $fila) {
-            if (isset($fila[$columna])) {
-                $salida[] = $fila[$columna];
-            }
-        }
-
-        return $salida;
+    function aplanar(array $datos, string $columna): array
+    {
+        return array_column(array_filter($datos, function ($fila) use ($columna) {
+            return isset($fila[$columna]);
+        }), $columna);
     }
 
 }
