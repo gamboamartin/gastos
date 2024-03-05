@@ -12,6 +12,8 @@ namespace gamboamartin\gastos\controllers;
 use base\controller\controler;
 use gamboamartin\errores\errores;
 use gamboamartin\gastos\models\gt_centro_costo;
+use gamboamartin\gastos\models\gt_cotizacion;
+use gamboamartin\gastos\models\gt_orden_compra_producto;
 use gamboamartin\system\_ctl_base;
 use gamboamartin\system\links_menu;
 use gamboamartin\template\html;
@@ -189,10 +191,27 @@ class controlador_gt_centro_costo extends _ctl_base {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
 
-        $this->saldos = 20.10;
+        $this->saldos = $this->obtener_saldo(gt_centro_costo_id: $this->registro_id);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al obtener saldo', data: $this->saldos, header: $header, ws: $ws);
+        }
 
         return $r_modifica;
     }
+
+    public function obtener_saldo(int $gt_centro_costo_id): array|stdClass
+    {
+
+        $filtro['gt_cotizacion.gt_centro_costo_id'] = $gt_centro_costo_id;
+        $cotizaciones = (new gt_orden_compra_producto($this->link))->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error filtrar cotizacion', data: $cotizaciones);
+        }
+
+        return $cotizaciones;
+    }
+
+
 
 
 }
