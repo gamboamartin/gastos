@@ -37,6 +37,14 @@ class gt_centro_costo extends _modelo_parent
         return $cotizaciones->registros;
     }
 
+    /**
+     * Función para obtener cotizaciones filtradas por el ID de centro de costo.
+     *
+     * @param int $gt_centro_costo_id El ID del centro de costo.
+     *
+     * @return array|stdClass Retorna un array de cotizaciones o un objeto stdClass vacío.
+     * Si se produce un error durante la filtración, se devuelve un objeto de error.
+     */
     public function obtener_cotizaciones(int $gt_centro_costo_id): array|stdClass
     {
         $filtro['gt_cotizacion.gt_centro_costo_id'] = $gt_centro_costo_id;
@@ -48,7 +56,15 @@ class gt_centro_costo extends _modelo_parent
         return $cotizaciones;
     }
 
-    function aplanar($datos, $columna) : array {
+    /**
+     * Función para aplanar un array de datos y extraer los valores de una columna específica.
+     *
+     * @param array $datos El array de datos original con filas asociativas.
+     * @param string $columna El nombre de la columna cuyos valores se desean extraer.
+     *
+     * @return array Retorna un array que contiene todos los valores de la columna especificada.
+     */
+    function aplanar(array $datos, string $columna) : array {
         $salida = array();
 
         foreach ($datos as $fila) {
