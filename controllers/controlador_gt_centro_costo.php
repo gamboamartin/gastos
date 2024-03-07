@@ -24,6 +24,7 @@ use stdClass;
 class controlador_gt_centro_costo extends _ctl_base {
 
     public float $saldos;
+    public float $saldos_solicitud;
 
     public function __construct(PDO      $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass())
@@ -196,22 +197,11 @@ class controlador_gt_centro_costo extends _ctl_base {
             return $this->retorno_error(mensaje: 'Error al obtener saldo', data: $this->saldos, header: $header, ws: $ws);
         }
 
-        return $r_modifica;
-    }
-
-    public function obtener_saldo(int $gt_centro_costo_id): array|stdClass
-    {
-
-        $filtro['gt_cotizacion.gt_centro_costo_id'] = $gt_centro_costo_id;
-        $cotizaciones = (new gt_orden_compra_producto($this->link))->filtro_and(filtro: $filtro);
+        $this->saldos_solicitud = (new gt_centro_costo($this->link))->total_solicitud(gt_centro_costo_id: $this->registro_id);
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error filtrar cotizacion', data: $cotizaciones);
+            return $this->retorno_error(mensaje: 'Error al obtener saldo', data: $this->saldos, header: $header, ws: $ws);
         }
 
-        return $cotizaciones;
+        return $r_modifica;
     }
-
-
-
-
 }
