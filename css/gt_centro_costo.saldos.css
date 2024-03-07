@@ -25,9 +25,10 @@
 .card-title {
     margin-bottom: 0.8rem;
     color: #4f4f4f;
-    font-size: 2.25rem;
+    font-size: 1.5rem;
     font-weight: bold;
     line-height: 1.2;
+    text-transform: uppercase;
 }
 
 .card-text {
@@ -35,4 +36,12 @@
     color: #4f4f4f;
     font-size: 1.6rem;
     line-height: 1.5;
+}
+
+.card-title span {
+    color: #132aa9;
+}
+
+.card-text {
+    color: #017011;
 }

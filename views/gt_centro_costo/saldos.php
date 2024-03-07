@@ -32,11 +32,20 @@
             <div class="col-md-3">
                 <div class=" card">
                     <div class="card-body">
-                        <h5 class="card-title">Saldos Totales</h5>
+                        <h5 class="card-title"><b>Saldos:</b> <span>Ordenes de Compra</span></h5>
                         <p class="card-text">$ <?php echo number_format($controlador->saldos, 2); ?></p>
                     </div>
                 </div>
             </div>
+            <div class="col-md-3">
+                <div class=" card">
+                    <div class="card-body">
+                        <h5 class="card-title"><b>Saldos:</b> <span>Solicitudes</span></h5>
+                        <p class="card-text">$ <?php echo number_format($controlador->saldos_solicitud, 2); ?></p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
