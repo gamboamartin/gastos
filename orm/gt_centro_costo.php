@@ -61,6 +61,14 @@ class gt_centro_costo extends _modelo_parent
         return $cotizaciones;
     }
 
+    /**
+     * Función para obtener solicitudes filtradas por el ID de centro de costo.
+     *
+     * @param int $gt_centro_costo_id El ID del centro de costo.
+     *
+     * @return array|stdClass Retorna un array de solicitudes o un objeto stdClass vacío.
+     * Si se produce un error durante la filtración, se devuelve un objeto de error.
+     */
     public function obtener_solicitudes(int $gt_centro_costo_id): array|stdClass
     {
         $filtro['gt_solicitud.gt_centro_costo_id'] = $gt_centro_costo_id;
@@ -100,10 +108,10 @@ class gt_centro_costo extends _modelo_parent
     /**
      * Función para obtener el total de las ordenes de compra asociadas a cotizaciones de un centro de costo.
      *
-     * @param int $gt_centro_costo_id El ID del centro de costo para el cual se obtendrán las ordenes de compra.
+     * @param int $gt_centro_costo_id El ID del centro de costo.
      *
-     * @return array|stdClass|float Retorna el total de las ordenes de compra, o un objeto stdClass vacío,
-     * o un objeto de error en caso de fallo durante el proceso.
+     * @return array|stdClass|float Retorna el total de productos en todas las cotizaciones
+     * En caso de error, se devuelve un array, stdClass o el resultado de un error, según corresponda.
      */
     public function total_ordenes_cotizacion(int $gt_centro_costo_id): array|stdClass|float
     {
@@ -138,6 +146,14 @@ class gt_centro_costo extends _modelo_parent
         return number_format(num: $total, decimals: 2);
     }
 
+    /**
+     * Función para calcular el total de productos en todas las solicitudes asociadas a un centro de costo.
+     *
+     * @param int $gt_centro_costo_id El ID del centro de costo.
+     *
+     * @return array|stdClass|float Retorna el total de productos en todas las solicitudes
+     * En caso de error, se devuelve un array, stdClass o el resultado de un error, según corresponda.
+     */
     public function total_solicitud(int $gt_centro_costo_id): array|stdClass|float
     {
         $solicitudes= $this->obtener_solicitudes(gt_centro_costo_id: $gt_centro_costo_id);
@@ -165,12 +181,12 @@ class gt_centro_costo extends _modelo_parent
     }
 
     /**
-     * Función para calcular la suma de los productos asociados a una orden de compra.
+     * Función para calcular la suma total de los productos asociados a una orden de compra.
      *
-     * @param int $gt_orden_compra_id El ID de la orden de compra para la cual se calculará la suma.
+     * @param int $gt_orden_compra_id El ID de la orden de compra.
      *
-     * @return array|stdClass|float Retorna la suma de los productos, o un objeto stdClass vacío,
-     * o un objeto de error en caso de fallo durante el proceso.
+     * @return array|stdClass|float Retorna la suma total de los productos de la orden de compra.
+     * Si se produce un error durante la obtención o suma de los datos, se devuelve un objeto de error.
      */
     public function suma_productos_orden_compra(int $gt_orden_compra_id): array|stdClass|float
     {
@@ -192,6 +208,14 @@ class gt_centro_costo extends _modelo_parent
         return number_format(num: $suma, decimals: 2);
     }
 
+    /**
+     * Función para calcular la suma total de los productos asociados a una solicitud.
+     *
+     * @param int $gt_solicitud_id El ID de la solicitud.
+     *
+     * @return array|stdClass|float Retorna la suma total de los productos de la solicitud.
+     * Si se produce un error durante la obtención o suma de los datos, se devuelve un objeto de error.
+     */
     public function suma_productos_solicitud(int $gt_solicitud_id): array|stdClass|float
     {
         $campos = array("gt_solicitud_producto_total");
