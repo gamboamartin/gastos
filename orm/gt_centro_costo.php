@@ -154,7 +154,7 @@ class gt_centro_costo extends _modelo_parent
             }
         }
 
-        return number_format(num: $total, decimals: 2);
+        return round(num: $total, precision: 2);
     }
 
     /**
@@ -188,7 +188,7 @@ class gt_centro_costo extends _modelo_parent
             $total += $suma;
         }
 
-        return number_format(num: $total, decimals: 2);
+        return round(num: $total, precision: 2);
     }
 
     public function total_requisicion(int $gt_centro_costo_id): array|stdClass|float
@@ -214,7 +214,7 @@ class gt_centro_costo extends _modelo_parent
             $total += $suma;
         }
 
-        return number_format(num: $total, decimals: 2);
+        return round(num: $total, precision: 2);
     }
 
     /**
@@ -242,7 +242,7 @@ class gt_centro_costo extends _modelo_parent
             return $this->error->error('Error al sumar valores', $suma);
         }
 
-        return number_format(num: $suma, decimals: 2);
+        return round(num: $suma, precision: 2);
     }
 
     /**
@@ -270,7 +270,7 @@ class gt_centro_costo extends _modelo_parent
             return $this->error->error('Error al sumar valores', $suma);
         }
 
-        return number_format(num: $suma, decimals: 2);
+        return round(num: $suma, precision: 2);
     }
 
     public function suma_productos_requisicion(int $gt_requisicion_id): array|stdClass|float
@@ -290,7 +290,7 @@ class gt_centro_costo extends _modelo_parent
             return $this->error->error('Error al sumar valores', $suma);
         }
 
-        return number_format(num: $suma, decimals: 2);
+        return round(num: $suma, precision: 2);
     }
 
     /**
@@ -308,7 +308,7 @@ class gt_centro_costo extends _modelo_parent
             return $this->error->error(mensaje: 'Error al aplanar datos por $columna', data: $valores);
         }
 
-        return number_format(num: array_sum($valores), decimals: 2);
+        return round(num: array_sum($valores), precision: 2);
     }
 
 }
