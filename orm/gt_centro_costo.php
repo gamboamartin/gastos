@@ -234,6 +234,40 @@ class gt_centro_costo extends _modelo_parent
     }
 
     /**
+     * Función para calcular el total de productos en todas las cotizaciones asociadas a un centro de costo.
+     *
+     * @param int $gt_centro_costo_id El ID del centro de costo.
+     *
+     * @return array|stdClass|float Retorna el total de productos en todas las cotizaciones
+     * En caso de error, se devuelve un array, stdClass o el resultado de un error, según corresponda.
+     */
+    public function total_cotizacion(int $gt_centro_costo_id): array|stdClass|float
+    {
+        $cotizaciones = $this->obtener_cotizaciones(gt_centro_costo_id: $gt_centro_costo_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener cotizaciones', data: $cotizaciones);
+        }
+
+        $aplanados = $this->aplanar($cotizaciones->registros, "gt_cotiacion_id");
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al aplanar datos por gt_cotiacion_id', data: $aplanados);
+        }
+
+        $total = 0.0;
+
+        foreach ($aplanados as $elemento) {
+            $suma = $this->suma_productos_cotizacion(gt_cotizacion_id: $elemento);
+            if (errores::$error) {
+                return $this->error->error(mensaje: 'Error al totales de productos de la cotizacion', data: $suma);
+            }
+
+            $total += $suma;
+        }
+
+        return round(num: $total, precision: 2);
+    }
+
+    /**
      * Función para calcular la suma total de los productos asociados a una orden de compra.
      *
      * @param int $gt_orden_compra_id El ID de la orden de compra.
@@ -310,6 +344,34 @@ class gt_centro_costo extends _modelo_parent
         }
 
         $suma = $this->sumar(datos: $datos->registros, columna: "gt_requisicion_producto_total");
+        if (errores::$error) {
+            return $this->error->error('Error al sumar valores', $suma);
+        }
+
+        return round(num: $suma, precision: 2);
+    }
+
+    /**
+     * Función para calcular la suma total de los productos asociados a una cotizacion.
+     *
+     * @param int $gt_cotizacion_id El ID de la cotizacion.
+     *
+     * @return array|stdClass|float Retorna la suma total de los productos de la cotizacion.
+     * Si se produce un error durante la obtención o suma de los datos, se devuelve un objeto de error.
+     */
+    public function suma_productos_cotizacion(int $gt_cotizacion_id): array|stdClass|float
+    {
+        $campos = array("gt_cotizacion_producto_total");
+        $filtro = ['gt_cotizacion_producto.gt_cotizacion_id' => $gt_cotizacion_id];
+        $datos = (new gt_cotizacion_producto($this->link))->filtro_and(
+            columnas: $campos,
+            filtro: $filtro
+        );
+        if (errores::$error) {
+            return $this->error->error('Error al obtener los datos de la cotizacion', $datos);
+        }
+
+        $suma = $this->sumar(datos: $datos->registros, columna: "gt_cotizacion_producto_total");
         if (errores::$error) {
             return $this->error->error('Error al sumar valores', $suma);
         }
