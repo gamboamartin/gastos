@@ -80,6 +80,14 @@ class gt_centro_costo extends _modelo_parent
         return $solicitudes;
     }
 
+    /**
+     * Función para obtener requisiciones filtradas por el ID de centro de costo.
+     *
+     * @param int $gt_centro_costo_id El ID del centro de costo.
+     *
+     * @return array|stdClass Retorna un array de requisiciones o un objeto stdClass vacío.
+     * Si se produce un error durante la filtración, se devuelve un objeto de error.
+     */
     public function obtener_requisiciones(int $gt_centro_costo_id): array|stdClass
     {
         $filtro['gt_requisicion.gt_centro_costo_id'] = $gt_centro_costo_id;
@@ -191,11 +199,19 @@ class gt_centro_costo extends _modelo_parent
         return round(num: $total, precision: 2);
     }
 
+    /**
+     * Función para calcular el total de productos en todas las requisiciones asociadas a un centro de costo.
+     *
+     * @param int $gt_centro_costo_id El ID del centro de costo.
+     *
+     * @return array|stdClass|float Retorna el total de productos en todas las requisiciones
+     * En caso de error, se devuelve un array, stdClass o el resultado de un error, según corresponda.
+     */
     public function total_requisicion(int $gt_centro_costo_id): array|stdClass|float
     {
         $requisiciones = $this->obtener_requisiciones(gt_centro_costo_id: $gt_centro_costo_id);
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al obtener solicitudes', data: $requisiciones);
+            return $this->error->error(mensaje: 'Error al obtener requisiciones', data: $requisiciones);
         }
 
         $aplanados = $this->aplanar($requisiciones->registros, "gt_requisicion_id");
@@ -273,6 +289,14 @@ class gt_centro_costo extends _modelo_parent
         return round(num: $suma, precision: 2);
     }
 
+    /**
+     * Función para calcular la suma total de los productos asociados a una requisicion.
+     *
+     * @param int $gt_requisicion_id El ID de la requisicion.
+     *
+     * @return array|stdClass|float Retorna la suma total de los productos de la requisicion.
+     * Si se produce un error durante la obtención o suma de los datos, se devuelve un objeto de error.
+     */
     public function suma_productos_requisicion(int $gt_requisicion_id): array|stdClass|float
     {
         $campos = array("gt_requisicion_producto_total");
@@ -299,9 +323,9 @@ class gt_centro_costo extends _modelo_parent
      * @param array $datos El array de datos del cual se sumarán los valores.
      * @param string $columna El nombre de la columna cuyos valores se sumarán.
      *
-     * @return float Retorna la suma de los valores de la columna especificada.
+     * @return array|float Retorna la suma de los valores de la columna especificada.
      */
-    function sumar(array $datos, string $columna): float
+    function sumar(array $datos, string $columna): array|float
     {
         $valores = $this->aplanar(datos: $datos, columna: $columna);
         if (errores::$error) {
