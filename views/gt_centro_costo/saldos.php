@@ -45,6 +45,15 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-3">
+                <div class=" card">
+                    <div class="card-body">
+                        <h5 class="card-title"><b>Saldos:</b> <span>Requisiciones</span></h5>
+                        <p class="card-text">$ <?php echo number_format($controlador->saldos_requisicion, 2); ?></p>
+                    </div>
+                </div>
+            </div>
+
 
         </div>
     </div>
