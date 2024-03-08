@@ -80,6 +80,17 @@ class gt_centro_costo extends _modelo_parent
         return $solicitudes;
     }
 
+    public function obtener_requisiciones(int $gt_centro_costo_id): array|stdClass
+    {
+        $filtro['gt_requisicion.gt_centro_costo_id'] = $gt_centro_costo_id;
+        $requisiciones = (new gt_requisicion($this->link))->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error filtrar requisicion', data: $requisiciones);
+        }
+
+        return $requisiciones;
+    }
+
     /**
      * Función para obtener el ID de la orden de compra asociada a una cotización.
      *
@@ -180,6 +191,32 @@ class gt_centro_costo extends _modelo_parent
         return number_format(num: $total, decimals: 2);
     }
 
+    public function total_requisicion(int $gt_centro_costo_id): array|stdClass|float
+    {
+        $requisiciones = $this->obtener_requisiciones(gt_centro_costo_id: $gt_centro_costo_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener solicitudes', data: $requisiciones);
+        }
+
+        $aplanados = $this->aplanar($requisiciones->registros, "gt_requisicion_id");
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al aplanar datos por gt_requisicion_id', data: $aplanados);
+        }
+
+        $total = 0.0;
+
+        foreach ($aplanados as $elemento) {
+            $suma = $this->suma_productos_requisicion(gt_requisicion_id: $elemento);
+            if (errores::$error) {
+                return $this->error->error(mensaje: 'Error al totales de productos de la requisicion', data: $suma);
+            }
+
+            $total += $suma;
+        }
+
+        return number_format(num: $total, decimals: 2);
+    }
+
     /**
      * Función para calcular la suma total de los productos asociados a una orden de compra.
      *
@@ -229,6 +266,26 @@ class gt_centro_costo extends _modelo_parent
         }
 
         $suma = $this->sumar(datos: $datos->registros, columna: "gt_solicitud_producto_total");
+        if (errores::$error) {
+            return $this->error->error('Error al sumar valores', $suma);
+        }
+
+        return number_format(num: $suma, decimals: 2);
+    }
+
+    public function suma_productos_requisicion(int $gt_requisicion_id): array|stdClass|float
+    {
+        $campos = array("gt_requisicion_producto_total");
+        $filtro = ['gt_requisicion_producto.gt_requisicion_id' => $gt_requisicion_id];
+        $datos = (new gt_requisicion_producto($this->link))->filtro_and(
+            columnas: $campos,
+            filtro: $filtro
+        );
+        if (errores::$error) {
+            return $this->error->error('Error al obtener los datos de la requisicion', $datos);
+        }
+
+        $suma = $this->sumar(datos: $datos->registros, columna: "gt_requisicion_producto_total");
         if (errores::$error) {
             return $this->error->error('Error al sumar valores', $suma);
         }

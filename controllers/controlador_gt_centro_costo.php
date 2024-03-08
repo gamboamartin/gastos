@@ -25,6 +25,7 @@ class controlador_gt_centro_costo extends _ctl_base {
 
     public float $saldos;
     public float $saldos_solicitud;
+    public float $saldos_requisicion;
 
     public function __construct(PDO      $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass())
@@ -198,6 +199,11 @@ class controlador_gt_centro_costo extends _ctl_base {
         }
 
         $this->saldos_solicitud = (new gt_centro_costo($this->link))->total_solicitud(gt_centro_costo_id: $this->registro_id);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al obtener saldo', data: $this->saldos, header: $header, ws: $ws);
+        }
+
+        $this->saldos_requisicion = (new gt_centro_costo($this->link))->total_requisicion(gt_centro_costo_id: $this->registro_id);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al obtener saldo', data: $this->saldos, header: $header, ws: $ws);
         }
