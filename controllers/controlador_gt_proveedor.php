@@ -314,7 +314,7 @@ class controlador_gt_proveedor extends _ctl_base {
 
     public function saldos(bool $header, bool $ws = false): array|stdClass
     {
-        $this->accion_titulo = 'Ordenes de Compra';
+        $this->accion_titulo = 'Cotizaciones';
 
         $r_modifica = $this->init_modifica();
         if (errores::$error) {
@@ -326,8 +326,6 @@ class controlador_gt_proveedor extends _ctl_base {
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
-
-
 
         return $r_modifica;
     }
