@@ -22,6 +22,8 @@ use stdClass;
 
 class controlador_gt_proveedor extends _ctl_base {
 
+    public float $saldos;
+
     public function __construct(PDO      $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass())
     {
@@ -326,6 +328,8 @@ class controlador_gt_proveedor extends _ctl_base {
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
+
+        $this->saldos = 4.53;
 
         return $r_modifica;
     }
