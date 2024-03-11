@@ -1,4 +1,4 @@
-<?php /** @var  \gamboamartin\gastos\controllers\controlador_gt_centro_costo $controlador controlador en ejecucion */ ?>
+<?php /** @var  \gamboamartin\gastos\controllers\controlador_gt_proveedor $controlador controlador en ejecucion */ ?>
 <?php use config\views; ?>
 
 <main class="main section-color-primary">
@@ -33,7 +33,7 @@
                         <div class="d-flex align-items-end justify-content-between mt-4">
                             <div>
                                 <h4 class="fs-22 fw-semibold ff-secondary mb-4 text-success">$
-                                    <span class="counter-value"><?php echo number_format($controlador->saldos, 2); ?></span>
+                                    <span class="counter-value"><?php echo number_format($controlador->saldos_cotizacion, 2); ?></span>
                                 </h4>
                             </div>
                         </div>

@@ -22,7 +22,7 @@ use stdClass;
 
 class controlador_gt_proveedor extends _ctl_base {
 
-    public float $saldos;
+    public $saldos_cotizacion;
 
     public function __construct(PDO      $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass())
@@ -329,7 +329,11 @@ class controlador_gt_proveedor extends _ctl_base {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
 
-        $this->saldos = 4.53;
+        $this->saldos_cotizacion = (new gt_proveedor($this->link))->total_saldos_cotizacion(gt_proveedor_id: $this->registro_id);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al obtener saldo de las cotizaciones', data: $this->saldos_cotizacion,
+                header: $header, ws: $ws);
+        }
 
         return $r_modifica;
     }

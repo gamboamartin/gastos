@@ -79,4 +79,118 @@ class gt_proveedor extends _modelo_parent
         return $r_modifica_bd;
     }
 
+    /**
+     * Función para obtener cotizaciones filtradas por el ID de un proveedor.
+     *
+     * @param int $gt_proveedor_id El ID del proveedor.
+     *
+     * @return array|stdClass Retorna un array de cotizaciones o un objeto stdClass vacío.
+     * Si se produce un error durante la filtración, se devuelve un objeto de error.
+     */
+    public function obtener_cotizaciones(int $gt_proveedor_id): array|stdClass
+    {
+        $filtro['gt_cotizacion.gt_proveedor_id'] = $gt_proveedor_id;
+        $cotizaciones = (new gt_cotizacion($this->link))->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error filtrar cotizacion', data: $cotizaciones);
+        }
+
+        return $cotizaciones;
+    }
+
+    /**
+     * Función para aplanar un array de datos y extraer los valores de una columna específica.
+     *
+     * @param array $datos El array de datos original con filas asociativas.
+     * @param string $columna El nombre de la columna cuyos valores se desean extraer.
+     *
+     * @return array Retorna un array que contiene todos los valores de la columna especificada.
+     */
+    function aplanar(array $datos, string $columna): array
+    {
+        return array_column(array_filter($datos, function ($fila) use ($columna) {
+            return isset($fila[$columna]);
+        }), $columna);
+    }
+
+    /**
+     * Función para obtener el total de las cotizaciones de un proveedor.
+     *
+     * @param int $gt_proveedor_id El ID del proveedor.
+     *
+     * @return array|stdClass|float Retorna el total de productos en todas las cotizaciones
+     * En caso de error, se devuelve un array, stdClass o el resultado de un error, según corresponda.
+     */
+    public function total_saldos_cotizacion(int $gt_proveedor_id): array|stdClass|float
+    {
+        $cotizaciones = $this->obtener_cotizaciones(gt_proveedor_id: $gt_proveedor_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener cotizaciones', data: $cotizaciones);
+        }
+
+        $aplanados = $this->aplanar($cotizaciones->registros, "gt_cotizacion_id");
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al aplanar datos por gt_cotizacion_id', data: $aplanados);
+        }
+
+        $total = 0.0;
+
+        foreach ($aplanados as $elemento) {
+            $suma = $this->suma_productos_cotizacion(gt_cotizacion_id: $elemento);
+            if (errores::$error) {
+                return $this->error->error(mensaje: 'Error al calcular totales de productos de la orden de compra', data: $suma);
+            }
+
+            $total += $suma;
+        }
+
+        return round(num: $total, precision: 2);
+    }
+
+    /**
+     * Función para calcular la suma total de los productos asociados a una cotizacion.
+     *
+     * @param int $gt_cotizacion_id El ID de la cotizacion.
+     *
+     * @return array|stdClass|float Retorna la suma total de los productos de la cotizacion.
+     * Si se produce un error durante la obtención o suma de los datos, se devuelve un objeto de error.
+     */
+    public function suma_productos_cotizacion(int $gt_cotizacion_id): array|stdClass|float
+    {
+        $campos = array("gt_cotizacion_producto_total");
+        $filtro = ['gt_cotizacion_producto.gt_cotizacion_id' => $gt_cotizacion_id];
+        $datos = (new gt_cotizacion_producto($this->link))->filtro_and(
+            columnas: $campos,
+            filtro: $filtro
+        );
+        if (errores::$error) {
+            return $this->error->error('Error al obtener los datos de la cotizacion', $datos);
+        }
+
+        $suma = $this->sumar(datos: $datos->registros, columna: "gt_cotizacion_producto_total");
+        if (errores::$error) {
+            return $this->error->error('Error al sumar valores', $suma);
+        }
+
+        return round(num: $suma, precision: 2);
+    }
+
+    /**
+     * Función para sumar los valores de una columna en un array de datos.
+     *
+     * @param array $datos El array de datos del cual se sumarán los valores.
+     * @param string $columna El nombre de la columna cuyos valores se sumarán.
+     *
+     * @return array|float Retorna la suma de los valores de la columna especificada.
+     */
+    function sumar(array $datos, string $columna): array|float
+    {
+        $valores = $this->aplanar(datos: $datos, columna: $columna);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al aplanar datos por $columna', data: $valores);
+        }
+
+        return round(num: array_sum($valores), precision: 2);
+    }
+
 }
