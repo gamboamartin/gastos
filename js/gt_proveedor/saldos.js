@@ -30,9 +30,25 @@ $(document).ready(function () {
         }
     ];
 
-    const table_gt_cotizacion = table('gt_cotizacion', columns_gt_cotizacion, filtro_gt_cotizacion, [], function () {
+    const callback_gt_cotizacion = (seccion, columns) => {
+        return [
+            {
+                targets: 3,
+                render: function (data, type, row, meta) {
+                    let etapa = row[`gt_cotizacion_etapa`];
+                    let badge = 'primary';
 
-    });
+                    if (etapa.toLowerCase() === 'autorizado') {
+                        badge = 'success';
+                    }
+
+                    return `<span class="badge badge-pill badge-${badge}">${etapa.toLowerCase()}</span>`;
+                }
+            }
+        ]
+    }
+
+    const table_gt_cotizacion = table('gt_cotizacion', columns_gt_cotizacion, filtro_gt_cotizacion, [], callback_gt_cotizacion);
 
 });
 
