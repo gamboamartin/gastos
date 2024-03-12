@@ -332,11 +332,15 @@ class controlador_gt_proveedor extends _ctl_base
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
 
-        $this->saldos_cotizacion = (new gt_proveedor($this->link))->total_saldos_cotizacion(gt_proveedor_id: $this->registro_id);
+        $saldos = (new gt_proveedor($this->link))->total_saldos_cotizacion(gt_proveedor_id: $this->registro_id);
         if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al obtener saldo de las cotizaciones', data: $this->saldos_cotizacion,
+            return $this->retorno_error(mensaje: 'Error al obtener saldo de las cotizaciones', data: $saldos,
                 header: $header, ws: $ws);
         }
+
+
+
+        $this->saldos_cotizacion = $saldos['total'];
 
         return $r_modifica;
     }
@@ -345,12 +349,20 @@ class controlador_gt_proveedor extends _ctl_base
 
     public function api_sados_cotizacion(bool $header, bool $ws = false, array $not_actions = array())
     {
+        $saldos = (new gt_proveedor($this->link))->total_saldos_cotizacion(gt_proveedor_id: 3);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al obtener saldo de las cotizaciones', data: $saldos,
+                header: $header, ws: $ws);
+        }
 
         $labels = ['Alta', 'Autorizado'];
 
         $salida = [
             'labels' => $labels,
-            'data' => [100.45, 200.72]
+            'data' => [
+                $saldos['total_alta'],
+                $saldos['total_autorizado']
+            ]
         ];
 
         header('Content-Type: application/json');

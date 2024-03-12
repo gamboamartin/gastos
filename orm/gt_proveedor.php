@@ -81,14 +81,20 @@ class gt_proveedor extends _modelo_parent
 
     /**
      * Función para obtener cotizaciones filtradas por el ID de un proveedor.
+     * Si se especifica una etapa, se filtran las cotizaciones por etapa.
      *
      * @param int $gt_proveedor_id El ID del proveedor.
+     * @param String $etapa etapa para filtrar los registros(ALTA, AUTORIZADO).
      *
      * @return array|stdClass Retorna un array de cotizaciones o un objeto stdClass vacío.
      * Si se produce un error durante la filtración, se devuelve un objeto de error.
      */
-    public function obtener_cotizaciones(int $gt_proveedor_id): array|stdClass
+    public function obtener_cotizaciones(int $gt_proveedor_id, String $etapa = ""): array|stdClass
     {
+        if ($etapa != "") {
+            $filtro = array('gt_cotizacion.etapa' => $etapa);
+        }
+
         $filtro['gt_cotizacion.gt_proveedor_id'] = $gt_proveedor_id;
         $cotizaciones = (new gt_cotizacion($this->link))->filtro_and(filtro: $filtro);
         if (errores::$error) {
@@ -118,16 +124,52 @@ class gt_proveedor extends _modelo_parent
      *
      * @param int $gt_proveedor_id El ID del proveedor.
      *
-     * @return array|stdClass|float Retorna el total de productos en todas las cotizaciones
-     * En caso de error, se devuelve un array, stdClass o el resultado de un error, según corresponda.
+     * @return array|stdClass Retorna un array con el total de las cotizaciones en alta y autorizadas.
+     * Si se produce un error durante la obtención de los datos, se devuelve un objeto de error.
      */
-    public function total_saldos_cotizacion(int $gt_proveedor_id): array|stdClass|float
+    public function total_saldos_cotizacion(int $gt_proveedor_id): array|stdClass
     {
-        $cotizaciones = $this->obtener_cotizaciones(gt_proveedor_id: $gt_proveedor_id);
+        $cotizaciones_alta = $this->obtener_cotizaciones(gt_proveedor_id: $gt_proveedor_id,etapa: "ALTA");
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al obtener cotizaciones', data: $cotizaciones);
+            return $this->error->error(mensaje: 'Error al obtener cotizaciones en alta', data: $cotizaciones_alta);
         }
 
+        $cotizaciones_autorizado = $this->obtener_cotizaciones(gt_proveedor_id: $gt_proveedor_id,etapa: "AUTORIZADO");
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener cotizaciones autorizadas', data: $cotizaciones_autorizado);
+        }
+
+        $total_alta = $this->total_saldos_cotizacion_proceso(cotizaciones: $cotizaciones_alta);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al calcular el total de saldos de cotizacion en alta',
+                data: $total_alta);
+        }
+
+        $total_autorizado = $this->total_saldos_cotizacion_proceso(cotizaciones: $cotizaciones_autorizado);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al calcular el total de saldos de cotizacion autorizadas',
+                data: $total_autorizado);
+        }
+
+        $total_cotizacion = [
+            "total_alta" => $total_alta,
+            "total_autorizado" => $total_autorizado,
+            "total" => $total_alta + $total_autorizado,
+        ];
+
+        return $total_cotizacion;
+    }
+
+    /**
+    * Función para calcular el total de saldos de cotizaciones en un proceso.
+     *
+     * @param stdClass $cotizaciones El objeto de cotizaciones.
+     *
+     * @return array|stdClass|float Retorna el total de saldos de cotizaciones en un proceso.
+     * Si se produce un error durante la obtención o suma de los datos, se devuelve un objeto de error.
+    */
+    private function total_saldos_cotizacion_proceso(stdClass $cotizaciones): array|stdClass|float
+    {
         $aplanados = $this->aplanar($cotizaciones->registros, "gt_cotizacion_id");
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al aplanar datos por gt_cotizacion_id', data: $aplanados);
@@ -138,7 +180,8 @@ class gt_proveedor extends _modelo_parent
         foreach ($aplanados as $elemento) {
             $suma = $this->suma_productos_cotizacion(gt_cotizacion_id: $elemento);
             if (errores::$error) {
-                return $this->error->error(mensaje: 'Error al calcular totales de productos de la orden de compra', data: $suma);
+                return $this->error->error(mensaje: 'Error al calcular totales de productos de la cotizacion',
+                    data: $suma);
             }
 
             $total += $suma;
