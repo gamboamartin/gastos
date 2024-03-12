@@ -50,6 +50,32 @@ $(document).ready(function () {
 
     const table_gt_cotizacion = table('gt_cotizacion', columns_gt_cotizacion, filtro_gt_cotizacion, [], callback_gt_cotizacion);
 
+    const labels = ['Alta', 'Autorizado'];
+    const data = {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Saldo',
+                data: [12.23, 19.32]
+            }
+        ]
+    };
+
+    const ctx = document.getElementById('saldos_cotizacion');
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: data,
+        options: {
+            plugins: {
+                legend: {
+                    position: 'right',
+                    align: 'center'
+                }
+            }
+        }
+    });
+
 });
 
 

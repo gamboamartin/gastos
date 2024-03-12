@@ -21,7 +21,7 @@
     <div class="container">
         <div class="row">
 
-            <div class="col-lg-3 col-md-6 mb-4">
+            <div class="col-lg-2 col-md-6 mb-4">
                 <div class="card card-animate">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -37,6 +37,24 @@
                                 </h4>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 col-md-6 mb-4" style="max-width: 300px; max-height: 300px;">
+                <div class="card card-animate">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="saldos_cotizacion" ></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 col-md-6 mb-4">
+                <div class="card card-animate">
+                    <div class="card-body">
+                        <h1 class="text-center">Saldo</h1>
                     </div>
                 </div>
             </div>
