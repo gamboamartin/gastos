@@ -49,7 +49,7 @@ $(document).ready(function () {
 
     const table_gt_cotizacion = table('gt_cotizacion', columns_gt_cotizacion, filtro_gt_cotizacion, [], callback_gt_cotizacion);
 
-    const url = get_url('gt_proveedor', 'api_sados_cotizacion', {});
+    const url = get_url('gt_proveedor', 'api_sados_cotizacion', {registro_id: registro_id});
 
     ajax(url, function (result) {
         const data = {

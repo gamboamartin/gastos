@@ -349,7 +349,7 @@ class controlador_gt_proveedor extends _ctl_base
 
     public function api_sados_cotizacion(bool $header, bool $ws = false, array $not_actions = array())
     {
-        $saldos = (new gt_proveedor($this->link))->total_saldos_cotizacion(gt_proveedor_id: 3);
+        $saldos = (new gt_proveedor($this->link))->total_saldos_cotizacion(gt_proveedor_id: $_GET['registro_id']);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al obtener saldo de las cotizaciones', data: $saldos,
                 header: $header, ws: $ws);
