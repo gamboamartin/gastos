@@ -78,6 +78,35 @@ $(document).ready(function () {
         });
     });
 
+    const url2 = get_url('gt_proveedor', 'api_sados_orden_compra', {registro_id: registro_id});
+
+    ajax(url2, function (result) {
+        const data = {
+            labels: result.labels,
+            datasets: [
+                {
+                    label: 'Monto',
+                    data: result.data
+                }
+            ]
+        };
+
+        const ctx = document.getElementById('saldos_orden_compra');
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Total de ordenes de compra'
+                    }
+                }
+            }
+        });
+    });
+
 });
 
 

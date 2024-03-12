@@ -73,7 +73,7 @@
                 <div class="card card-animate">
                     <div class="card-body">
                         <div>
-                            <canvas id="saldos_cotizacion" ></canvas>
+                            <canvas id="saldos_orden_compra" ></canvas>
                         </div>
                     </div>
                 </div>
