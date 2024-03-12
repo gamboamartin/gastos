@@ -6,6 +6,7 @@
  * @final En proceso
  *
  */
+
 namespace gamboamartin\gastos\controllers;
 
 use base\controller\controler;
@@ -19,8 +20,10 @@ use html\gt_proveedor_html;
 
 use PDO;
 use stdClass;
+use Throwable;
 
-class controlador_gt_proveedor extends _ctl_base {
+class controlador_gt_proveedor extends _ctl_base
+{
 
     public $saldos_cotizacion;
 
@@ -119,7 +122,7 @@ class controlador_gt_proveedor extends _ctl_base {
         $columns["gt_proveedor_razon_social"]["titulo"] = "Razón Social";
         $columns["gt_proveedor_descripcion"]["titulo"] = "Descripción";
 
-        $filtro = array("gt_proveedor.id","gt_tipo_proveedor.descripcion","cat_sat_regimen_fiscal.descripcion",
+        $filtro = array("gt_proveedor.id", "gt_tipo_proveedor.descripcion", "cat_sat_regimen_fiscal.descripcion",
             "gt_proveedor.rfc", "gt_proveedor.razon_social", "gt_proveedor.descripcion");
 
         $datatables = new stdClass();
@@ -265,46 +268,46 @@ class controlador_gt_proveedor extends _ctl_base {
         }
 
         $calle = (new dp_calle_pertenece($this->link))->get_calle_pertenece($this->registro['dp_calle_pertenece_id']);
-        if(errores::$error){
-            return $this->errores->error(mensaje: 'Error al obtener calle',data:  $calle);
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al obtener calle', data: $calle);
         }
 
         $identificador = "dp_pais_id";
         $propiedades = array("id_selected" => $calle['dp_pais_id']);
-        $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
+        $this->asignar_propiedad(identificador: $identificador, propiedades: $propiedades);
 
         $identificador = "dp_estado_id";
         $propiedades = array("id_selected" => $calle['dp_estado_id'], "con_registros" => true,
             "filtro" => array('dp_pais.id' => $calle['dp_pais_id']));
-        $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
+        $this->asignar_propiedad(identificador: $identificador, propiedades: $propiedades);
 
         $identificador = "dp_municipio_id";
         $propiedades = array("id_selected" => $calle['dp_municipio_id'], "con_registros" => true,
             "filtro" => array('dp_estado.id' => $calle['dp_estado_id']));
-        $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
+        $this->asignar_propiedad(identificador: $identificador, propiedades: $propiedades);
 
         $identificador = "dp_cp_id";
         $propiedades = array("id_selected" => $calle['dp_cp_id'], "con_registros" => true,
             "filtro" => array('dp_estado.id' => $calle['dp_estado_id']));
-        $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
+        $this->asignar_propiedad(identificador: $identificador, propiedades: $propiedades);
 
         $identificador = "dp_colonia_postal_id";
         $propiedades = array("id_selected" => $calle['dp_colonia_postal_id'], "con_registros" => true,
             "filtro" => array('dp_cp.id' => $calle['dp_cp_id']));
-        $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
+        $this->asignar_propiedad(identificador: $identificador, propiedades: $propiedades);
 
         $identificador = "dp_calle_pertenece_id";
         $propiedades = array("id_selected" => $this->row_upd->dp_calle_pertenece_id, "con_registros" => true,
             "filtro" => array('dp_colonia_postal.id' => $calle['dp_colonia_postal_id']));
-        $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
+        $this->asignar_propiedad(identificador: $identificador, propiedades: $propiedades);
 
         $identificador = "cat_sat_regimen_fiscal_id";
         $propiedades = array("id_selected" => $this->registro['cat_sat_regimen_fiscal_id']);
-        $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
+        $this->asignar_propiedad(identificador: $identificador, propiedades: $propiedades);
 
         $identificador = "gt_tipo_proveedor_id";
         $propiedades = array("id_selected" => $this->registro['gt_tipo_proveedor_id']);
-        $this->asignar_propiedad(identificador:$identificador, propiedades: $propiedades);
+        $this->asignar_propiedad(identificador: $identificador, propiedades: $propiedades);
 
         $base = $this->base_upd(keys_selects: $this->keys_selects, params: array(), params_ajustados: array());
         if (errores::$error) {
@@ -338,4 +341,29 @@ class controlador_gt_proveedor extends _ctl_base {
         return $r_modifica;
     }
 
+    // APIS para consumo de datos
+
+    public function api_sados_cotizacion(bool $header, bool $ws = false, array $not_actions = array())
+    {
+
+        $labels = ['Alta', 'Autorizado'];
+
+        $salida = [
+            'labels' => $labels,
+            'data' => [100, 200]
+        ];
+
+        header('Content-Type: application/json');
+        try {
+            echo json_encode($salida, JSON_THROW_ON_ERROR);
+        } catch (Throwable $e) {
+            return $this->retorno_error(mensaje: 'Error al obtener saldo de las cotizaciones', data: $salida,
+                header: $header, ws: $ws);
+        }
+        if (!$header) {
+            exit;
+        }
+
+        return $salida;
+    }
 }
