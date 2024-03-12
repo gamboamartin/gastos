@@ -26,6 +26,7 @@ class controlador_gt_proveedor extends _ctl_base
 {
 
     public $saldos_cotizacion;
+    public $saldos_orden_compra;
 
     public function __construct(PDO      $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass())
@@ -317,6 +318,7 @@ class controlador_gt_proveedor extends _ctl_base
         return $r_modifica;
     }
 
+
     public function saldos(bool $header, bool $ws = false): array|stdClass
     {
         $this->accion_titulo = 'Cotizaciones';
@@ -338,9 +340,14 @@ class controlador_gt_proveedor extends _ctl_base
                 header: $header, ws: $ws);
         }
 
-
+        $orden_compra = (new gt_proveedor($this->link))->total_saldos_orden_compra(gt_proveedor_id: $this->registro_id);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al obtener saldo de las ordenes de compra', data: $saldos,
+                header: $header, ws: $ws);
+        }
 
         $this->saldos_cotizacion = $saldos['total'];
+        $this->saldos_orden_compra = $orden_compra['total'];
 
         return $r_modifica;
     }

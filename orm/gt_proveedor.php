@@ -120,6 +120,108 @@ class gt_proveedor extends _modelo_parent
     }
 
     /**
+     * Función para obtener el ID de la orden de compra asociada a una cotización.
+     *
+     * @param int $gt_cotizacion_id El ID de la cotización.
+     *
+     * @return array|stdClass|int Retorna el ID de la orden de compra o un objeto stdClass vacío.
+     * Si no se encuentra una orden de compra, se devuelve -1.
+     * Si se produce un error durante la consulta, se devuelve un objeto de error.
+     */
+    public function obtener_orden_compra_cotizacion(int $gt_cotizacion_id): array|stdClass|int
+    {
+        $filtro = ['gt_orden_compra_cotizacion.gt_cotizacion_id' => $gt_cotizacion_id];
+        $orden = (new gt_orden_compra_cotizacion($this->link))->filtro_and(
+            columnas: ['gt_orden_compra_id'],
+            filtro: $filtro
+        );
+        if (errores::$error) {
+            return $this->error->error('Error filtrar orden compra cotizacion', $orden);
+        }
+
+        $registro = $orden->registros[0] ?? null;
+
+        return $registro ? $registro['gt_orden_compra_id'] : -1;
+    }
+
+    /**
+     * Función para calcular el total de saldos de orden de compra en un proceso.
+     *
+     * @param int $gt_proveedor_id El ID del proveedor.
+     *
+     * @return array|stdClass Retorna un array con el total de las ordenes de compra en alta y autorizadas.
+     * Si se produce un error durante la obtención de los datos, se devuelve un objeto de error.
+     */
+    public function total_saldos_orden_compra(int $gt_proveedor_id): array|stdClass
+    {
+        $cotizaciones_alta = $this->obtener_cotizaciones(gt_proveedor_id: $gt_proveedor_id,etapa: "ALTA");
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener cotizaciones en alta', data: $cotizaciones_alta);
+        }
+
+        $cotizaciones_autorizado = $this->obtener_cotizaciones(gt_proveedor_id: $gt_proveedor_id,etapa: "AUTORIZADO");
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener cotizaciones autorizadas', data: $cotizaciones_autorizado);
+        }
+
+        $total_alta = $this->total_saldos_orden_compra_proceso(cotizaciones: $cotizaciones_alta);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al calcular el total de saldos de orden de compra en alta',
+                data: $total_alta);
+        }
+
+        $total_autorizado = $this->total_saldos_orden_compra_proceso(cotizaciones: $cotizaciones_autorizado);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al calcular el total de saldos de orden de compra autorizadas',
+                data: $total_autorizado);
+        }
+
+        $total_orden_compra = [
+            "total_alta" => $total_alta,
+            "total_autorizado" => $total_autorizado,
+            "total" => $total_alta + $total_autorizado,
+        ];
+
+        return $total_orden_compra;
+    }
+
+    /**
+     * Función para calcular el total de saldos de ordenes de compra en un proceso.
+     *
+     * @param stdClass $cotizaciones El objeto de cotizaciones.
+     *
+     * @return array|stdClass|float Retorna el total de saldos de cotizaciones en un proceso.
+     * Si se produce un error durante la obtención o suma de los datos, se devuelve un objeto de error.
+     */
+    private function total_saldos_orden_compra_proceso(stdClass $cotizaciones): array|stdClass|float
+    {
+        $aplanados = $this->aplanar($cotizaciones->registros, "gt_cotizacion_id");
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al aplanar datos por gt_cotizacion_id', data: $aplanados);
+        }
+
+        $total = 0.0;
+
+        foreach ($aplanados as $elemento) {
+            $gt_orden_compra_id = $this->obtener_orden_compra_cotizacion(gt_cotizacion_id: $elemento);
+            if (errores::$error) {
+                return $this->error->error(mensaje: 'Error al obtener gt_orden_compra_id', data: $gt_orden_compra_id);
+            }
+
+            if ($gt_orden_compra_id > -1) {
+                $suma = $this->suma_productos_orden_compra(gt_orden_compra_id: $gt_orden_compra_id);
+                if (errores::$error) {
+                    return $this->error->error(mensaje: 'Error al totales de productos de la orden de compra', data: $suma);
+                }
+
+                $total += $suma;
+            }
+        }
+
+        return round(num: $total, precision: 2);
+    }
+
+    /**
      * Función para obtener el total de las cotizaciones de un proveedor.
      *
      * @param int $gt_proveedor_id El ID del proveedor.
@@ -211,6 +313,34 @@ class gt_proveedor extends _modelo_parent
         }
 
         $suma = $this->sumar(datos: $datos->registros, columna: "gt_cotizacion_producto_total");
+        if (errores::$error) {
+            return $this->error->error('Error al sumar valores', $suma);
+        }
+
+        return round(num: $suma, precision: 2);
+    }
+
+    /**
+     * Función para calcular la suma total de los productos asociados a una orden de compra.
+     *
+     * @param int $gt_orden_compra_id El ID de la orden de compra.
+     *
+     * @return array|stdClass|float Retorna la suma total de los productos de la orden de compra.
+     * Si se produce un error durante la obtención o suma de los datos, se devuelve un objeto de error.
+     */
+    public function suma_productos_orden_compra(int $gt_orden_compra_id): array|stdClass|float
+    {
+        $campos = array("gt_orden_compra_producto_total");
+        $filtro = ['gt_orden_compra_producto.gt_orden_compra_id' => $gt_orden_compra_id];
+        $datos = (new gt_orden_compra_producto($this->link))->filtro_and(
+            columnas: $campos,
+            filtro: $filtro
+        );
+        if (errores::$error) {
+            return $this->error->error('Error al obtener los datos de la orden de compra', $datos);
+        }
+
+        $suma = $this->sumar(datos: $datos->registros, columna: "gt_orden_compra_producto_total");
         if (errores::$error) {
             return $this->error->error('Error al sumar valores', $suma);
         }
