@@ -69,9 +69,9 @@ $(document).ready(function () {
             data: data,
             options: {
                 plugins: {
-                    legend: {
-                        position: 'right',
-                        align: 'center'
+                    title: {
+                        display: true,
+                        text: 'Total de cotizaciones'
                     }
                 }
             }

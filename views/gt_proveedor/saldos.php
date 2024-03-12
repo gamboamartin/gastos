@@ -51,13 +51,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-5 col-md-6 mb-4">
-                <div class="card card-animate">
-                    <div class="card-body">
-                        <h1 class="text-center">Saldo</h1>
-                    </div>
-                </div>
-            </div>
+
 
         </div>
     </div>
