@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
 
     let registro_id = getParameterByName('registro_id');
@@ -50,30 +49,33 @@ $(document).ready(function () {
 
     const table_gt_cotizacion = table('gt_cotizacion', columns_gt_cotizacion, filtro_gt_cotizacion, [], callback_gt_cotizacion);
 
-    const labels = ['Alta', 'Autorizado'];
-    const data = {
-        labels: labels,
-        datasets: [
-            {
-                label: 'Saldo',
-                data: [12.23, 19.32]
-            }
-        ]
-    };
+    const url = get_url('gt_proveedor', 'api_sados_cotizacion', {});
 
-    const ctx = document.getElementById('saldos_cotizacion');
+    ajax(url, function (result) {
+        const data = {
+            labels: result.labels,
+            datasets: [
+                {
+                    label: 'Monto',
+                    data: result.data
+                }
+            ]
+        };
 
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: data,
-        options: {
-            plugins: {
-                legend: {
-                    position: 'right',
-                    align: 'center'
+        const ctx = document.getElementById('saldos_cotizacion');
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        align: 'center'
+                    }
                 }
             }
-        }
+        });
     });
 
 });

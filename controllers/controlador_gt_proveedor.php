@@ -350,7 +350,7 @@ class controlador_gt_proveedor extends _ctl_base
 
         $salida = [
             'labels' => $labels,
-            'data' => [100, 200]
+            'data' => [100.45, 200.72]
         ];
 
         header('Content-Type: application/json');
