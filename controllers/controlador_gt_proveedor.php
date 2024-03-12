@@ -385,4 +385,36 @@ class controlador_gt_proveedor extends _ctl_base
 
         return $salida;
     }
+
+    public function api_sados_orden_compra(bool $header, bool $ws = false, array $not_actions = array())
+    {
+        $saldos = (new gt_proveedor($this->link))->total_saldos_orden_compra(gt_proveedor_id: $_GET['registro_id']);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al obtener saldo de las ordenes de compra', data: $saldos,
+                header: $header, ws: $ws);
+        }
+
+        $labels = ['Alta', 'Autorizado'];
+
+        $salida = [
+            'labels' => $labels,
+            'data' => [
+                $saldos['total_alta'],
+                $saldos['total_autorizado']
+            ]
+        ];
+
+        header('Content-Type: application/json');
+        try {
+            echo json_encode($salida, JSON_THROW_ON_ERROR);
+        } catch (Throwable $e) {
+            return $this->retorno_error(mensaje: 'Error al obtener saldo de las ordenes de compra', data: $salida,
+                header: $header, ws: $ws);
+        }
+        if (!$header) {
+            exit;
+        }
+
+        return $salida;
+    }
 }
