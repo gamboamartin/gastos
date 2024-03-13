@@ -354,6 +354,15 @@ class controlador_gt_proveedor extends _ctl_base
 
     // APIS para consumo de datos
 
+    /**
+     * API para obtener los saldos de cotización de un proveedor.
+     *
+     * @param bool $header Indicador para incluir o no encabezados en la respuesta.
+     * @param bool $ws Indicador para identificar si la solicitud se hace desde un servicio web.
+     * @param array $not_actions Un array de acciones que no se deben realizar durante el procesamiento de la solicitud.
+     *
+     * @return array|void Un array asociativo con los totales de cotizaciones o un mensaje de error en caso de fallo.
+     */
     public function api_sados_cotizacion(bool $header, bool $ws = false, array $not_actions = array())
     {
         $saldos = (new gt_proveedor($this->link))->total_saldos_cotizacion(gt_proveedor_id: $_GET['registro_id']);
@@ -386,6 +395,15 @@ class controlador_gt_proveedor extends _ctl_base
         return $salida;
     }
 
+    /**
+     * API para obtener los saldos de órdenes de compra de un proveedor.
+     *
+     * @param bool $header Indicador para incluir o no encabezados en la respuesta.
+     * @param bool $ws Indicador para identificar si la solicitud se hace desde un servicio web.
+     * @param array $not_actions Un array de acciones que no se deben realizar durante el procesamiento de la solicitud.
+     *
+     * @return array|void Un array asociativo con los totales de órdenes de compra o un mensaje de error en caso de fallo.
+     */
     public function api_sados_orden_compra(bool $header, bool $ws = false, array $not_actions = array())
     {
         $saldos = (new gt_proveedor($this->link))->total_saldos_orden_compra(gt_proveedor_id: $_GET['registro_id']);
