@@ -154,5 +154,6 @@ class Stream
         }
         return new Stream($flattened);
     }
+
 }
 

@@ -47,7 +47,7 @@ class gt_proveedor extends _modelo_parent
 
     protected function inicializa_campos(array $registros): array
     {
-        $keys = array('dp_calle_pertenece_id','cat_sat_regimen_fiscal_id','gt_tipo_proveedor_id');
+        $keys = array('dp_calle_pertenece_id', 'cat_sat_regimen_fiscal_id', 'gt_tipo_proveedor_id');
         $valida = $this->validacion->valida_ids(keys: $keys, registro: $registros);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error validar campos', data: $valida);
@@ -58,7 +58,7 @@ class gt_proveedor extends _modelo_parent
             return $this->error->error(mensaje: 'Error generar codigo', data: $registros);
         }
 
-        $registros['codigo'] .= " - ".$registros['rfc'];
+        $registros['codigo'] .= " - " . $registros['rfc'];
         $registros['descripcion'] = $registros['razon_social'];
 
         return $registros;
@@ -79,56 +79,55 @@ class gt_proveedor extends _modelo_parent
         return $r_modifica_bd;
     }
 
-    /**
-     * Función para obtener cotizaciones filtradas por el ID de un proveedor.
-     * Si se especifica una etapa, se filtran las cotizaciones por etapa.
-     *
-     * @param int $gt_proveedor_id El ID del proveedor.
-     * @param String $etapa etapa para filtrar los registros(ALTA, AUTORIZADO).
-     *
-     * @return array|stdClass Retorna un array de cotizaciones o un objeto stdClass vacío.
-     * Si se produce un error durante la filtración, se devuelve un objeto de error.
-     */
-    public function obtener_cotizaciones(int $gt_proveedor_id, String $etapa = ""): array|stdClass
+    public function getProductoTotal($id)
     {
-        if ($etapa != "") {
-            $filtro = array('gt_cotizacion.etapa' => $etapa);
-        }
 
-        $filtro['gt_cotizacion.gt_proveedor_id'] = $gt_proveedor_id;
-        $cotizaciones = (new gt_cotizacion($this->link))->filtro_and(filtro: $filtro);
+        $campos = array("gt_cotizacion_producto_total");
+        $filtro = ['gt_cotizacion_producto.gt_cotizacion_id' => $id];
+        $datos = (new gt_cotizacion_producto($this->link))->filtro_and(
+            columnas: $campos,
+            filtro: $filtro
+        );
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error filtrar cotizacion', data: $cotizaciones);
+            return $this->error->error('Error al obtener los datos de la cotizacion', $datos);
         }
 
-        return $cotizaciones;
+        return Stream::of($datos->registros)
+            ->map(fn($registro) => $registro['gt_cotizacion_producto_total'])
+            ->toArray();
     }
 
-    /**
-     * Función para aplanar un array de datos y extraer los valores de una columna específica.
-     *
-     * @param array $datos El array de datos original con filas asociativas.
-     * @param string $columna El nombre de la columna cuyos valores se desean extraer.
-     *
-     * @return array Retorna un array que contiene todos los valores de la columna especificada.
-     */
-    function aplanar(array $datos, string $columna): array
+    public function total_saldos_cotizacion(int $gt_proveedor_id): array|stdClass
     {
-        return array_column(array_filter($datos, function ($fila) use ($columna) {
-            return isset($fila[$columna]);
-        }), $columna);
+        $cotizaciones = Transaccion::getInstance(new gt_cotizacion($this->link), $this->error)
+            ->get_registros('gt_proveedor_id', $gt_proveedor_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener cotizaciones', data: $cotizaciones);
+        }
+
+        $total_alta = Stream::of($cotizaciones->registros)
+            ->filter(fn($registro) => $registro['gt_cotizacion_etapa'] === 'ALTA')
+            ->map(fn($registro) => $registro['gt_cotizacion_id'])
+            ->flatMap(fn($id) => $this->getProductoTotal($id))
+            ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
+
+        $total_autorizado = Stream::of($cotizaciones->registros)
+            ->filter(fn($registro) => $registro['gt_cotizacion_etapa'] === 'AUTORIZADO')
+            ->map(fn($registro) => $registro['gt_cotizacion_id'])
+            ->flatMap(fn($id) => $this->getProductoTotal($id))
+            ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
+
+        $total_cotizacion = [
+            "total_alta" => $total_alta,
+            "total_autorizado" => $total_autorizado,
+            "total" => $total_alta + $total_autorizado,
+        ];
+
+        return $total_cotizacion;
     }
 
-    /**
-     * Función para obtener el ID de la orden de compra asociada a una cotización.
-     *
-     * @param int $gt_cotizacion_id El ID de la cotización.
-     *
-     * @return array|stdClass|int Retorna el ID de la orden de compra o un objeto stdClass vacío.
-     * Si no se encuentra una orden de compra, se devuelve -1.
-     * Si se produce un error durante la consulta, se devuelve un objeto de error.
-     */
-    public function obtener_orden_compra_cotizacion(int $gt_cotizacion_id): array|stdClass|int
+
+    public function obtener_orden_compra_cotizacion2(int $gt_cotizacion_id): int
     {
         $filtro = ['gt_orden_compra_cotizacion.gt_cotizacion_id' => $gt_cotizacion_id];
         $orden = (new gt_orden_compra_cotizacion($this->link))->filtro_and(
@@ -139,10 +138,28 @@ class gt_proveedor extends _modelo_parent
             return $this->error->error('Error filtrar orden compra cotizacion', $orden);
         }
 
-        $registro = $orden->registros[0] ?? null;
-
-        return $registro ? $registro['gt_orden_compra_id'] : -1;
+        return Stream::of($orden->registros)
+            ->map(fn($registro) => $registro['gt_orden_compra_id'])
+            ->findFirst() ?? -1;
     }
+
+    public function getProductoTotal2($id)
+    {
+        $campos = array("gt_orden_compra_producto_total");
+        $filtro = ['gt_orden_compra_producto.gt_orden_compra_id' => $id];
+        $datos = (new gt_orden_compra_producto($this->link))->filtro_and(
+            columnas: $campos,
+            filtro: $filtro
+        );
+        if (errores::$error) {
+            return $this->error->error('Error al obtener los datos de la orden de compra', $datos);
+        }
+
+        return Stream::of($datos->registros)
+            ->map(fn($registro) => $registro['gt_orden_compra_producto_total'])
+            ->toArray();
+    }
+
 
     /**
      * Función para calcular el total de saldos de orden de compra en un proceso.
@@ -154,27 +171,27 @@ class gt_proveedor extends _modelo_parent
      */
     public function total_saldos_orden_compra(int $gt_proveedor_id): array|stdClass
     {
-        $cotizaciones_alta = $this->obtener_cotizaciones(gt_proveedor_id: $gt_proveedor_id,etapa: "ALTA");
+        $cotizaciones = Transaccion::getInstance(new gt_cotizacion($this->link), $this->error)
+            ->get_registros('gt_proveedor_id', $gt_proveedor_id);
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al obtener cotizaciones en alta', data: $cotizaciones_alta);
+            return $this->error->error(mensaje: 'Error al obtener cotizaciones', data: $cotizaciones);
         }
 
-        $cotizaciones_autorizado = $this->obtener_cotizaciones(gt_proveedor_id: $gt_proveedor_id,etapa: "AUTORIZADO");
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al obtener cotizaciones autorizadas', data: $cotizaciones_autorizado);
-        }
+        $total_alta = Stream::of($cotizaciones->registros)
+            ->filter(fn($registro) => $registro['gt_cotizacion_etapa'] === 'ALTA')
+            ->map(fn($registro) => $registro['gt_cotizacion_id'])
+            ->flatMap(fn($cotizacion_id) => $this->obtener_orden_compra_cotizacion2($cotizacion_id))
+            ->filter(fn($orden_compra_id) => $orden_compra_id > -1)
+            ->flatMap(fn($id) => $this->getProductoTotal2($id))
+            ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
 
-        $total_alta = $this->total_saldos_orden_compra_proceso(cotizaciones: $cotizaciones_alta);
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al calcular el total de saldos de orden de compra en alta',
-                data: $total_alta);
-        }
-
-        $total_autorizado = $this->total_saldos_orden_compra_proceso(cotizaciones: $cotizaciones_autorizado);
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al calcular el total de saldos de orden de compra autorizadas',
-                data: $total_autorizado);
-        }
+        $total_autorizado = Stream::of($cotizaciones->registros)
+            ->filter(fn($registro) => $registro['gt_cotizacion_etapa'] === 'AUTORIZADO')
+            ->map(fn($registro) => $registro['gt_cotizacion_id'])
+            ->flatMap(fn($cotizacion_id) => $this->obtener_orden_compra_cotizacion2($cotizacion_id))
+            ->filter(fn($orden_compra_id) => $orden_compra_id > -1)
+            ->flatMap(fn($id) => $this->getProductoTotal2($id))
+            ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
 
         $total_orden_compra = [
             "total_alta" => $total_alta,
@@ -183,187 +200,6 @@ class gt_proveedor extends _modelo_parent
         ];
 
         return $total_orden_compra;
-    }
-
-    /**
-     * Función para calcular el total de saldos de ordenes de compra en un proceso.
-     *
-     * @param stdClass $cotizaciones El objeto de cotizaciones.
-     *
-     * @return array|stdClass|float Retorna el total de saldos de cotizaciones en un proceso.
-     * Si se produce un error durante la obtención o suma de los datos, se devuelve un objeto de error.
-     */
-    private function total_saldos_orden_compra_proceso(stdClass $cotizaciones): array|stdClass|float
-    {
-        $aplanados = $this->aplanar($cotizaciones->registros, "gt_cotizacion_id");
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al aplanar datos por gt_cotizacion_id', data: $aplanados);
-        }
-
-        $total = 0.0;
-
-        foreach ($aplanados as $elemento) {
-            $gt_orden_compra_id = $this->obtener_orden_compra_cotizacion(gt_cotizacion_id: $elemento);
-            if (errores::$error) {
-                return $this->error->error(mensaje: 'Error al obtener gt_orden_compra_id', data: $gt_orden_compra_id);
-            }
-
-            if ($gt_orden_compra_id > -1) {
-                $suma = $this->suma_productos_orden_compra(gt_orden_compra_id: $gt_orden_compra_id);
-                if (errores::$error) {
-                    return $this->error->error(mensaje: 'Error al totales de productos de la orden de compra', data: $suma);
-                }
-
-                $total += $suma;
-            }
-        }
-
-        return round(num: $total, precision: 2);
-    }
-
-    /**
-     * Función para obtener el total de las cotizaciones de un proveedor.
-     *
-     * @param int $gt_proveedor_id El ID del proveedor.
-     *
-     * @return array|stdClass Retorna un array con el total de las cotizaciones en alta y autorizadas.
-     * Si se produce un error durante la obtención de los datos, se devuelve un objeto de error.
-     */
-    public function total_saldos_cotizacion(int $gt_proveedor_id): array|stdClass
-    {
-        $cotizaciones_alta = $this->obtener_cotizaciones(gt_proveedor_id: $gt_proveedor_id,etapa: "ALTA");
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al obtener cotizaciones en alta', data: $cotizaciones_alta);
-        }
-
-        $cotizaciones_autorizado = $this->obtener_cotizaciones(gt_proveedor_id: $gt_proveedor_id,etapa: "AUTORIZADO");
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al obtener cotizaciones autorizadas', data: $cotizaciones_autorizado);
-        }
-
-        $total_alta = $this->total_saldos_cotizacion_proceso(cotizaciones: $cotizaciones_alta);
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al calcular el total de saldos de cotizacion en alta',
-                data: $total_alta);
-        }
-
-        $total_autorizado = $this->total_saldos_cotizacion_proceso(cotizaciones: $cotizaciones_autorizado);
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al calcular el total de saldos de cotizacion autorizadas',
-                data: $total_autorizado);
-        }
-
-        $total_cotizacion = [
-            "total_alta" => $total_alta,
-            "total_autorizado" => $total_autorizado,
-            "total" => $total_alta + $total_autorizado,
-        ];
-
-        return $total_cotizacion;
-    }
-
-    /**
-    * Función para calcular el total de saldos de cotizaciones en un proceso.
-     *
-     * @param stdClass $cotizaciones El objeto de cotizaciones.
-     *
-     * @return array|stdClass|float Retorna el total de saldos de cotizaciones en un proceso.
-     * Si se produce un error durante la obtención o suma de los datos, se devuelve un objeto de error.
-    */
-    private function total_saldos_cotizacion_proceso(stdClass $cotizaciones): array|stdClass|float
-    {
-        $aplanados = $this->aplanar($cotizaciones->registros, "gt_cotizacion_id");
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al aplanar datos por gt_cotizacion_id', data: $aplanados);
-        }
-
-        $total = 0.0;
-
-        foreach ($aplanados as $elemento) {
-            $suma = $this->suma_productos_cotizacion(gt_cotizacion_id: $elemento);
-            if (errores::$error) {
-                return $this->error->error(mensaje: 'Error al calcular totales de productos de la cotizacion',
-                    data: $suma);
-            }
-
-            $total += $suma;
-        }
-
-        return round(num: $total, precision: 2);
-    }
-
-    /**
-     * Función para calcular la suma total de los productos asociados a una cotizacion.
-     *
-     * @param int $gt_cotizacion_id El ID de la cotizacion.
-     *
-     * @return array|stdClass|float Retorna la suma total de los productos de la cotizacion.
-     * Si se produce un error durante la obtención o suma de los datos, se devuelve un objeto de error.
-     */
-    public function suma_productos_cotizacion(int $gt_cotizacion_id): array|stdClass|float
-    {
-        $campos = array("gt_cotizacion_producto_total");
-        $filtro = ['gt_cotizacion_producto.gt_cotizacion_id' => $gt_cotizacion_id];
-        $datos = (new gt_cotizacion_producto($this->link))->filtro_and(
-            columnas: $campos,
-            filtro: $filtro
-        );
-        if (errores::$error) {
-            return $this->error->error('Error al obtener los datos de la cotizacion', $datos);
-        }
-
-        $suma = $this->sumar(datos: $datos->registros, columna: "gt_cotizacion_producto_total");
-        if (errores::$error) {
-            return $this->error->error('Error al sumar valores', $suma);
-        }
-
-        return round(num: $suma, precision: 2);
-    }
-
-    /**
-     * Función para calcular la suma total de los productos asociados a una orden de compra.
-     *
-     * @param int $gt_orden_compra_id El ID de la orden de compra.
-     *
-     * @return array|stdClass|float Retorna la suma total de los productos de la orden de compra.
-     * Si se produce un error durante la obtención o suma de los datos, se devuelve un objeto de error.
-     */
-    public function suma_productos_orden_compra(int $gt_orden_compra_id): array|stdClass|float
-    {
-        $campos = array("gt_orden_compra_producto_total");
-        $filtro = ['gt_orden_compra_producto.gt_orden_compra_id' => $gt_orden_compra_id];
-        $datos = (new gt_orden_compra_producto($this->link))->filtro_and(
-            columnas: $campos,
-            filtro: $filtro
-        );
-        if (errores::$error) {
-            return $this->error->error('Error al obtener los datos de la orden de compra', $datos);
-        }
-
-        $suma = $this->sumar(datos: $datos->registros, columna: "gt_orden_compra_producto_total");
-        if (errores::$error) {
-            return $this->error->error('Error al sumar valores', $suma);
-        }
-
-        return round(num: $suma, precision: 2);
-    }
-
-    /**
-     * Función para sumar los valores de una columna en un array de datos.
-     *
-     * @param array $datos El array de datos del cual se sumarán los valores.
-     * @param string $columna El nombre de la columna cuyos valores se sumarán.
-     *
-     * @return array|float Retorna la suma de los valores de la columna especificada.
-     */
-    function sumar(array $datos, string $columna): array|float
-    {
-        $valores = $this->aplanar(datos: $datos, columna: $columna);
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al aplanar datos por $columna', data: $valores);
-        }
-
-        return round(num: array_sum($valores), precision: 2);
     }
 
 }
