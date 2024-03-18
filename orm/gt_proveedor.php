@@ -3,6 +3,7 @@
 namespace gamboamartin\gastos\models;
 
 use base\orm\_modelo_parent;
+use base\orm\modelo;
 use gamboamartin\errores\errores;
 use PDO;
 use stdClass;
@@ -79,55 +80,49 @@ class gt_proveedor extends _modelo_parent
         return $r_modifica_bd;
     }
 
-    public function getProductoTotal($id)
+    private function calculo_total_saldos_cotizacion(array $registros, string $etapa): float
     {
+        return Stream::of($registros)
+            ->filter(fn($registro) => $registro['gt_cotizacion_etapa'] === $etapa)
+            ->map(fn($registro) => $registro['gt_cotizacion_id'])
+            ->flatMap(fn($id) => $this->get_productos(tabla: new gt_cotizacion_producto($this->link),
+                campo: 'gt_cotizacion_id',
+                id: $id,
+                campo_Total: 'gt_cotizacion_producto_total'))
+            ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
+    }
 
-        $campos = array("gt_cotizacion_producto_total");
-        $filtro = ['gt_cotizacion_producto.gt_cotizacion_id' => $id];
-        $datos = (new gt_cotizacion_producto($this->link))->filtro_and(
-            columnas: $campos,
+    private function calculo_total_saldos_orden_compra(array $registros, string $etapa): float
+    {
+        return Stream::of($registros)
+            ->filter(fn($registro) => $registro['gt_cotizacion_etapa'] === $etapa)
+            ->map(fn($registro) => $registro['gt_cotizacion_id'])
+            ->flatMap(fn($cotizacion_id) => $this->get_orden_compra_cotizacion($cotizacion_id))
+            ->filter(fn($orden_compra_id) => $orden_compra_id > -1)
+            ->flatMap(fn($id) => $this->get_productos(tabla: new gt_orden_compra_producto($this->link),
+                campo: 'gt_orden_compra_id',
+                id: $id,
+                campo_Total: 'gt_orden_compra_producto_total'))
+            ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
+    }
+
+    public function get_productos(modelo $tabla, string $campo, int $id, string $campo_Total): array|stdClass
+    {
+        $filtro = [$campo => $id];
+        $datos = $tabla->filtro_and(
+            columnas: [$campo_Total],
             filtro: $filtro
         );
         if (errores::$error) {
-            return $this->error->error('Error al obtener los datos de la cotizacion', $datos);
+            return $this->error->error('Error al obtener los datos', $datos);
         }
 
         return Stream::of($datos->registros)
-            ->map(fn($registro) => $registro['gt_cotizacion_producto_total'])
+            ->map(fn($registro) => $registro[$campo_Total])
             ->toArray();
     }
 
-    public function total_saldos_cotizacion(int $gt_proveedor_id): array|stdClass
-    {
-        $cotizaciones = Transaccion::getInstance(new gt_cotizacion($this->link), $this->error)
-            ->get_registros('gt_proveedor_id', $gt_proveedor_id);
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al obtener cotizaciones', data: $cotizaciones);
-        }
-
-        $total_alta = Stream::of($cotizaciones->registros)
-            ->filter(fn($registro) => $registro['gt_cotizacion_etapa'] === 'ALTA')
-            ->map(fn($registro) => $registro['gt_cotizacion_id'])
-            ->flatMap(fn($id) => $this->getProductoTotal($id))
-            ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
-
-        $total_autorizado = Stream::of($cotizaciones->registros)
-            ->filter(fn($registro) => $registro['gt_cotizacion_etapa'] === 'AUTORIZADO')
-            ->map(fn($registro) => $registro['gt_cotizacion_id'])
-            ->flatMap(fn($id) => $this->getProductoTotal($id))
-            ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
-
-        $total_cotizacion = [
-            "total_alta" => $total_alta,
-            "total_autorizado" => $total_autorizado,
-            "total" => $total_alta + $total_autorizado,
-        ];
-
-        return $total_cotizacion;
-    }
-
-
-    public function obtener_orden_compra_cotizacion2(int $gt_cotizacion_id): int
+    public function get_orden_compra_cotizacion(int $gt_cotizacion_id): int
     {
         $filtro = ['gt_orden_compra_cotizacion.gt_cotizacion_id' => $gt_cotizacion_id];
         $orden = (new gt_orden_compra_cotizacion($this->link))->filtro_and(
@@ -143,21 +138,32 @@ class gt_proveedor extends _modelo_parent
             ->findFirst() ?? -1;
     }
 
-    public function getProductoTotal2($id)
+    public function total_saldos_cotizacion(int $gt_proveedor_id): array|stdClass
     {
-        $campos = array("gt_orden_compra_producto_total");
-        $filtro = ['gt_orden_compra_producto.gt_orden_compra_id' => $id];
-        $datos = (new gt_orden_compra_producto($this->link))->filtro_and(
-            columnas: $campos,
-            filtro: $filtro
-        );
+        $cotizaciones = Transaccion::getInstance(new gt_cotizacion($this->link), $this->error)
+            ->get_registros('gt_proveedor_id', $gt_proveedor_id);
         if (errores::$error) {
-            return $this->error->error('Error al obtener los datos de la orden de compra', $datos);
+            return $this->error->error(mensaje: 'Error al obtener cotizaciones', data: $cotizaciones);
         }
 
-        return Stream::of($datos->registros)
-            ->map(fn($registro) => $registro['gt_orden_compra_producto_total'])
-            ->toArray();
+        $total_alta = $this->calculo_total_saldos_cotizacion(registros: $cotizaciones->registros, etapa: 'ALTA');
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al calcular total de saldos de cotizacion en alta',
+                data: $total_alta);
+        }
+
+        $total_autorizado = $this->calculo_total_saldos_cotizacion(registros: $cotizaciones->registros,
+            etapa: 'AUTORIZADO');
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al calcular total de saldos de cotizacion autorizados',
+                data: $total_autorizado);
+        }
+
+        return [
+            "total_alta" => $total_alta,
+            "total_autorizado" => $total_autorizado,
+            "total" => $total_alta + $total_autorizado,
+        ];
     }
 
 
@@ -177,29 +183,24 @@ class gt_proveedor extends _modelo_parent
             return $this->error->error(mensaje: 'Error al obtener cotizaciones', data: $cotizaciones);
         }
 
-        $total_alta = Stream::of($cotizaciones->registros)
-            ->filter(fn($registro) => $registro['gt_cotizacion_etapa'] === 'ALTA')
-            ->map(fn($registro) => $registro['gt_cotizacion_id'])
-            ->flatMap(fn($cotizacion_id) => $this->obtener_orden_compra_cotizacion2($cotizacion_id))
-            ->filter(fn($orden_compra_id) => $orden_compra_id > -1)
-            ->flatMap(fn($id) => $this->getProductoTotal2($id))
-            ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
+        $total_alta = $this->calculo_total_saldos_orden_compra(registros: $cotizaciones->registros, etapa: 'ALTA');
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al calcular total de saldos de orden de compra en alta',
+                data: $total_alta);
+        }
 
-        $total_autorizado = Stream::of($cotizaciones->registros)
-            ->filter(fn($registro) => $registro['gt_cotizacion_etapa'] === 'AUTORIZADO')
-            ->map(fn($registro) => $registro['gt_cotizacion_id'])
-            ->flatMap(fn($cotizacion_id) => $this->obtener_orden_compra_cotizacion2($cotizacion_id))
-            ->filter(fn($orden_compra_id) => $orden_compra_id > -1)
-            ->flatMap(fn($id) => $this->getProductoTotal2($id))
-            ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
+        $total_autorizado = $this->calculo_total_saldos_orden_compra(registros: $cotizaciones->registros, etapa: 'AUTORIZADO');
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al calcular total de saldos de orden de compra autorizados',
+                data: $total_autorizado);
+        }
 
-        $total_orden_compra = [
+        return [
             "total_alta" => $total_alta,
             "total_autorizado" => $total_autorizado,
             "total" => $total_alta + $total_autorizado,
         ];
-
-        return $total_orden_compra;
     }
+
 
 }
