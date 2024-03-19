@@ -2,67 +2,52 @@ $(document).ready(function () {
 
     let registro_id = getParameterByName('registro_id');
 
-    const columns_gt_orden_compra = [
+    const columns_gt_cotizacion = [
         {
             title: "Id",
-            data: `gt_orden_compra_id`
+            data: "gt_cotizacion_id"
         },
         {
             title: "Tipo",
-            data: 'gt_tipo_orden_compra_descripcion'
+            data: "gt_tipo_cotizacion_descripcion"
         },
         {
-            title: "Orden Compra",
-            data: 'gt_orden_compra_descripcion'
-        },
-        {
-            title: "Proveedor",
-            data: "gt_proveedor_descripcion"
+            title: "Cotización",
+            data: "gt_cotizacion_descripcion"
         },
         {
             title: "Etapa",
-            data: "gt_orden_compra_etapa"
+            data: "gt_cotizacion_etapa"
         }
+
     ];
 
-    const filtro_gt_orden_compra = [
-        {
-            "key": "gt_orden_compra.etapa",
-            "valor": 'AUTORIZADA'
-        },
+    const filtro_gt_cotizacion = [
         {
             "key": "gt_cotizacion.gt_centro_costo_id",
             "valor": registro_id
         }
     ];
 
-    const extra_join_gt_orden_compra = [
-        {
-            "entidad": "gt_orden_compra_cotizacion",
-            "key": "gt_orden_compra_id",
-            "enlace": "gt_orden_compra",
-            "key_enlace": "id",
-            "renombre": "gt_orden_compra_cotizacion"
-        },
-        {
-            "entidad": "gt_cotizacion",
-            "key": "id",
-            "enlace": "gt_orden_compra_cotizacion",
-            "key_enlace": "gt_cotizacion_id",
-            "renombre": "gt_cotizacion"
-        },
-        {
-            "entidad": "gt_proveedor",
-            "key": "id",
-            "enlace": "gt_cotizacion",
-            "key_enlace": "gt_proveedor_id",
-            "renombre": "gt_proveedor"
-        }
-    ];
+    const callback_gt_cotizacion = (seccion, columns) => {
+        return [
+            {
+                targets: 3,
+                render: function (data, type, row, meta) {
+                    let etapa = row[`gt_cotizacion_etapa`];
+                    let badge = 'primary';
 
-    const table_gt_orden_compra = table('gt_orden_compra', columns_gt_orden_compra, filtro_gt_orden_compra, extra_join_gt_orden_compra, function () {
+                    if (etapa.toLowerCase() === 'autorizado') {
+                        badge = 'success';
+                    }
 
-    });
+                    return `<span class="badge badge-pill badge-${badge}">${etapa.toLowerCase()}</span>`;
+                }
+            }
+        ]
+    }
+
+    const table_gt_cotizacion = table('gt_cotizacion', columns_gt_cotizacion, filtro_gt_cotizacion, [], callback_gt_cotizacion);
 
 });
 

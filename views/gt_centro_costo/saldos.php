@@ -15,7 +15,7 @@
                     <?php include (new views())->ruta_templates . "mensajes.php"; ?>
 
                     <div class="table-responsive">
-                        <table id="table-gt_orden_compra" class="table mb-0 table-striped table-sm "></table>
+                        <table id="table-gt_cotizacion" class="table mb-0 table-striped table-sm "></table>
                     </div>
 
 
