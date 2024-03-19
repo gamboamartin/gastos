@@ -124,45 +124,52 @@ class gt_centro_costo extends _modelo_parent
         return $registro ? $registro['gt_orden_compra_id'] : -1;
     }
 
-    /**
-     * Función para obtener el total de las ordenes de compra asociadas a cotizaciones de un centro de costo.
-     *
-     * @param int $gt_centro_costo_id El ID del centro de costo.
-     *
-     * @return array|stdClass|float Retorna el total de productos en todas las cotizaciones
-     * En caso de error, se devuelve un array, stdClass o el resultado de un error, según corresponda.
-     */
+
     public function total_ordenes_cotizacion(int $gt_centro_costo_id): array|stdClass|float
     {
-        $cotizaciones = $this->obtener_cotizaciones(gt_centro_costo_id: $gt_centro_costo_id);
+        $cotizaciones = Transaccion::getInstance(new gt_cotizacion($this->link), $this->error)
+            ->get_registros('gt_proveedor_id', $gt_centro_costo_id);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al obtener cotizaciones', data: $cotizaciones);
         }
 
-        $aplanados = $this->aplanar($cotizaciones->registros, "gt_cotizacion_id");
+        $total_alta = $this->calculo_total_saldos_cotizacion(registros: $cotizaciones->registros, etapa: 'ALTA');
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al aplanar datos por gt_cotizacion_id', data: $aplanados);
+            return $this->error->error(mensaje: 'Error al calcular total de saldos de cotizacion en alta',
+                data: $total_alta);
         }
 
-        $total = 0.0;
-
-        foreach ($aplanados as $elemento) {
-            $gt_orden_compra_id = $this->obtener_orden_compra_cotizacion(gt_cotizacion_id: $elemento);
-            if (errores::$error) {
-                return $this->error->error(mensaje: 'Error al obtener gt_orden_compra_id', data: $gt_orden_compra_id);
-            }
-
-            if ($gt_orden_compra_id > -1) {
-                $suma = $this->suma_productos_orden_compra(gt_orden_compra_id: $gt_orden_compra_id);
-                if (errores::$error) {
-                    return $this->error->error(mensaje: 'Error al totales de productos de la orden de compra', data: $suma);
-                }
-
-                $total += $suma;
-            }
+        $total_autorizado = $this->calculo_total_saldos_cotizacion(registros: $cotizaciones->registros,
+            etapa: 'AUTORIZADO');
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al calcular total de saldos de cotizacion autorizados',
+                data: $total_autorizado);
         }
 
-        return round(num: $total, precision: 2);
+        return [
+            "total_alta" => $total_alta,
+            "total_autorizado" => $total_autorizado,
+            "total" => $total_alta + $total_autorizado,
+        ];
+    }
+
+    /**
+     * Calcula el total de saldos de cotización para una etapa específica.
+     *
+     * @param array $registros Un array de registros de cotización.
+     * @param string $etapa La etapa para la cual se desea calcular el total de saldos.
+     * @return float El total de saldos de cotización para la etapa especificada.
+     */
+    private function calculo_total_saldos_cotizacion(array $registros, string $etapa): float
+    {
+        return Stream::of($registros)
+            ->filter(fn($registro) => $registro['gt_cotizacion_etapa'] === $etapa)
+            ->map(fn($registro) => $registro['gt_cotizacion_id'])
+            ->flatMap(fn($id) => $this->get_productos(tabla: new gt_cotizacion_producto($this->link),
+                campo: 'gt_cotizacion_id',
+                id: $id,
+                campo_Total: 'gt_cotizacion_producto_total'))
+            ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
     }
 
     /**
@@ -395,6 +402,93 @@ class gt_centro_costo extends _modelo_parent
         }
 
         return round(num: array_sum($valores), precision: 2);
+    }
+
+
+
+    public function total_saldos_cotizacion(int $gt_centro_costo_id): array|stdClass
+    {
+        $cotizaciones = Transaccion::getInstance(new gt_cotizacion($this->link), $this->error)
+            ->get_registros('gt_centro_costo_id', $gt_centro_costo_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener cotizaciones', data: $cotizaciones);
+        }
+
+        $total_alta = $this->calculo_total_saldos_cotizacion(registros: $cotizaciones->registros, etapa: 'ALTA');
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al calcular total de saldos de cotizacion en alta',
+                data: $total_alta);
+        }
+
+        $total_autorizado = $this->calculo_total_saldos_cotizacion(registros: $cotizaciones->registros,
+            etapa: 'AUTORIZADO');
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al calcular total de saldos de cotizacion autorizados',
+                data: $total_autorizado);
+        }
+
+        return [
+            "total_alta" => $total_alta,
+            "total_autorizado" => $total_autorizado,
+            "total" => $total_alta + $total_autorizado,
+        ];
+    }
+
+    public function total_saldos_orden_compra(int $gt_centro_costo_id): array|stdClass
+    {
+        $cotizaciones = Transaccion::getInstance(new gt_cotizacion($this->link), $this->error)
+            ->get_registros('gt_centro_costo_id', $gt_centro_costo_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener cotizaciones', data: $cotizaciones);
+        }
+
+        $total_alta = $this->calculo_total_saldos_orden_compra(registros: $cotizaciones->registros, etapa: 'ALTA');
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al calcular total de saldos de orden de compra en alta',
+                data: $total_alta);
+        }
+
+        $total_autorizado = $this->calculo_total_saldos_orden_compra(registros: $cotizaciones->registros, etapa: 'AUTORIZADO');
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al calcular total de saldos de orden de compra autorizados',
+                data: $total_autorizado);
+        }
+
+        return [
+            "total_alta" => $total_alta,
+            "total_autorizado" => $total_autorizado,
+            "total" => $total_alta + $total_autorizado,
+        ];
+    }
+
+    public function get_productos(modelo $tabla, string $campo, int $id, string $campo_Total): array|stdClass
+    {
+        $filtro = [$campo => $id];
+        $datos = $tabla->filtro_and(
+            columnas: [$campo_Total],
+            filtro: $filtro
+        );
+        if (errores::$error) {
+            return $this->error->error('Error al obtener los datos', $datos);
+        }
+
+        return Stream::of($datos->registros)
+            ->map(fn($registro) => $registro[$campo_Total])
+            ->toArray();
+    }
+
+    private function calculo_total_saldos_orden_compra(array $registros, string $etapa): float
+    {
+        return Stream::of($registros)
+            ->filter(fn($registro) => $registro['gt_cotizacion_etapa'] === $etapa)
+            ->map(fn($registro) => $registro['gt_cotizacion_id'])
+            ->flatMap(fn($cotizacion_id) => $this->get_orden_compra_cotizacion($cotizacion_id))
+            ->filter(fn($orden_compra_id) => $orden_compra_id > -1)
+            ->flatMap(fn($id) => $this->get_productos(tabla: new gt_orden_compra_producto($this->link),
+                campo: 'gt_orden_compra_id',
+                id: $id,
+                campo_Total: 'gt_orden_compra_producto_total'))
+            ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
     }
 
 }
