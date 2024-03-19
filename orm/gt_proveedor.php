@@ -80,6 +80,13 @@ class gt_proveedor extends _modelo_parent
         return $r_modifica_bd;
     }
 
+    /**
+     * Calcula el total de saldos de cotización para una etapa específica.
+     *
+     * @param array $registros Un array de registros de cotización.
+     * @param string $etapa La etapa para la cual se desea calcular el total de saldos.
+     * @return float El total de saldos de cotización para la etapa especificada.
+     */
     private function calculo_total_saldos_cotizacion(array $registros, string $etapa): float
     {
         return Stream::of($registros)
@@ -92,6 +99,13 @@ class gt_proveedor extends _modelo_parent
             ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
     }
 
+    /**
+     * Calcula el total de saldos de orden de compra para una etapa específica.
+     *
+     * @param array $registros Un array de registros de orden de compra.
+     * @param string $etapa La etapa para la cual se desea calcular el total de saldos.
+     * @return float El total de saldos de orden de compra para la etapa especificada.
+     */
     private function calculo_total_saldos_orden_compra(array $registros, string $etapa): float
     {
         return Stream::of($registros)
@@ -106,6 +120,16 @@ class gt_proveedor extends _modelo_parent
             ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
     }
 
+    /**
+     * Obtiene los productos de una tabla según un campo y un ID especificados.
+     *
+     * @param modelo $tabla El modelo de la tabla de la base de datos.
+     * @param string $campo El nombre del campo utilizado para filtrar los datos.
+     * @param int $id El ID utilizado para filtrar los datos.
+     * @param string $campo_Total El nombre del campo que contiene el total de los productos.
+     * @return array|stdClass Un array o un objeto stdClass que contiene los datos de los productos.
+     * Si se produce un error durante la obtención de los datos, se devuelve un objeto de error.
+     */
     public function get_productos(modelo $tabla, string $campo, int $id, string $campo_Total): array|stdClass
     {
         $filtro = [$campo => $id];
@@ -122,6 +146,13 @@ class gt_proveedor extends _modelo_parent
             ->toArray();
     }
 
+    /**
+     * Obtiene el ID de la orden de compra asociada a una cotización específica.
+     *
+     * @param int $gt_cotizacion_id El ID de la cotización.
+     * @return int El ID de la orden de compra asociada a la cotización, o -1 si no se encuentra.
+     * Si se produce un error durante la obtención de los datos, se devuelve un objeto de error.
+     */
     public function get_orden_compra_cotizacion(int $gt_cotizacion_id): int
     {
         $filtro = ['gt_orden_compra_cotizacion.gt_cotizacion_id' => $gt_cotizacion_id];
@@ -138,6 +169,13 @@ class gt_proveedor extends _modelo_parent
             ->findFirst() ?? -1;
     }
 
+    /**
+     * Calcula el total de saldos de cotización para un proveedor específico, dividido por etapa.
+     *
+     * @param int $gt_proveedor_id El ID del proveedor para el cual se desea calcular el total de saldos.
+     * @return array|stdClass Un array o un objeto stdClass que contiene los totales de saldos de cotización.
+     * Si se produce un error durante la obtención de los datos, se devuelve un objeto de error.
+     */
     public function total_saldos_cotizacion(int $gt_proveedor_id): array|stdClass
     {
         $cotizaciones = Transaccion::getInstance(new gt_cotizacion($this->link), $this->error)
@@ -166,13 +204,11 @@ class gt_proveedor extends _modelo_parent
         ];
     }
 
-
     /**
-     * Función para calcular el total de saldos de orden de compra en un proceso.
+     * Calcula el total de saldos de orden de compra para un proveedor específico, dividido por etapa.
      *
-     * @param int $gt_proveedor_id El ID del proveedor.
-     *
-     * @return array|stdClass Retorna un array con el total de las ordenes de compra en alta y autorizadas.
+     * @param int $gt_proveedor_id El ID del proveedor para el cual se desea calcular el total de saldos.
+     * @return array|stdClass Un array o un objeto stdClass que contiene los totales de saldos de orden de compra.
      * Si se produce un error durante la obtención de los datos, se devuelve un objeto de error.
      */
     public function total_saldos_orden_compra(int $gt_proveedor_id): array|stdClass
@@ -201,6 +237,4 @@ class gt_proveedor extends _modelo_parent
             "total" => $total_alta + $total_autorizado,
         ];
     }
-
-
 }
