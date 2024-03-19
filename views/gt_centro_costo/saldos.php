@@ -18,8 +18,6 @@
                         <table id="table-gt_cotizacion" class="table mb-0 table-striped table-sm "></table>
                     </div>
 
-
-
                 </div>
 
             </div>
@@ -29,35 +27,117 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-md-3">
-                <div class=" card">
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card card-animate">
                     <div class="card-body">
-                        <h5 class="card-title"><b>Saldos:</b> <span>Ordenes de Compra</span></h5>
-                        <p class="card-text">$ <?php echo number_format($controlador->saldos, 2); ?></p>
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1 overflow-hidden">
+                                <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                                    <b>Total Cotizaciones</b></p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-end justify-content-between mt-4">
+                            <div>
+                                <h4 class="fs-22 fw-semibold ff-secondary mb-4 text-success">$
+                                    <span class="counter-value"><?php echo number_format($controlador->saldos_cotizacion, 2); ?></span>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-animate">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1 overflow-hidden">
+                                <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                                    <b>Total Ordenes de Compra</b></p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-end justify-content-between mt-4">
+                            <div>
+                                <h4 class="fs-22 fw-semibold ff-secondary mb-4 text-success">$
+                                    <span class="counter-value"><?php echo number_format($controlador->saldos_orden_compra, 2); ?></span>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-animate">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1 overflow-hidden">
+                                <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                                    <b>Total Solicitudes</b></p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-end justify-content-between mt-4">
+                            <div>
+                                <h4 class="fs-22 fw-semibold ff-secondary mb-4 text-success">$
+                                    <span class="counter-value"><?php echo number_format($controlador->saldos_solicitud, 2); ?></span>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-animate">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1 overflow-hidden">
+                                <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                                    <b>Total Requisiciones</b></p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-end justify-content-between mt-4">
+                            <div>
+                                <h4 class="fs-22 fw-semibold ff-secondary mb-4 text-success">$
+                                    <span class="counter-value"><?php echo number_format($controlador->saldos_requisicion, 2); ?></span>
+                                </h4>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class=" card">
+
+            <div class="col-lg-6 col-md-6 mb-4" style="max-width: 300px; max-height: 300px;">
+                <div class="card card-animate">
                     <div class="card-body">
-                        <h5 class="card-title"><b>Saldos:</b> <span>Solicitudes</span></h5>
-                        <p class="card-text">$ <?php echo number_format($controlador->saldos_solicitud, 2); ?></p>
+                        <div>
+                            <canvas id="saldos_cotizacion" ></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class=" card">
+
+            <div class="col-lg-6 col-md-6 mb-4" style="max-width: 300px; max-height: 300px;">
+                <div class="card card-animate">
                     <div class="card-body">
-                        <h5 class="card-title"><b>Saldos:</b> <span>Requisiciones</span></h5>
-                        <p class="card-text">$ <?php echo number_format($controlador->saldos_requisicion, 2); ?></p>
+                        <div>
+                            <canvas id="saldos_orden_compra" ></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class=" card">
+
+            <div class="col-lg-6 col-md-6 mb-4" style="max-width: 300px; max-height: 300px;">
+                <div class="card card-animate">
                     <div class="card-body">
-                        <h5 class="card-title"><b>Saldos:</b> <span>Cotizaciones</span></h5>
-                        <p class="card-text">$ <?php echo number_format($controlador->saldos_cotizacion, 2); ?></p>
+                        <div>
+                            <canvas id="saldos_orden_compra" ></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 mb-4" style="max-width: 300px; max-height: 300px;">
+                <div class="card card-animate">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="saldos_orden_compra" ></canvas>
+                        </div>
                     </div>
                 </div>
             </div>

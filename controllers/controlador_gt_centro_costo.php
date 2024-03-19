@@ -23,10 +23,10 @@ use stdClass;
 
 class controlador_gt_centro_costo extends _ctl_base {
 
-    public float $saldos;
+    public $saldos_cotizacion;
+    public $saldos_orden_compra;
     public float $saldos_solicitud;
     public float $saldos_requisicion;
-    public float $saldos_cotizacion;
 
     public function __construct(PDO      $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass())
@@ -194,7 +194,7 @@ class controlador_gt_centro_costo extends _ctl_base {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
 
-        $this->saldos = (new gt_centro_costo($this->link))->total_ordenes_cotizacion(gt_centro_costo_id: $this->registro_id);
+        $this->saldos_orden_compra = (new gt_centro_costo($this->link))->total_ordenes_cotizacion(gt_centro_costo_id: $this->registro_id);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al obtener saldo', data: $this->saldos, header: $header, ws: $ws);
         }
