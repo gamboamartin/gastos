@@ -27,6 +27,13 @@ class gt_centro_costo extends _modelo_parent
 
     }
 
+    /**
+     * Calcula el total de saldos de cotización para una etapa específica.
+     *
+     * @param array $registros Un array de registros de cotización.
+     * @param string $etapa La etapa específica para la cual se calcula el total de saldos.
+     * @return float El total de saldos de cotización para la etapa especificada.
+     */
     private function calculo_total_saldos_cotizacion(array $registros, string $etapa): float
     {
         return Stream::of($registros)
@@ -39,6 +46,13 @@ class gt_centro_costo extends _modelo_parent
             ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
     }
 
+    /**
+     * Calcula el total de saldos de orden de compra para una etapa específica.
+     *
+     * @param array $registros Un array de registros de cotización.
+     * @param string $etapa La etapa específica para la cual se calcula el total de saldos.
+     * @return float El total de saldos de orden de compra para la etapa especificada.
+     */
     private function calculo_total_saldos_orden_compra(array $registros, string $etapa): float
     {
         return Stream::of($registros)
@@ -53,6 +67,13 @@ class gt_centro_costo extends _modelo_parent
             ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
     }
 
+    /**
+     * Calcula el total de saldos de requisición para una etapa específica.
+     *
+     * @param array $registros Un array de registros de cotización.
+     * @param string $etapa La etapa específica para la cual se calcula el total de saldos.
+     * @return float El total de saldos de requisición para la etapa especificada.
+     */
     private function calculo_total_saldos_requisicion(array $registros, string $etapa): float
     {
         return Stream::of($registros)
@@ -65,6 +86,13 @@ class gt_centro_costo extends _modelo_parent
             ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
     }
 
+    /**
+     * Calcula el total de saldos de solicitud para una etapa específica.
+     *
+     * @param array $registros Un array de registros de cotización.
+     * @param string $etapa La etapa específica para la cual se calcula el total de saldos.
+     * @return float El total de saldos de solicitud para la etapa especificada.
+     */
     private function calculo_total_saldos_solicitud(array $registros, string $etapa): float
     {
         return Stream::of($registros)
@@ -77,6 +105,14 @@ class gt_centro_costo extends _modelo_parent
             ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
     }
 
+    /**
+     * Obtiene el id de la orden de compra asociada a una cotización.
+     *
+     * @param int $gt_cotizacion_id El id de la cotización.
+     * @return int El id de la orden de compra asociada a la cotización.
+     * Si no hay orden de compra asociada, retorna -1.
+     * Si hay un error, retorna un objeto stdClass con el error.
+     */
     public function get_orden_compra_cotizacion(int $gt_cotizacion_id): int
     {
         $filtro = ['gt_orden_compra_cotizacion.gt_cotizacion_id' => $gt_cotizacion_id];
@@ -93,6 +129,16 @@ class gt_centro_costo extends _modelo_parent
             ->findFirst() ?? -1;
     }
 
+    /**
+     * Obtiene los productos asociados a un registro.
+     *
+     * @param modelo $tabla La tabla de la cual se obtienen los productos.
+     * @param string $campo El campo por el cual se filtra la tabla.
+     * @param int $id El id por el cual se filtra la tabla.
+     * @param string $campo_Total El campo que se obtiene de la tabla.
+     * @return array|stdClass Un array con los valores del campo especificado.
+     * Si hay un error, retorna un objeto stdClass con el error.
+     */
     public function get_productos(modelo $tabla, string $campo, int $id, string $campo_Total): array|stdClass
     {
         $filtro = [$campo => $id];
@@ -109,6 +155,13 @@ class gt_centro_costo extends _modelo_parent
             ->toArray();
     }
 
+    /**
+     * Obtiene el total de saldos de cotización para un centro de costo.
+     *
+     * @param int $gt_centro_costo_id El id del centro de costo.
+     * @return array|stdClass Un array con el total de saldos de cotización.
+     * Si hay un error, retorna un objeto stdClass con el error.
+     */
     public function total_saldos_cotizacion(int $gt_centro_costo_id): array|stdClass
     {
         $cotizaciones = Transaccion::getInstance(new gt_cotizacion($this->link), $this->error)
@@ -137,6 +190,13 @@ class gt_centro_costo extends _modelo_parent
         ];
     }
 
+    /**
+     * Obtiene el total de saldos de orden de compra para un centro de costo.
+     *
+     * @param int $gt_centro_costo_id El id del centro de costo.
+     * @return array|stdClass Un array con el total de saldos de orden de compra.
+     * Si hay un error, retorna un objeto stdClass con el error.
+     */
     public function total_saldos_orden_compra(int $gt_centro_costo_id): array|stdClass
     {
         $cotizaciones = Transaccion::getInstance(new gt_cotizacion($this->link), $this->error)
@@ -164,6 +224,13 @@ class gt_centro_costo extends _modelo_parent
         ];
     }
 
+    /**
+     * Obtiene el total de saldos de requisición para un centro de costo.
+     *
+     * @param int $gt_centro_costo_id El id del centro de costo.
+     * @return array|stdClass Un array con el total de saldos de requisición.
+     * Si hay un error, retorna un objeto stdClass con el error.
+     */
     public function total_saldos_requisicion(int $gt_centro_costo_id): array|stdClass
     {
         $requisiciones = Transaccion::getInstance(new gt_requisicion($this->link), $this->error)
@@ -192,6 +259,13 @@ class gt_centro_costo extends _modelo_parent
         ];
     }
 
+    /**
+     * Obtiene el total de saldos de solicitud para un centro de costo.
+     *
+     * @param int $gt_centro_costo_id El id del centro de costo.
+     * @return array|stdClass Un array con el total de saldos de solicitud.
+     * Si hay un error, retorna un objeto stdClass con el error.
+     */
     public function total_saldos_solicitud(int $gt_centro_costo_id): array|stdClass
     {
         $solicitudes = Transaccion::getInstance(new gt_solicitud($this->link), $this->error)
