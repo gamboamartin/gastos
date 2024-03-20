@@ -20,6 +20,7 @@ use gamboamartin\template\html;
 use html\gt_centro_costo_html;
 use PDO;
 use stdClass;
+use Throwable;
 
 class controlador_gt_centro_costo extends _ctl_base {
 
@@ -222,8 +223,15 @@ class controlador_gt_centro_costo extends _ctl_base {
         return $r_modifica;
     }
 
-    // APIS para consumo de datos
-
+    /**
+     * API para obtener los saldos de cotización de un centro de costo.
+     *
+     * @param bool $header Indicador para incluir o no encabezados en la respuesta.
+     * @param bool $ws Indicador para identificar si la solicitud se hace desde un servicio web.
+     * @param array $not_actions Un array de acciones que no se deben realizar durante el procesamiento de la solicitud.
+     *
+     * @return array|void Un array asociativo con los totales de cotizaciones o un mensaje de error en caso de fallo.
+     */
     public function api_sados_cotizacion(bool $header, bool $ws = false, array $not_actions = array())
     {
         $saldos_cotizacion = (new gt_centro_costo($this->link))->total_saldos_cotizacion(gt_centro_costo_id: $this->registro_id);
@@ -255,6 +263,15 @@ class controlador_gt_centro_costo extends _ctl_base {
         return $salida;
     }
 
+    /**
+     * API para obtener los saldos de ordenes de compra de un centro de costo.
+     *
+     * @param bool $header Indicador para incluir o no encabezados en la respuesta.
+     * @param bool $ws Indicador para identificar si la solicitud se hace desde un servicio web.
+     * @param array $not_actions Un array de acciones que no se deben realizar durante el procesamiento de la solicitud.
+     *
+     * @return array|void Un array asociativo con los totales de ordenes de compra o un mensaje de error en caso de fallo.
+     */
     public function api_sados_orden_compra(bool $header, bool $ws = false, array $not_actions = array())
     {
         $saldos_ordenes = (new gt_centro_costo($this->link))->total_saldos_orden_compra(gt_centro_costo_id: $this->registro_id);
@@ -286,6 +303,15 @@ class controlador_gt_centro_costo extends _ctl_base {
         return $salida;
     }
 
+    /**
+     * API para obtener los saldos de requisiciones de un centro de costo.
+     *
+     * @param bool $header Indicador para incluir o no encabezados en la respuesta.
+     * @param bool $ws Indicador para identificar si la solicitud se hace desde un servicio web.
+     * @param array $not_actions Un array de acciones que no se deben realizar durante el procesamiento de la solicitud.
+     *
+     * @return array|void Un array asociativo con los totales de requisiciones o un mensaje de error en caso de fallo.
+     */
     public function api_sados_requisicion(bool $header, bool $ws = false, array $not_actions = array())
     {
         $saldos_requisicion = (new gt_centro_costo($this->link))->total_saldos_requisicion(gt_centro_costo_id: $this->registro_id);
@@ -317,6 +343,15 @@ class controlador_gt_centro_costo extends _ctl_base {
         return $salida;
     }
 
+    /**
+     * API para obtener los saldos de solicitudes de un centro de costo.
+     *
+     * @param bool $header Indicador para incluir o no encabezados en la respuesta.
+     * @param bool $ws Indicador para identificar si la solicitud se hace desde un servicio web.
+     * @param array $not_actions Un array de acciones que no se deben realizar durante el procesamiento de la solicitud.
+     *
+     * @return array|void Un array asociativo con los totales de solicitudes o un mensaje de error en caso de fallo.
+     */
     public function api_sados_solicitud(bool $header, bool $ws = false, array $not_actions = array())
     {
         $saldos_solicitud = (new gt_centro_costo($this->link))->total_saldos_solicitud(gt_centro_costo_id: $this->registro_id);
@@ -347,8 +382,4 @@ class controlador_gt_centro_costo extends _ctl_base {
 
         return $salida;
     }
-
-
-
-
 }
