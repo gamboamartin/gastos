@@ -221,4 +221,134 @@ class controlador_gt_centro_costo extends _ctl_base {
 
         return $r_modifica;
     }
+
+    // APIS para consumo de datos
+
+    public function api_sados_cotizacion(bool $header, bool $ws = false, array $not_actions = array())
+    {
+        $saldos_cotizacion = (new gt_centro_costo($this->link))->total_saldos_cotizacion(gt_centro_costo_id: $this->registro_id);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al obtener saldo', data: $saldos_cotizacion, header: $header, ws: $ws);
+        }
+
+        $labels = ['Alta', 'Autorizado'];
+
+        $salida = [
+            'labels' => $labels,
+            'data' => [
+                $saldos_cotizacion['total_alta'],
+                $saldos_cotizacion['total_autorizado']
+            ]
+        ];
+
+        header('Content-Type: application/json');
+        try {
+            echo json_encode($salida, JSON_THROW_ON_ERROR);
+        } catch (Throwable $e) {
+            return $this->retorno_error(mensaje: 'Error al obtener saldo de las cotizaciones', data: $salida,
+                header: $header, ws: $ws);
+        }
+        if (!$header) {
+            exit;
+        }
+
+        return $salida;
+    }
+
+    public function api_sados_orden_compra(bool $header, bool $ws = false, array $not_actions = array())
+    {
+        $saldos_ordenes = (new gt_centro_costo($this->link))->total_saldos_orden_compra(gt_centro_costo_id: $this->registro_id);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al obtener saldo', data: $saldos_ordenes, header: $header, ws: $ws);
+        }
+
+        $labels = ['Alta', 'Autorizado'];
+
+        $salida = [
+            'labels' => $labels,
+            'data' => [
+                $saldos_ordenes['total_alta'],
+                $saldos_ordenes['total_autorizado']
+            ]
+        ];
+
+        header('Content-Type: application/json');
+        try {
+            echo json_encode($salida, JSON_THROW_ON_ERROR);
+        } catch (Throwable $e) {
+            return $this->retorno_error(mensaje: 'Error al obtener saldo de las las ordenes de compra', data: $salida,
+                header: $header, ws: $ws);
+        }
+        if (!$header) {
+            exit;
+        }
+
+        return $salida;
+    }
+
+    public function api_sados_requisicion(bool $header, bool $ws = false, array $not_actions = array())
+    {
+        $saldos_requisicion = (new gt_centro_costo($this->link))->total_saldos_requisicion(gt_centro_costo_id: $this->registro_id);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al obtener saldo', data: $saldos_requisicion, header: $header, ws: $ws);
+        }
+
+        $labels = ['Alta', 'Autorizado'];
+
+        $salida = [
+            'labels' => $labels,
+            'data' => [
+                $saldos_requisicion['total_alta'],
+                $saldos_requisicion['total_autorizado']
+            ]
+        ];
+
+        header('Content-Type: application/json');
+        try {
+            echo json_encode($salida, JSON_THROW_ON_ERROR);
+        } catch (Throwable $e) {
+            return $this->retorno_error(mensaje: 'Error al obtener saldo de las requisiciones', data: $salida,
+                header: $header, ws: $ws);
+        }
+        if (!$header) {
+            exit;
+        }
+
+        return $salida;
+    }
+
+    public function api_sados_solicitud(bool $header, bool $ws = false, array $not_actions = array())
+    {
+        $saldos_solicitud = (new gt_centro_costo($this->link))->total_saldos_solicitud(gt_centro_costo_id: $this->registro_id);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al obtener saldo', data: $saldos_solicitud, header: $header, ws: $ws);
+        }
+
+        $labels = ['Alta', 'Autorizado'];
+
+        $salida = [
+            'labels' => $labels,
+            'data' => [
+                $saldos_solicitud['total_alta'],
+                $saldos_solicitud['total_autorizado']
+            ]
+        ];
+
+        header('Content-Type: application/json');
+        try {
+            echo json_encode($salida, JSON_THROW_ON_ERROR);
+        } catch (Throwable $e) {
+            return $this->retorno_error(mensaje: 'Error al obtener saldo de las solicitudes', data: $salida,
+                header: $header, ws: $ws);
+        }
+        if (!$header) {
+            exit;
+        }
+
+        return $salida;
+    }
+
+
+
+
 }
