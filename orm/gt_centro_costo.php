@@ -172,14 +172,33 @@ class gt_centro_costo extends _modelo_parent
             ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
     }
 
-    /**
-     * Función para calcular el total de productos en todas las solicitudes asociadas a un centro de costo.
-     *
-     * @param int $gt_centro_costo_id El ID del centro de costo.
-     *
-     * @return array|stdClass|float Retorna el total de productos en todas las solicitudes
-     * En caso de error, se devuelve un array, stdClass o el resultado de un error, según corresponda.
-     */
+    private function calculo_total_saldos_solicitud(array $registros, string $etapa): float
+    {
+        return Stream::of($registros)
+            ->filter(fn($registro) => $registro['gt_solicitud_etapa'] === $etapa)
+            ->map(fn($registro) => $registro['gt_solicitud_id'])
+            ->flatMap(fn($id) => $this->get_productos(tabla: new gt_solicitud_producto($this->link),
+                campo: 'gt_solicitud_id',
+                id: $id,
+                campo_Total: 'gt_solicitud_producto_total'))
+            ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
+    }
+
+    private function calculo_total_saldos_requisicion(array $registros, string $etapa): float
+    {
+        return Stream::of($registros)
+            ->filter(fn($registro) => $registro['gt_requisicion_etapa'] === $etapa)
+            ->map(fn($registro) => $registro['gt_requisicion_id'])
+            ->flatMap(fn($id) => $this->get_productos(tabla: new gt_requisicion_producto($this->link),
+                campo: 'gt_requisicion_id',
+                id: $id,
+                campo_Total: 'gt_requisicion_producto_total'))
+            ->reduce(fn($acumulador, $valor) => $acumulador + $valor, 0.0);
+    }
+
+
+
+
     public function total_solicitud(int $gt_centro_costo_id): array|stdClass|float
     {
         $solicitudes= $this->obtener_solicitudes(gt_centro_costo_id: $gt_centro_costo_id);
@@ -424,6 +443,62 @@ class gt_centro_costo extends _modelo_parent
             etapa: 'AUTORIZADO');
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al calcular total de saldos de cotizacion autorizados',
+                data: $total_autorizado);
+        }
+
+        return [
+            "total_alta" => $total_alta,
+            "total_autorizado" => $total_autorizado,
+            "total" => $total_alta + $total_autorizado,
+        ];
+    }
+
+    public function total_saldos_solicitud(int $gt_centro_costo_id): array|stdClass
+    {
+        $solicitudes = Transaccion::getInstance(new gt_solicitud($this->link), $this->error)
+            ->get_registros('gt_centro_costo_id', $gt_centro_costo_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener solicitudes', data: $solicitudes);
+        }
+
+        $total_alta = $this->calculo_total_saldos_solicitud(registros: $solicitudes->registros, etapa: 'ALTA');
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al calcular total de saldos de solicitud en alta',
+                data: $total_alta);
+        }
+
+        $total_autorizado = $this->calculo_total_saldos_solicitud(registros: $solicitudes->registros,
+            etapa: 'AUTORIZADO');
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al calcular total de saldos de solicitud autorizados',
+                data: $total_autorizado);
+        }
+
+        return [
+            "total_alta" => $total_alta,
+            "total_autorizado" => $total_autorizado,
+            "total" => $total_alta + $total_autorizado,
+        ];
+    }
+
+    public function total_saldos_requisicion(int $gt_centro_costo_id): array|stdClass
+    {
+        $requisiciones = Transaccion::getInstance(new gt_requisicion($this->link), $this->error)
+            ->get_registros('gt_centro_costo_id', $gt_centro_costo_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener requisiciones', data: $requisiciones);
+        }
+
+        $total_alta = $this->calculo_total_saldos_requisicion(registros: $requisiciones->registros, etapa: 'ALTA');
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al calcular total de saldos de requisicion en alta',
+                data: $total_alta);
+        }
+
+        $total_autorizado = $this->calculo_total_saldos_requisicion(registros: $requisiciones->registros,
+            etapa: 'AUTORIZADO');
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al calcular total de saldos de requisicion autorizados',
                 data: $total_autorizado);
         }
 

@@ -199,12 +199,12 @@ class controlador_gt_centro_costo extends _ctl_base {
             return $this->retorno_error(mensaje: 'Error al obtener saldo', data: $saldos_ordenes, header: $header, ws: $ws);
         }
 
-        $saldos_solicitud = (new gt_centro_costo($this->link))->total_solicitud(gt_centro_costo_id: $this->registro_id);
+        $saldos_solicitud = (new gt_centro_costo($this->link))->total_saldos_solicitud(gt_centro_costo_id: $this->registro_id);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al obtener saldo', data: $saldos_solicitud, header: $header, ws: $ws);
         }
 
-        $saldos_requisicion = (new gt_centro_costo($this->link))->total_requisicion(gt_centro_costo_id: $this->registro_id);
+        $saldos_requisicion = (new gt_centro_costo($this->link))->total_saldos_requisicion(gt_centro_costo_id: $this->registro_id);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al obtener saldo', data: $saldos_requisicion, header: $header, ws: $ws);
         }
@@ -216,8 +216,8 @@ class controlador_gt_centro_costo extends _ctl_base {
 
         $this->saldos_cotizacion = $saldos_cotizacion['total'];
         $this->saldos_orden_compra = $saldos_ordenes['total'];
-        $this->saldos_solicitud = 4;
-        $this->saldos_requisicion = 4;
+        $this->saldos_solicitud = $saldos_solicitud['total'];
+        $this->saldos_requisicion = $saldos_requisicion['total'];
 
         return $r_modifica;
     }
