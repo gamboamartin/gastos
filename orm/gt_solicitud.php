@@ -39,11 +39,6 @@ class gt_solicitud extends _modelo_parent_sin_codigo
             return $this->error->error(mensaje: 'Error al insertar solicitud', data: $r_alta_bd);
         }
 
-        $acciones = $this->acciones_solicitantes(gt_solicitud_id: $r_alta_bd->registro_id, gt_solicitante_id: $acciones->registro_id);
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al ejecutar acciones para el solicitante', data: $acciones);
-        }
-
         return $r_alta_bd;
     }
 
@@ -59,14 +54,30 @@ class gt_solicitud extends _modelo_parent_sin_codigo
                 data: $existe);
         }
 
+        /*
+         *  GEMERAR ACCION EN EL CONTROLADOR QUE LLAME A LA FUNCION PARA VALIDAR SI EL USUARIO ESTA AUTORIZADO
+         *  MOSTRAR MENSAJE DE ERROR SI NO ESTA AUTORIZADO EN UN ALERT
+         */
+
         if ($existe->n_registros <= 0) {
             return $this->error->error(mensaje: 'Error el usuario no cuenta con una relacion con un empleado autorizado',
                 data: $existe);
         }
 
-        $alta_solicitante = $this->alta_solicitante(em_empleado_id: $existe->registros[0]['em_empleado_id']);
+        $existe = $this->existe_empleado_usuario(adm_usuario_id: $_SESSION['usuario_id']);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al comprobar si el usuario esta autorizado para hacer solicitudes',
+                data: $existe);
+        }
+
+        $alta_solicitante = $this->existe_soliciante(em_empleado_id: $existe->registros[0]['em_empleado_id']);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error insertar una soliciante',
+                data: $existe);
+        }
+
+        if ($existe->n_registros <= 0) {
+            return $this->error->error(mensaje: 'Error el empleado no es un solicitante autorizado',
                 data: $existe);
         }
 
@@ -147,6 +158,24 @@ class gt_solicitud extends _modelo_parent_sin_codigo
         $data = (new gt_empleado_usuario($this->link))->filtro_and(filtro: $filtro);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al filtrar empleado usuario', data: $data);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Valida si existe un solicitante según el ID del empleado.
+     *
+     * @param int $em_empleado_id El ID del empleado a verificar.
+     * @return array|stdClass Devuelve un array o un objeto que representa al solicitante si existe,
+     * En caso de error, devuelve un objeto con el error.
+     */
+    public function existe_soliciante(int $em_empleado_id): array|stdClass
+    {
+        $filtro['gt_solicitante.em_empleado_id'] = $em_empleado_id;
+        $data = (new gt_solicitante($this->link))->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al filtrar soliciante', data: $data);
         }
 
         return $data;
