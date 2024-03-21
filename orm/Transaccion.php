@@ -19,11 +19,27 @@ class Transaccion
      * @param modelo $modelo La tabla a la que pertenece la transacción.
      * @param errores $error El manejador de errores.
      */
-    private function __construct(modelo $modelo, errores $error)
+    private function __construct(modelo $modelo)
     {
         $this->modelo = $modelo;
-        $this->error = $error;
+        $this->error = $modelo->error;
     }
+
+    public static function of(modelo $modelo): Transaccion
+    {
+        return new Transaccion($modelo);
+    }
+
+    public function existe(array $filtro): array|stdClass
+    {
+        $existe = $this->modelo->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            return $this->error->error(mensaje: "Error al filtrar {$this->modelo->tabla}", data: $existe);
+        }
+
+        return $existe;
+    }
+
 
     /**
      * Crea una nueva instancia de Transaccion con la conexión proporcionada.

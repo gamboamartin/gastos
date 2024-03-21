@@ -48,10 +48,15 @@ class gt_solicitud extends _modelo_parent_sin_codigo
      */
     public function acciones_solicitante() : array | stdClass
     {
-        $existe = $this->existe_empleado_usuario(adm_usuario_id: $_SESSION['usuario_id']);
+        $existe_usuario = $this->validar_permiso_usuario();
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al comprobar si el usuario esta autorizado para hacer solicitudes',
-                data: $existe);
+            return $this->error->error(mensaje: 'Error al comprobar permisos del usuario', data: $existe_usuario);
+        }
+
+        $existe_solicitante = $this->validar_permiso_empleado($existe_usuario->registros[0]['em_empleado_id']);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al comprobar permisos del empleado',
+                data: $existe_solicitante);
         }
 
         /*
@@ -59,20 +64,32 @@ class gt_solicitud extends _modelo_parent_sin_codigo
          *  MOSTRAR MENSAJE DE ERROR SI NO ESTA AUTORIZADO EN UN ALERT
          */
 
-        if ($existe->n_registros <= 0) {
-            return $this->error->error(mensaje: 'Error el usuario no cuenta con una relacion con un empleado autorizado',
-                data: $existe);
-        }
+        return $existe_solicitante;
+    }
 
-        $existe = $this->existe_empleado_usuario(adm_usuario_id: $_SESSION['usuario_id']);
+    public function validar_permiso_usuario()
+    {
+        $existe = Transaccion::of(new gt_empleado_usuario($this->link))
+            ->existe(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al comprobar si el usuario esta autorizado para hacer solicitudes',
                 data: $existe);
         }
 
-        $alta_solicitante = $this->existe_soliciante(em_empleado_id: $existe->registros[0]['em_empleado_id']);
+        if ($existe->n_registros <= 0) {
+            return $this->error->error(mensaje: 'Error el usuario no se encuentra autorizado para hacer solicitudes',
+                data: $existe);
+        }
+
+        return $existe;
+    }
+
+    public function validar_permiso_empleado(int $em_empleado_id)
+    {
+        $existe = Transaccion::of(new gt_solicitante($this->link))
+            ->existe(filtro: ['gt_solicitante.em_empleado_id' => $em_empleado_id]);
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error insertar una soliciante',
+            return $this->error->error(mensaje: 'Error al comprobar si el empleado esta autorizado para hacer solicitudes',
                 data: $existe);
         }
 
@@ -81,7 +98,7 @@ class gt_solicitud extends _modelo_parent_sin_codigo
                 data: $existe);
         }
 
-        return $alta_solicitante;
+        return $existe;
     }
 
     /**
@@ -145,42 +162,6 @@ class gt_solicitud extends _modelo_parent_sin_codigo
 
         return $alta;
     }
-
-    /**
-     * Funcion para validar si existe la relacion entre un empleado-usuario
-     * @param int $adm_usuario_id id del usuario
-     * @return array|stdClass retorna el estado de la accion
-     */
-    public function existe_empleado_usuario(int $adm_usuario_id): array|stdClass
-    {
-        $filtro['gt_empleado_usuario.adm_usuario_id'] = $adm_usuario_id;
-
-        $data = (new gt_empleado_usuario($this->link))->filtro_and(filtro: $filtro);
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al filtrar empleado usuario', data: $data);
-        }
-
-        return $data;
-    }
-
-    /**
-     * Valida si existe un solicitante según el ID del empleado.
-     *
-     * @param int $em_empleado_id El ID del empleado a verificar.
-     * @return array|stdClass Devuelve un array o un objeto que representa al solicitante si existe,
-     * En caso de error, devuelve un objeto con el error.
-     */
-    public function existe_soliciante(int $em_empleado_id): array|stdClass
-    {
-        $filtro['gt_solicitante.em_empleado_id'] = $em_empleado_id;
-        $data = (new gt_solicitante($this->link))->filtro_and(filtro: $filtro);
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al filtrar soliciante', data: $data);
-        }
-
-        return $data;
-    }
-
 
     public function convierte_requisicion(int $gt_solicitud_id, int $gt_requision_id): array|stdClass
     {
