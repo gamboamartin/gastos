@@ -10,13 +10,17 @@ namespace gamboamartin\gastos\controllers;
 
 use base\controller\controler;
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_empleado_usuario;
 use gamboamartin\gastos\models\gt_requisicion;
 use gamboamartin\gastos\models\gt_requisicion_producto;
+use gamboamartin\gastos\models\gt_solicitantes;
 use gamboamartin\gastos\models\gt_solicitud;
 use gamboamartin\gastos\models\gt_solicitud_etapa;
 use gamboamartin\gastos\models\gt_solicitud_producto;
 use gamboamartin\gastos\models\gt_solicitud_requisicion;
 use gamboamartin\gastos\models\gt_tipo_requisicion;
+use gamboamartin\gastos\models\Stream;
+use gamboamartin\gastos\models\Transaccion;
 use gamboamartin\proceso\models\pr_etapa_proceso;
 use gamboamartin\system\_ctl_parent_sin_codigo;
 use gamboamartin\system\actions;
@@ -112,7 +116,26 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
                 ws: $ws);
         }
 
+        $solicitante = Transaccion::of(new gt_solicitantes($this->link))
+            ->existe(filtro: ['gt_solicitantes.gt_solicitud_id' => $this->registro_id]);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al filtrar solicitantes', data: $solicitante, header: $header,
+                ws: $ws);
+        }
+
+        $solicitantes_id = Stream::of($solicitante->registros)
+            ->map(fn($solicitante) => $solicitante['gt_solicitante_id'])
+            ->toArray();
+
+        if ($solicitante->n_registros <= 0) {
+            $mensaje = 'No se encontraron solicitantes relacionados para esta solicitud';
+            echo "<div class='alert alert-warning alert-dismissible' role='alert'>$mensaje</div>";
+        }
+
         $keys_selects['gt_solicitante_id']->cols = 8;
+        $keys_selects['gt_solicitante_id']->filtro = array('gt_solicitante.id' => $solicitantes_id[0]);
+        $keys_selects['gt_solicitante_id']->id_selected = $solicitantes_id[0];
+
         $keys_selects = (new \base\controller\init())->key_select_txt(cols: 4, key: 'fecha',
             keys_selects: $keys_selects, place_holder: 'Fecha');
         $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'observaciones',
@@ -124,6 +147,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
+
 
         return $r_modifica;
     }
