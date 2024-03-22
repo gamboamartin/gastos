@@ -185,7 +185,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         $registros['gt_solicitud_id'] = $this->registro_id;
         $registros['pr_etapa_proceso_id'] = $registro['pr_etapa_proceso_id'];
         $registros['fecha'] = $_POST['fecha'];
-
+        $registros['observaciones'] = $_POST['observaciones'];
         $alta = (new gt_solicitud_etapa($this->link))->alta_registro(registro: $registros);
         if (errores::$error) {
             $this->link->rollBack();
@@ -193,7 +193,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
                 header: $header, ws: $ws);
         }
 
-        $filtro = array();
+        /*$filtro = array();
         $tipo = constantes::GT_TIPO_DEFAULT->value;
         $filtro['gt_tipo_requisicion.descripcion'] = $tipo;
         $tipo_requisicion = (new gt_tipo_requisicion($this->link))->filtro_and(filtro: $filtro);
@@ -228,7 +228,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
             $this->link->rollBack();
             return $this->retorno_error(mensaje: 'Error al dar de alta requisicion', data: $alta,
                 header: $header, ws: $ws);
-        }
+        }*/
 
         $this->link->commit();
 
@@ -272,13 +272,26 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
             return $this->retorno_error(mensaje: "Error la etapa '$etapa' no se encuentra registrada",
                 data: $etapa_proceso, header: $header, ws: $ws);
         }
+        $filtro = array();
+        $filtro['gt_solicitud_etapa.gt_solicitud_id'] = $this->registro_id;
+        $filtro['gt_solicitud_etapa.pr_etapa_proceso_id'] = $etapa_proceso->registros[0]['pr_etapa_proceso_id'];
+        $solicitud_etapa = (new gt_solicitud_etapa($this->link))->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: "Error al solicitud etapa $etapa ", data: $solicitud_etapa,
+                header: $header, ws: $ws);
+        }
+
+        if($solicitud_etapa->n_registros > 0){
+            return $this->retorno_error(mensaje: "Error la solicitud ya se encuentra en la etapa '$etapa'",
+                data: $solicitud_etapa, header: $header, ws: $ws);
+        }
 
         $registro = $etapa_proceso->registros[0];
 
         $registros['gt_solicitud_id'] = $this->registro_id;
         $registros['pr_etapa_proceso_id'] = $registro['pr_etapa_proceso_id'];
         $registros['fecha'] = $_POST['fecha'];
-
+        $registros['observaciones'] = $_POST['observaciones'];
         $alta = (new gt_solicitud_etapa($this->link))->alta_registro(registro: $registros);
         if (errores::$error) {
             $this->link->rollBack();
