@@ -4,8 +4,13 @@
     right: 20px;
     padding: 15px;
     z-index: 9999;
-    background-color: #f44336; /* Color de fondo rojo para alerta */
-    color: white; /* Color de texto blanco para alerta */
+    color: white;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
 }

@@ -65,7 +65,7 @@ class controlador_adm_session extends \gamboamartin\controllers\controlador_adm_
         $this->include_menu .= 'templates/inicio.php';
 
         $existe = Transaccion::of(new gt_empleado_usuario($this->link))
-            ->existe(filtro: ['gt_empleado_usuario.adm_usuario_id' => 33]);
+            ->existe(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al comprobar si el usuario esta autorizado para hacer solicitudes',
                 data: $existe, header: $header, ws: $ws);
@@ -73,7 +73,7 @@ class controlador_adm_session extends \gamboamartin\controllers\controlador_adm_
 
         if ($existe->n_registros <= 0) {
             $mensaje = 'Error el usuario no se encuentra autorizado para hacer solicitudes';
-            echo "<div class='alert'>$mensaje</div>";
+            echo "<div class='alert alert-danger alert-dismissible' role='alert'>$mensaje</div>";
         }
 
 

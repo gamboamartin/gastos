@@ -14,10 +14,13 @@
                         <?php include (new views())->ruta_templates . "head/title.php"; ?>
                         <?php include (new views())->ruta_templates . "head/subtitulo.php"; ?>
                         <?php include (new views())->ruta_templates . "mensajes.php"; ?>
+                        <?php echo $controlador->inputs->gt_solicitante_id; ?>
                         <?php echo $controlador->inputs->fecha; ?>
-                        <div class="control-group btn-alta">
-                            <div class="controls">
-                                <button class="btn btn-success" role="submit">Alta</button><br>
+                        <?php echo $controlador->inputs->observaciones; ?>
+                        <div class="control-group">
+                            <div class="controls" style="display: inline-flex;">
+                                <button class="btn btn-danger" role="submit" style="margin-right: 15px;">Rechazar</button><br>
+                                <button class="btn btn-success" role="submit">Autorizar</button><br>
                             </div>
                         </div>
                     </form>
