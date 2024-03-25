@@ -59,7 +59,7 @@ class gt_autorizante_solicitantes extends _base_auto_soli
                 data: $registro);
         }
 
-        return true;
+        return $registro;
     }
 
 

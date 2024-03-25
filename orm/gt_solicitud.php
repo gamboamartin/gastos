@@ -59,10 +59,7 @@ class gt_solicitud extends _modelo_parent_sin_codigo
                 data: $existe_solicitante);
         }
 
-        /*
-         *  GEMERAR ACCION EN EL CONTROLADOR QUE LLAME A LA FUNCION PARA VALIDAR SI EL USUARIO ESTA AUTORIZADO
-         *  MOSTRAR MENSAJE DE ERROR SI NO ESTA AUTORIZADO EN UN ALERT
-         */
+
 
         return $existe_solicitante;
     }
