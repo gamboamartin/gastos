@@ -5,6 +5,7 @@ namespace gamboamartin\gastos\models;
 use base\orm\_modelo_parent;
 use gamboamartin\errores\errores;
 use PDO;
+use stdClass;
 
 class gt_autorizante_solicitantes extends _base_auto_soli
 {
@@ -33,5 +34,33 @@ class gt_autorizante_solicitantes extends _base_auto_soli
 
         return $registros;
     }
+
+    public function get_relaciones(int $gt_autorizante_id, int $gt_solicitante_id): array|stdClass
+    {
+        $filtro['gt_autorizante_solicitantes.gt_autorizante_id'] = $gt_autorizante_id;
+        $filtro['gt_autorizante_solicitantes.gt_solicitante_id'] = $gt_solicitante_id;
+        $resultado = $this->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error filtrar permisos', data: $resultado);
+        }
+
+        return $resultado;
+    }
+
+    public function valida_permisos(int $gt_autorizante_id, int $gt_solicitante_id): array|stdClass|bool
+    {
+        $registro = $this->get_relaciones(gt_autorizante_id: $gt_autorizante_id, gt_solicitante_id: $gt_solicitante_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener permisos', data: $registro);
+        }
+
+        if ($registro->n_registros <= 0) {
+            return $this->error->error(mensaje: 'El autorizante no tiene permisos para aprobar la solicitud de este soliciante',
+                data: $registro);
+        }
+
+        return true;
+    }
+
 
 }
