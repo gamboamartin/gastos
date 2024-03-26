@@ -39,6 +39,11 @@ class gt_solicitud extends _modelo_parent_sin_codigo
             return $this->error->error(mensaje: 'Error al insertar solicitud', data: $r_alta_bd);
         }
 
+        $relacion = $this->acciones_solicitantes(gt_solicitud_id: $r_alta_bd->registro_id, gt_solicitante_id: $acciones->registros[0]['gt_solicitante_id']);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al generar relacion entre el solicitante y la solicitud', data: $relacion);
+        }
+
         return $r_alta_bd;
     }
 
@@ -58,8 +63,6 @@ class gt_solicitud extends _modelo_parent_sin_codigo
             return $this->error->error(mensaje: 'Error al comprobar permisos del empleado',
                 data: $existe_solicitante);
         }
-
-
 
         return $existe_solicitante;
     }
