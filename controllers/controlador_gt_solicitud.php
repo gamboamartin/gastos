@@ -385,6 +385,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         $columns["gt_tipo_solicitud_descripcion"]["titulo"] = "Tipo";
         $columns["gt_centro_costo_descripcion"]["titulo"] = "Centro Costo";
         $columns["gt_solicitud_descripcion"]["titulo"] = "Descripción";
+        $columns["gt_solicitud_etapa"]["titulo"] = "Etapa";
 
         $filtro = array("gt_solicitud.id","gt_tipo_solicitud.descripcion","gt_centro_costo.descripcion",
             "gt_solicitud.descripcion");
