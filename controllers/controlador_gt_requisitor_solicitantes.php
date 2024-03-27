@@ -10,16 +10,12 @@ namespace gamboamartin\gastos\controllers;
 
 use base\controller\controler;
 use gamboamartin\errores\errores;
-use gamboamartin\gastos\models\gt_autorizante_solicitantes;
-use gamboamartin\gastos\models\gt_solicitantes;
+use gamboamartin\gastos\models\gt_requisitor_solicitantes;
 use gamboamartin\system\_ctl_base;
 use gamboamartin\system\links_menu;
-use gamboamartin\system\system;
 use gamboamartin\template\html;
-use html\gt_autorizante_solicitantes_html;
-use html\gt_solicitante_html;
-use html\gt_solicitantes_html;
-use html\gt_solicitud_html;
+use html\gt_requisitor_solicitantes_html;
+
 
 use PDO;
 use stdClass;
@@ -29,8 +25,8 @@ class controlador_gt_requisitor_solicitantes extends _ctl_base {
     public function __construct(PDO      $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass())
     {
-        $modelo = new gt_autorizante_solicitantes(link: $link);
-        $html_ = new gt_autorizante_solicitantes_html(html: $html);
+        $modelo = new gt_requisitor_solicitantes(link: $link);
+        $html_ = new gt_requisitor_solicitantes_html(html: $html);
         $obj_link = new links_menu(link: $link, registro_id: $this->registro_id);
 
         $datatables = $this->init_datatable();

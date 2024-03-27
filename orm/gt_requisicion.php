@@ -31,6 +31,11 @@ class gt_requisicion extends _modelo_parent_sin_codigo
     {
         $gt_solicitud_id = $this->registro['gt_solicitud_id'];
 
+        $acciones_requisitor = $this->acciones_requisitor();
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al ejecutar acciones para el requisitor', data: $acciones_requisitor);
+        }
+
         $acciones = $this->acciones_solicitud();
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al ejecutar acciones para solicitud', data: $acciones);
@@ -76,6 +81,56 @@ class gt_requisicion extends _modelo_parent_sin_codigo
         }
 
         return $this->registro;
+    }
+
+    public function acciones_requisitor() : array | stdClass
+    {
+        $existe_usuario = $this->validar_permiso_usuario();
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al comprobar permisos del usuario', data: $existe_usuario);
+        }
+
+        $existe_solicitante = $this->validar_permiso_empleado($existe_usuario->registros[0]['em_empleado_id']);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al comprobar permisos del empleado',
+                data: $existe_solicitante);
+        }
+
+        return $existe_solicitante;
+    }
+
+    public function validar_permiso_usuario()
+    {
+        $existe = Transaccion::of(new gt_empleado_usuario($this->link))
+            ->existe(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al comprobar si el usuario esta autorizado para hacer requisiciones',
+                data: $existe);
+        }
+
+        if ($existe->n_registros <= 0) {
+            return $this->error->error(mensaje: 'Error el usuario no se encuentra autorizado para hacer requisiciones',
+                data: $existe);
+        }
+
+        return $existe;
+    }
+
+    public function validar_permiso_empleado(int $em_empleado_id)
+    {
+        $existe = Transaccion::of(new gt_requisitor($this->link))
+            ->existe(filtro: ['gt_requisitor.em_empleado_id' => $em_empleado_id]);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al comprobar si el empleado esta autorizado para hacer requisiciones',
+                data: $existe);
+        }
+
+        if ($existe->n_registros <= 0) {
+            return $this->error->error(mensaje: 'Error el empleado no es un requisitor autorizado',
+                data: $existe);
+        }
+
+        return $existe;
     }
 
     public function verificar_estado_solicitud(array $registros): array|stdClass
