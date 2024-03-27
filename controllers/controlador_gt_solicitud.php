@@ -109,8 +109,6 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         if ($existe->n_registros <= 0) {
             $mensaje = 'Error el usuario no se encuentra autorizado para hacer solicitudes';
             echo "<div class='alert alert-danger alert-dismissible' role='alert'>$mensaje</div>";
-        } else if ($existe->n_registros > 1) {
-            $_SESSION['gt_autorizante_id'] = $existe->datos[0]['gt_empleado_id'];
         }
 
         return $r_alta;

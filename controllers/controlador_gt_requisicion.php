@@ -13,12 +13,14 @@ use gamboamartin\errores\errores;
 use gamboamartin\gastos\models\gt_cotizacion;
 use gamboamartin\gastos\models\gt_cotizacion_producto;
 use gamboamartin\gastos\models\gt_cotizacion_requisicion;
+use gamboamartin\gastos\models\gt_empleado_usuario;
 use gamboamartin\gastos\models\gt_requisicion;
 use gamboamartin\gastos\models\gt_requisicion_etapa;
 use gamboamartin\gastos\models\gt_requisicion_producto;
 use gamboamartin\gastos\models\gt_solicitud;
 use gamboamartin\gastos\models\gt_solicitud_etapa;
 use gamboamartin\gastos\models\gt_tipo_cotizacion;
+use gamboamartin\gastos\models\Transaccion;
 use gamboamartin\proceso\models\pr_etapa_proceso;
 use gamboamartin\system\_ctl_parent_sin_codigo;
 use gamboamartin\system\actions;
@@ -92,6 +94,18 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
         if (errores::$error) {
             return $this->retorno_error(
                 mensaje: 'Error al obtener inputs', data: $inputs, header: $header, ws: $ws);
+        }
+
+        $existe = Transaccion::of(new gt_empleado_usuario($this->link))
+            ->existe(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al comprobar si el usuario esta autorizado para hacer requisiciones',
+                data: $existe, header: $header, ws: $ws);
+        }
+
+        if ($existe->n_registros <= 0) {
+            $mensaje = 'Error el usuario no se encuentra autorizado para hacer requisiciones';
+            echo "<div class='alert alert-danger alert-dismissible' role='alert'>$mensaje</div>";
         }
 
         return $r_alta;
