@@ -7,6 +7,6 @@ use gamboamartin\system\html_controler;
 use gamboamartin\template\directivas;
 use PDO;
 
-class gt_autorizantes_requisicion_html extends html_controler {
+class gt_autorizante_requisitores_html extends html_controler {
 
 }
