@@ -121,9 +121,22 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
                 mensaje: 'Error al generar salida de template', data: $r_modifica, header: $header, ws: $ws);
         }
 
+        $keys_selects = $this->init_selects_inputs();
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al inicializar selects', data: $keys_selects, header: $header,
+                ws: $ws);
+        }
+
+        $keys_selects['gt_requisitor_id']->cols = 8;
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 4, key: 'fecha',
+            keys_selects: $keys_selects, place_holder: 'Fecha');
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'observaciones',
+            keys_selects: $keys_selects, place_holder: 'Observaciones');
+
         $this->row_upd->fecha = date("Y-m-d");
 
-        $base = $this->base_upd(keys_selects: array(), params: array(), params_ajustados: array());
+        $base = $this->base_upd(keys_selects: $keys_selects, params: array(), params_ajustados: array());
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
@@ -190,7 +203,7 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
     protected function campos_view(array $inputs = array()): array
     {
         $keys = new stdClass();
-        $keys->inputs = array('codigo', 'descripcion', 'cantidad', 'precio');
+        $keys->inputs = array('codigo', 'descripcion', 'cantidad', 'precio', 'observaciones');
         $keys->telefonos = array();
         $keys->fechas = array('fecha');
         $keys->selects = array();
@@ -318,6 +331,12 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
 
         $keys_selects = (new \base\controller\init())->key_select_txt(cols: 6, key: 'fecha',
             keys_selects: $keys_selects, place_holder: 'Fecha');
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
+        }
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'obervaciones',
+            keys_selects: $keys_selects, place_holder: 'Obervaciones');
         if (errores::$error) {
             return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
         }
