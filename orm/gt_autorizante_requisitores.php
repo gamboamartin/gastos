@@ -7,12 +7,12 @@ use gamboamartin\errores\errores;
 use PDO;
 use stdClass;
 
-class gt_requisitor_solicitantes extends _base_auto_soli
+class gt_autorizante_requisitores extends _base_auto_soli
 {
     public function __construct(PDO $link)
     {
-        $tabla = 'gt_requisitor_solicitantes';
-        $columnas = array($tabla => false, 'gt_requisitor' => $tabla, 'gt_solicitante' => $tabla);
+        $tabla = 'gt_autorizante_requisitores';
+        $columnas = array($tabla => false, 'gt_autorizante' => $tabla, 'gt_requisitor' => $tabla);
         $campos_obligatorios = array();
 
         $no_duplicados = array();

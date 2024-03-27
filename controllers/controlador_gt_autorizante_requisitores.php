@@ -10,23 +10,24 @@ namespace gamboamartin\gastos\controllers;
 
 use base\controller\controler;
 use gamboamartin\errores\errores;
-use gamboamartin\gastos\models\gt_requisitor_solicitantes;
+use gamboamartin\gastos\models\gt_autorizante_solicitantes;
 use gamboamartin\system\_ctl_base;
 use gamboamartin\system\links_menu;
 use gamboamartin\template\html;
+use html\gt_autorizante_solicitantes_html;
 use html\gt_requisitor_solicitantes_html;
 
 
 use PDO;
 use stdClass;
 
-class controlador_gt_requisitor_solicitantes extends _ctl_base {
+class controlador_gt_autorizante_requisitores extends _ctl_base {
 
     public function __construct(PDO      $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass())
     {
-        $modelo = new gt_requisitor_solicitantes(link: $link);
-        $html_ = new gt_requisitor_solicitantes_html(html: $html);
+        $modelo = new gt_autorizante_solicitantes(link: $link);
+        $html_ = new gt_autorizante_solicitantes_html(html: $html);
         $obj_link = new links_menu(link: $link, registro_id: $this->registro_id);
 
         $datatables = $this->init_datatable();
@@ -80,8 +81,8 @@ class controlador_gt_requisitor_solicitantes extends _ctl_base {
         $keys->selects = array();
 
         $init_data = array();
+        $init_data['gt_autorizante'] = "gamboamartin\\gastos";
         $init_data['gt_requisitor'] = "gamboamartin\\gastos";
-        $init_data['gt_solicitante'] = "gamboamartin\\gastos";
 
 
         $campos_view = $this->campos_view_base(init_data: $init_data, keys: $keys);
@@ -94,8 +95,8 @@ class controlador_gt_requisitor_solicitantes extends _ctl_base {
 
     private function init_configuraciones(): controler
     {
-        $this->seccion_titulo = 'Requisitor Solicitantes';
-        $this->titulo_lista = 'Registro de Solicitanes';
+        $this->seccion_titulo = 'Autorizante Requisitores';
+        $this->titulo_lista = 'Registro de Requisitores';
 
         $this->lista_get_data = true;
 
@@ -104,12 +105,12 @@ class controlador_gt_requisitor_solicitantes extends _ctl_base {
 
     protected function init_datatable(): stdClass
     {
-        $columns["gt_requisitor_solicitantes_id"]["titulo"] = "Id";
+        $columns["gt_autorizante_requisitores_id"]["titulo"] = "Id";
+        $columns["gt_autorizante_descripcion"]["titulo"] = "Autorizante";
         $columns["gt_requisitor_descripcion"]["titulo"] = "Requisitor";
-        $columns["gt_solicitante_descripcion"]["titulo"] = "Solicitante";
 
-        $filtro = array("gt_requisitor_soliciantes.id","gt_requisitor.descripcion",
-            "gt_solicitante.descripcion");
+        $filtro = array("gt_requisitor_soliciantes.id","gt_autorizante.descripcion",
+            "gt_requisitor.descripcion");
 
         $datatables = new stdClass();
         $datatables->columns = $columns;
@@ -132,8 +133,8 @@ class controlador_gt_requisitor_solicitantes extends _ctl_base {
 
     public function init_selects_inputs(): array
     {
-        $keys_selects = $this->init_selects(keys_selects: array(), key: "gt_requisitor_id", label: "Requisitor", cols: 12);
-        return $this->init_selects(keys_selects: $keys_selects, key: "gt_solicitante_id", label: "Solicitante", cols: 12);
+        $keys_selects = $this->init_selects(keys_selects: array(), key: "gt_autorizante_id", label: "Autorizante", cols: 12);
+        return $this->init_selects(keys_selects: $keys_selects, key: "gt_requisitor_id", label: "Requisitor", cols: 12);
     }
 
     protected function key_selects_txt(array $keys_selects): array
@@ -167,8 +168,8 @@ class controlador_gt_requisitor_solicitantes extends _ctl_base {
                 ws: $ws);
         }
 
+        $keys_selects['gt_autorizante_id']->id_selected = $this->registro['gt_autorizante_id'];
         $keys_selects['gt_requisitor_id']->id_selected = $this->registro['gt_requisitor_id'];
-        $keys_selects['gt_solicitante_id']->id_selected = $this->registro['gt_solicitante_id'];
 
         $base = $this->base_upd(keys_selects: $keys_selects, params: array(), params_ajustados: array());
         if (errores::$error) {
