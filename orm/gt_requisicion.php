@@ -46,6 +46,13 @@ class gt_requisicion extends _modelo_parent_sin_codigo
             return $this->error->error(mensaje: 'Error al insertar requisicion', data: $r_alta_bd);
         }
 
+        $relacion_requisitores = $this->acciones_requisitores(gt_requisicion_id: $r_alta_bd->registro_id,
+            gt_requisitor_id: $acciones_requisitor->registros[0]['gt_requisitor_id']);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al generar relacion entre el requisicion y la requisitor',
+                data: $relacion_requisitores);
+        }
+
         $relacon = $this->alta_relacion_solicitud_requisicion(gt_solicitud_id: $gt_solicitud_id,
             gt_requisicion_id: $r_alta_bd->registro_id);
         if (errores::$error) {
@@ -53,6 +60,36 @@ class gt_requisicion extends _modelo_parent_sin_codigo
         }
 
         return $r_alta_bd;
+    }
+
+    public function alta_requisitores(int $gt_requisicion_id, int $gt_requisitor_id)
+    {
+        $registros['codigo'] = $this->get_codigo_aleatorio();
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error generar codigo', data: $registros);
+        }
+        $registros['descripcion'] = "Solicitud - solicitante";
+        $registros['gt_requisicion_id'] = $gt_requisicion_id;
+        $registros['gt_requisitor_id'] = $gt_requisitor_id;
+
+        $alta = (new gt_requisitores($this->link))->alta_registro(registro: $registros);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al dar de alta relacion entre requisicion y la requisitor',
+                data: $alta);
+        }
+
+        return $alta;
+    }
+
+    public function acciones_requisitores(int $gt_requisicion_id, int $gt_requisitor_id) : array | stdClass
+    {
+        $alta_requisitores = $this->alta_requisitores(gt_requisicion_id: $gt_requisicion_id, gt_requisitor_id: $gt_requisitor_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error insertar relacion entre requisicion y la requisitor',
+                data: $alta_requisitores);
+        }
+
+        return $alta_requisitores;
     }
 
     public function alta_relacion_solicitud_requisicion(int $gt_solicitud_id, int $gt_requisicion_id): array|stdClass
