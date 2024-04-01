@@ -349,6 +349,7 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
         $columns["gt_tipo_requisicion_descripcion"]["titulo"] = "Tipo";
         $columns["gt_centro_costo_descripcion"]["titulo"] = "Centro Costo";
         $columns["gt_requisicion_descripcion"]["titulo"] = "Descripción";
+        $columns["gt_requisicion_etapa"]["titulo"] = "Etapa";
 
         $filtro = array("gt_requisicion.id","gt_tipo_requisicion.descripcion","gt_centro_costo.descripcion",
             "gt_requisicion.descripcion");
