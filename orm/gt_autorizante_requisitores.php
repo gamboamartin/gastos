@@ -35,4 +35,31 @@ class gt_autorizante_requisitores extends _base_auto_soli
         return $registros;
     }
 
+    public function get_relaciones(int $gt_autorizante_id, int $gt_requisitor_id): array|stdClass
+    {
+        $filtro['gt_autorizante_requisitores.gt_autorizante_id'] = $gt_autorizante_id;
+        $filtro['gt_autorizante_requisitores.gt_requisitor_id'] = $gt_requisitor_id;
+        $resultado = $this->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error filtrar permisos', data: $resultado);
+        }
+
+        return $resultado;
+    }
+
+    public function valida_permisos(int $gt_autorizante_id, int $gt_requisitor_id): array|stdClass|bool
+    {
+        $registro = $this->get_relaciones(gt_autorizante_id: $gt_autorizante_id, gt_requisitor_id: $gt_requisitor_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener permisos', data: $registro);
+        }
+
+        if ($registro->n_registros <= 0) {
+            return $this->error->error(mensaje: 'El autorizante no tiene permisos para aprobar la requisicion de este soliciante',
+                data: $registro);
+        }
+
+        return $registro;
+    }
+
 }
