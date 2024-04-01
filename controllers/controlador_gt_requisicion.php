@@ -10,6 +10,7 @@ namespace gamboamartin\gastos\controllers;
 
 use base\controller\controler;
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_autorizante_requisitores;
 use gamboamartin\gastos\models\gt_cotizacion;
 use gamboamartin\gastos\models\gt_cotizacion_producto;
 use gamboamartin\gastos\models\gt_cotizacion_requisicion;
@@ -178,6 +179,19 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
 
         if (isset($_POST['btn_action_next'])) {
             unset($_POST['btn_action_next']);
+        }
+
+        $existe = Transaccion::of(new gt_empleado_usuario($this->link))
+            ->existe(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al comprobar si el usuario esta autorizado para hacer requisiciones',
+                data: $existe, header: $header, ws: $ws);
+        }
+
+        $permiso = (new gt_autorizante_requisitores($this->link))->valida_permisos(gt_autorizante_id: $existe->registros[0]['em_empleado_id'],
+            gt_requisitor_id: $_POST['gt_requesitor_id']);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al validar permisos', data: $permiso, header: $header, ws: $ws);
         }
 
         $etapa = constantes::PR_ETAPA_AUTORIZADO->value;
