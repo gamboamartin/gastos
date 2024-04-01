@@ -17,9 +17,11 @@
                         <?php echo $controlador->inputs->gt_requisitor_id; ?>
                         <?php echo $controlador->inputs->fecha; ?>
                         <?php echo $controlador->inputs->observaciones; ?>
-                        <div class="control-group btn-alta">
-                            <div class="controls">
-                                <button class="btn btn-success" role="submit">Alta</button><br>
+                        <div class="control-group">
+                            <div class="controls" style="display: inline-flex;">
+                                <input type="hidden" name="action" id="action">
+                                <button class="btn btn-danger" id="rechazarBtn" style="margin-right: 15px;">Rechazar</button>
+                                <button class="btn btn-success" id="autorizarBtn">Autorizar</button>
                             </div>
                         </div>
                     </form>

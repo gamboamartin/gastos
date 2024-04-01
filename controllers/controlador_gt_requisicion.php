@@ -189,7 +189,7 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
         }
 
         $permiso = (new gt_autorizante_requisitores($this->link))->valida_permisos(gt_autorizante_id: $existe->registros[0]['em_empleado_id'],
-            gt_requisitor_id: $_POST['gt_requesitor_id']);
+            gt_requisitor_id: $_POST['gt_requisitor_id']);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al validar permisos', data: $permiso, header: $header, ws: $ws);
         }
