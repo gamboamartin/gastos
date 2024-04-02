@@ -221,6 +221,7 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
         $columns["gt_proveedor_descripcion"]["titulo"] = "Proveedor";
         $columns["gt_centro_costo_descripcion"]["titulo"] = "Centro Costo";
         $columns["gt_cotizacion_descripcion"]["titulo"] = "Descripción";
+        $columns["gt_cotizacion_etapa"]["titulo"] = "Etapa";
 
         $filtro = array("gt_cotizacion.id","gt_proveedor.descripcion","gt_tipo_cotizacion.descripcion","gt_centro_costo.descripcion",
             "gt_cotizacion.descripcion");
