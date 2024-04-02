@@ -53,10 +53,10 @@ class gt_requisicion extends _modelo_parent_sin_codigo
                 data: $relacion_requisitores);
         }
 
-        $relacon = $this->alta_relacion_solicitud_requisicion(gt_solicitud_id: $gt_solicitud_id,
+        $relacion = $this->alta_relacion_solicitud_requisicion(gt_solicitud_id: $gt_solicitud_id,
             gt_requisicion_id: $r_alta_bd->registro_id);
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al insertar relacion entre solicitud y requisicion', data: $relacon);
+            return $this->error->error(mensaje: 'Error al insertar relacion entre solicitud y requisicion', data: $relacion);
         }
 
         return $r_alta_bd;
