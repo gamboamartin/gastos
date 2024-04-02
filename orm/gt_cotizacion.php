@@ -31,84 +31,70 @@ class gt_cotizacion extends _modelo_parent_sin_codigo
     {
         $gt_requisicion_id = $this->registro['gt_requisicion_id'];
 
-        $acciones = $this->acciones_requisicion();
+        $acciones_cotizador = $this->acciones_cotizador();
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al ejecutar acciones para requisicion', data: $acciones);
+            return $this->error->error(mensaje: 'Error al ejecutar acciones para el cotizador', data: $acciones_cotizador);
         }
+
 
         $r_alta_bd = parent::alta_bd($keys_integra_ds);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al insertar cotizacion', data: $r_alta_bd);
         }
 
-        $relacon = $this->alta_relacion_requisicion_cotizacion(gt_requisicion_id: $gt_requisicion_id,
-            gt_cotizacion_id: $r_alta_bd->registro_id);
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al insertar relacion entre requisicion y cotizacion', data: $relacon);
-        }
-
         return $r_alta_bd;
     }
 
-    /**
-     * Da de alta una relacion entre requisicion y cotizacion
-     * @param int $gt_requisicion_id id de la requisicion
-     * @param int $gt_cotizacion_id id de la cotizacion
-     * @return array|stdClass retorna el estado del alta
-     */
-    public function alta_relacion_requisicion_cotizacion(int $gt_requisicion_id, int $gt_cotizacion_id,): array|stdClass
+    public function acciones_cotizador() : array | stdClass
     {
-        $registros = array();
-        $registros['gt_requisicion_id'] = $gt_requisicion_id;
-        $registros['gt_cotizacion_id'] = $gt_cotizacion_id;
-        $alta = (new gt_cotizacion_requisicion($this->link))->alta_registro(registro: $registros);
+        $existe_usuario = $this->validar_permiso_usuario();
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al ejecutar insercion de datos para requisicion y cotizacion',
-                data: $alta);
+            return $this->error->error(mensaje: 'Error al comprobar permisos del usuario', data: $existe_usuario);
         }
 
-        return $alta;
+        $existe_solicitante = $this->validar_permiso_empleado($existe_usuario->registros[0]['em_empleado_id']);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al comprobar permisos del empleado',
+                data: $existe_solicitante);
+        }
+
+        return $existe_solicitante;
     }
 
-    /**
-     * Ejecuta acciones para una requisicion
-     * @return array retorna los registros procesados
-     */
-    public function acciones_requisicion(): array
+    public function validar_permiso_usuario()
     {
-        $resultado = $this->verificar_estado_requisicion(registros: $this->registro);
+        $existe = Transaccion::of(new gt_empleado_usuario($this->link))
+            ->existe(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al verificar etapa de la requisicion', data: $resultado);
+            return $this->error->error(mensaje: 'Error al comprobar si el usuario esta autorizado para hacer cotizaciones',
+                data: $existe);
         }
 
-        $this->registro = $this->limpia_campos_extras(registro: $this->registro, campos_limpiar: array("gt_requisicion_id"));
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al limpiar campos', data: $this->registro);
+        if ($existe->n_registros <= 0) {
+            return $this->error->error(mensaje: 'Error el usuario no se encuentra autorizado para hacer cotizaciones',
+                data: $existe);
         }
 
-        return $this->registro;
+        return $existe;
+    }
+
+    public function validar_permiso_empleado(int $em_empleado_id)
+    {
+        $existe = Transaccion::of(new gt_cotizador($this->link))
+            ->existe(filtro: ['gt_cotizador.em_empleado_id' => $em_empleado_id]);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al comprobar si el empleado esta autorizado para hacer cotizaciones',
+                data: $existe);
+        }
+
+        if ($existe->n_registros <= 0) {
+            return $this->error->error(mensaje: 'Error el empleado no es un cotizador autorizado',
+                data: $existe);
+        }
+
+        return $existe;
     }
 
 
-    /**
-     * Verifica el estado de una requisicion
-     * @param array $registros registros enviados
-     * @return array|stdClass retorna los registros del estado de la etapa
-     */
-    public function verificar_estado_requisicion(array $registros): array|stdClass
-    {
-        $filtro['gt_requisicion_etapa.gt_requisicion_id'] = $registros['gt_requisicion_id'];
-        $filtro['gt_requisicion.etapa'] = "AUTORIZADO";
-        $etapa = (new gt_requisicion_etapa($this->link))->filtro_and(filtro: $filtro);
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al filtrar etapa de la requisicion', data: $etapa);
-        }
-
-        if ($etapa->n_registros <= 0) {
-            return $this->error->error(mensaje: 'Error la requisicion no se encuentra AUTORIZADA', data: $etapa);
-        }
-
-        return $etapa;
-    }
 
 }
