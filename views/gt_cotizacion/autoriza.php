@@ -14,7 +14,9 @@
                         <?php include (new views())->ruta_templates . "head/title.php"; ?>
                         <?php include (new views())->ruta_templates . "head/subtitulo.php"; ?>
                         <?php include (new views())->ruta_templates . "mensajes.php"; ?>
+                        <?php echo $controlador->inputs->gt_cotizador_id; ?>
                         <?php echo $controlador->inputs->fecha; ?>
+                        <?php echo $controlador->inputs->observaciones; ?>
                         <div class="control-group">
                             <div class="controls" style="display: inline-flex;">
                                 <input type="hidden" name="action" id="action">

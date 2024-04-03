@@ -13,6 +13,7 @@ use gamboamartin\errores\errores;
 use gamboamartin\gastos\models\gt_cotizacion;
 use gamboamartin\gastos\models\gt_cotizacion_etapa;
 use gamboamartin\gastos\models\gt_cotizacion_producto;
+use gamboamartin\gastos\models\gt_cotizadores;
 use gamboamartin\gastos\models\gt_orden_compra;
 use gamboamartin\gastos\models\gt_orden_compra_cotizacion;
 use gamboamartin\gastos\models\gt_orden_compra_producto;
@@ -20,6 +21,8 @@ use gamboamartin\gastos\models\gt_requisicion;
 use gamboamartin\gastos\models\gt_requisicion_etapa;
 use gamboamartin\gastos\models\gt_solicitud;
 use gamboamartin\gastos\models\gt_solicitud_etapa;
+use gamboamartin\gastos\models\Stream;
+use gamboamartin\gastos\models\Transaccion;
 use gamboamartin\proceso\models\pr_etapa_proceso;
 use gamboamartin\system\_ctl_parent_sin_codigo;
 use gamboamartin\system\actions;
@@ -110,9 +113,40 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
                 mensaje: 'Error al generar salida de template', data: $r_modifica, header: $header, ws: $ws);
         }
 
+        $keys_selects = $this->init_selects_inputs();
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al inicializar selects', data: $keys_selects, header: $header,
+                ws: $ws);
+        }
+
+        $cotizadores = Transaccion::of(new gt_cotizadores($this->link))
+            ->existe(filtro: ['gt_cotizadores.gt_cotizacion_id' => $this->registro_id]);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al filtrar cotizadores', data: $cotizadores, header: $header,
+                ws: $ws);
+        }
+
+        $cotizador_id = Stream::of($cotizadores->registros)
+            ->map(fn($cotizador) => $cotizador['gt_cotizador_id'])
+            ->toArray();
+
+        if ($cotizadores->n_registros <= 0) {
+            $mensaje = 'No se encontraron cotizadores relacionados para esta cotizacion';
+            echo "<div class='alert alert-warning alert-dismissible' role='alert'>$mensaje</div>";
+        }
+
+        $keys_selects['gt_cotizador_id']->cols = 8;
+        $keys_selects['gt_cotizador_id']->filtro = array('gt_cotizador.id' => $cotizador_id[0]);
+        $keys_selects['gt_cotizador_id']->id_selected = $cotizador_id[0];
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 4, key: 'fecha',
+            keys_selects: $keys_selects, place_holder: 'Fecha');
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'observaciones',
+            keys_selects: $keys_selects, place_holder: 'Observaciones');
+
         $this->row_upd->fecha = date("Y-m-d");
 
-        $base = $this->base_upd(keys_selects: array(), params: array(), params_ajustados: array());
+        $base = $this->base_upd(keys_selects: $keys_selects, params: array(), params_ajustados: array());
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
@@ -178,7 +212,7 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
     protected function campos_view(array $inputs = array()): array
     {
         $keys = new stdClass();
-        $keys->inputs = array('codigo', 'descripcion', 'cantidad', 'precio', 'descripcion2');
+        $keys->inputs = array('codigo', 'descripcion', 'cantidad', 'precio', 'descripcion2', 'observaciones');
         $keys->telefonos = array();
         $keys->fechas = array('fecha');
         $keys->selects = array();
@@ -189,7 +223,7 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
         $init_data['gt_proveedor'] = "gamboamartin\\gastos";
 
         $init_data['gt_tipo_orden_compra'] = "gamboamartin\\gastos";
-        $init_data['gt_requisitor'] = "gamboamartin\\gastos";
+        $init_data['gt_cotizador'] = "gamboamartin\\gastos";
         $init_data['gt_autorizante'] = "gamboamartin\\gastos";
         $init_data['em_empleado'] = "gamboamartin\\empleado";
         $init_data['com_producto'] = "gamboamartin\\comercial";
@@ -278,7 +312,7 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
         $keys_selects = $this->init_selects(keys_selects: array(), key: "gt_centro_costo_id", label: "Centro Costo", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_proveedor_id", label: "Proveedor", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "em_empleado_id", label: "Empleado", cols: 12);
-        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_requisitor_id", label: "Requisitor", cols: 12);
+        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_cotizador_id", label: "Cotizador", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_autorizante_id", label: "Autorizante", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_tipo_cotizacion_id", label: "Tipo Cotización", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_tipo_orden_compra_id", label: "Tipo Orden Compra", cols: 12);
