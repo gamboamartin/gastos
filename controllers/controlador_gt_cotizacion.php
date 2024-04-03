@@ -15,6 +15,7 @@ use gamboamartin\gastos\models\gt_cotizacion;
 use gamboamartin\gastos\models\gt_cotizacion_etapa;
 use gamboamartin\gastos\models\gt_cotizacion_producto;
 use gamboamartin\gastos\models\gt_cotizadores;
+use gamboamartin\gastos\models\gt_empleado_usuario;
 use gamboamartin\gastos\models\gt_orden_compra;
 use gamboamartin\gastos\models\gt_orden_compra_cotizacion;
 use gamboamartin\gastos\models\gt_orden_compra_producto;
