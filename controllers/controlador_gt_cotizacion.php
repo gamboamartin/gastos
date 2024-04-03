@@ -10,6 +10,7 @@ namespace gamboamartin\gastos\controllers;
 
 use base\controller\controler;
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_autorizante_cotizadores;
 use gamboamartin\gastos\models\gt_cotizacion;
 use gamboamartin\gastos\models\gt_cotizacion_etapa;
 use gamboamartin\gastos\models\gt_cotizacion_producto;
@@ -169,6 +170,19 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
             unset($_POST['btn_action_next']);
         }
 
+        $existe = Transaccion::of(new gt_empleado_usuario($this->link))
+            ->existe(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al comprobar si el usuario esta autorizado para hacer cotizaciones',
+                data: $existe, header: $header, ws: $ws);
+        }
+
+        $permiso = (new gt_autorizante_cotizadores($this->link))->valida_permisos(gt_autorizante_id: $existe->registros[0]['em_empleado_id'],
+            gt_cotizador_id: $_POST['gt_cotizador_id']);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al validar permisos', data: $permiso, header: $header, ws: $ws);
+        }
+
         $etapa = constantes::PR_ETAPA_AUTORIZADO->value;
         $filtro['pr_etapa.descripcion'] = $etapa;
         $etapa_proceso = (new pr_etapa_proceso($this->link))->filtro_and(filtro: $filtro);
@@ -186,6 +200,7 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
         $registros['gt_cotizacion_id'] = $this->registro_id;
         $registros['pr_etapa_proceso_id'] = $registro['pr_etapa_proceso_id'];
         $registros['fecha'] = $_POST['fecha'];
+        $registros['observaciones'] = $_POST['observaciones'];
         $alta = (new gt_cotizacion_etapa($this->link))->alta_registro(registro: $registros);
         if (errores::$error) {
             $this->link->rollBack();
