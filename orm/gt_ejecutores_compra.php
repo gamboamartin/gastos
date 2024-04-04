@@ -11,7 +11,7 @@ class gt_ejecutores_compra extends _base_auto_soli
 {
     public function __construct(PDO $link)
     {
-        $tabla = 'gt_requisitores';
+        $tabla = 'gt_ejecutores_compra';
         $columnas = array($tabla => false, 'gt_orden_compra' => $tabla, 'gt_ejecutor_compra' => $tabla,
             "em_empleado" => 'gt_ejecutor_compra');
         $campos_obligatorios = array();

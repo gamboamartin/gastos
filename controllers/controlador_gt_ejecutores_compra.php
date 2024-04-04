@@ -3,12 +3,16 @@ namespace gamboamartin\gastos\controllers;
 
 use base\controller\controler;
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_ejecutor_compra;
+use gamboamartin\gastos\models\gt_ejecutores_compra;
 use gamboamartin\gastos\models\gt_requisitores;
 use gamboamartin\gastos\models\gt_solicitantes;
 use gamboamartin\system\_ctl_base;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use gamboamartin\template\html;
+use html\gt_ejecutor_compra_html;
+use html\gt_ejecutores_compra_html;
 use html\gt_requisitores_html;
 use html\gt_solicitante_html;
 use html\gt_solicitantes_html;
@@ -22,8 +26,8 @@ class controlador_gt_ejecutores_compra extends _ctl_base {
     public function __construct(PDO      $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass())
     {
-        $modelo = new gt_requisitores(link: $link);
-        $html_ = new gt_requisitores_html(html: $html);
+        $modelo = new gt_ejecutores_compra(link: $link);
+        $html_ = new gt_ejecutores_compra_html(html: $html);
         $obj_link = new links_menu(link: $link, registro_id: $this->registro_id);
 
         $datatables = $this->init_datatable();
@@ -101,12 +105,12 @@ class controlador_gt_ejecutores_compra extends _ctl_base {
 
     protected function init_datatable(): stdClass
     {
-        $columns["gt_requisitores_compra_id"]["titulo"] = "Id";
+        $columns["gt_ejecutores_compra_id"]["titulo"] = "Id";
         $columns["em_empleado_nombre"]["titulo"] = "Ejecutor";
         $columns["em_empleado_nombre"]["campos"] = array("em_empleado_ap","em_empleado_am");
         $columns["gt_orden_compra_descripcion"]["titulo"] = "Orden Compra";
 
-        $filtro = array("gt_requisitores_compra.id","em_empleado.nombre","em_empleado.ap", "em_empleado.am",
+        $filtro = array("gt_ejecutores_compra.id","em_empleado.nombre","em_empleado.ap", "em_empleado.am",
             "gt_orden_compra.descripcion");
 
         $datatables = new stdClass();
