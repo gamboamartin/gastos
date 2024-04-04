@@ -29,7 +29,7 @@ class gt_orden_compra_cotizacion extends _base_auto_soli {
             return $this->error->error(mensaje: 'Error generar codigo', data: $registros);
         }
 
-        $registros['codigo'] .= $registros['gt_solicitud_id'];
+        $registros['codigo'] .= $registros['gt_orden_compra_id'];
         $registros['descripcion'] = $registros['codigo'];
 
         return $registros;

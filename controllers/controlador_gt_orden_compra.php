@@ -11,10 +11,13 @@ namespace gamboamartin\gastos\controllers;
 use base\controller\controler;
 use gamboamartin\errores\errores;
 use gamboamartin\gastos\models\gt_cotizacion_producto;
+use gamboamartin\gastos\models\gt_ejecutores_compra;
 use gamboamartin\gastos\models\gt_orden_compra;
 use gamboamartin\gastos\models\gt_orden_compra_cotizacion;
 use gamboamartin\gastos\models\gt_requisitores;
 use gamboamartin\gastos\models\gt_solicitantes;
+use gamboamartin\gastos\models\Stream;
+use gamboamartin\gastos\models\Transaccion;
 use gamboamartin\system\_ctl_base;
 use gamboamartin\system\actions;
 use gamboamartin\system\links_menu;
@@ -100,9 +103,40 @@ class controlador_gt_orden_compra extends _ctl_base {
                 mensaje: 'Error al generar salida de template', data: $r_modifica, header: $header, ws: $ws);
         }
 
+        $keys_selects = $this->init_selects_inputs();
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al inicializar selects', data: $keys_selects, header: $header,
+                ws: $ws);
+        }
+
+        $ejecutores = Transaccion::of(new gt_ejecutores_compra($this->link))
+            ->existe(filtro: ['gt_ejecutores_compra.gt_orden_compra_id' => $this->registro_id]);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al filtrar ejecutores', data: $ejecutores, header: $header,
+                ws: $ws);
+        }
+
+        $ejecutor_id = Stream::of($ejecutores->registros)
+            ->map(fn($ejecutor) => $ejecutor['gt_ejecutor_compra_id'])
+            ->toArray();
+
+        if ($ejecutores->n_registros <= 0) {
+            $mensaje = 'No se encontraron ejecutores relacionados para esta orden de compra';
+            echo "<div class='alert alert-warning alert-dismissible' role='alert'>$mensaje</div>";
+        }
+
+        $keys_selects['gt_ejecutor_compra_id']->cols = 8;
+        $keys_selects['gt_ejecutor_compra_id']->filtro = array('gt_ejecutor_compra.id' => $ejecutor_id[0]);
+        $keys_selects['gt_ejecutor_compra_id']->id_selected = $ejecutor_id[0];
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 4, key: 'fecha',
+            keys_selects: $keys_selects, place_holder: 'Fecha');
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'observaciones',
+            keys_selects: $keys_selects, place_holder: 'Observaciones');
+
         $this->row_upd->fecha = date("Y-m-d");
 
-        $base = $this->base_upd(keys_selects: array(), params: array(), params_ajustados: array());
+        $base = $this->base_upd(keys_selects: $keys_selects, params: array(), params_ajustados: array());
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
         }
@@ -113,7 +147,7 @@ class controlador_gt_orden_compra extends _ctl_base {
     protected function campos_view(): array
     {
         $keys = new stdClass();
-        $keys->inputs = array('codigo', 'descripcion', 'cantidad', 'precio');
+        $keys->inputs = array('codigo', 'descripcion', 'cantidad', 'precio', 'observaciones');
         $keys->telefonos = array();
         $keys->fechas = array('fecha');
         $keys->selects = array();
@@ -121,6 +155,7 @@ class controlador_gt_orden_compra extends _ctl_base {
         $init_data = array();
         $init_data['gt_cotizacion'] = "gamboamartin\\gastos";
         $init_data['gt_tipo_orden_compra'] = "gamboamartin\\gastos";
+        $init_data['gt_ejecutor_compra'] = "gamboamartin\\gastos";
         $init_data['com_producto'] = "gamboamartin\\comercial";
         $init_data['cat_sat_unidad'] = "gamboamartin\\cat_sat";
 
@@ -204,6 +239,7 @@ class controlador_gt_orden_compra extends _ctl_base {
         $keys_selects = $this->init_selects(keys_selects: array(), key: "gt_cotizacion_id", label: "Cotización", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_tipo_orden_compra_id", label: "Tipo Orden Compra", cols: 12);
         $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "com_producto_id", label: "Producto", cols: 12);
+        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "gt_ejecutor_compra_id", label: "Ejecutor", cols: 8);
         return $this->init_selects(keys_selects: $keys_selects, key: "cat_sat_unidad_id", label: "Unidad", cols: 12);
     }
 

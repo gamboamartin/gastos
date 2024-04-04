@@ -138,8 +138,8 @@ class gt_orden_compra extends _modelo_parent_sin_codigo {
 
     public function validar_permiso_empleado(int $em_empleado_id)
     {
-        $existe = Transaccion::of(new gt_ejecutores_compra($this->link))
-            ->existe(filtro: ['gt_ejecutores_compra.em_empleado_id' => $em_empleado_id]);
+        $existe = Transaccion::of(new gt_ejecutor_compra($this->link))
+            ->existe(filtro: ['gt_ejecutor_compra.em_empleado_id' => $em_empleado_id]);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al comprobar si el empleado esta autorizado para hacer ordenes de compra',
                 data: $existe);
