@@ -26,6 +26,12 @@ class gt_orden_compra extends _modelo_parent_sin_codigo {
     {
         $gt_cotizacion_id = $this->registro['gt_cotizacion_id'];
 
+        $acciones_ejecutor = $this->acciones_ejecutor();
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al ejecutar acciones para el ejecutor de la compra',
+                data: $acciones_ejecutor);
+        }
+
         $acciones = $this->acciones_cotizacion();
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al ejecutar acciones para cotizacion', data: $acciones);
@@ -44,6 +50,58 @@ class gt_orden_compra extends _modelo_parent_sin_codigo {
 
         return $r_alta_bd;
     }
+
+    public function acciones_ejecutor() : array | stdClass
+    {
+        $existe_usuario = $this->validar_permiso_usuario();
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al comprobar permisos del usuario', data: $existe_usuario);
+        }
+
+        $existe_solicitante = $this->validar_permiso_empleado($existe_usuario->registros[0]['em_empleado_id']);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al comprobar permisos del empleado',
+                data: $existe_solicitante);
+        }
+
+        return $existe_solicitante;
+    }
+
+    public function validar_permiso_usuario()
+    {
+        $existe = Transaccion::of(new gt_empleado_usuario($this->link))
+            ->existe(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al comprobar si el usuario esta autorizado para hacer ordenes de compra',
+                data: $existe);
+        }
+
+        if ($existe->n_registros <= 0) {
+            return $this->error->error(mensaje: 'Error el usuario no se encuentra autorizado para hacer ordenes de compra',
+                data: $existe);
+        }
+
+        return $existe;
+    }
+
+    public function validar_permiso_empleado(int $em_empleado_id)
+    {
+        $existe = Transaccion::of(new gt_ejecutores_compra($this->link))
+            ->existe(filtro: ['gt_ejecutores_compra.em_empleado_id' => $em_empleado_id]);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al comprobar si el empleado esta autorizado para hacer ordenes de compra',
+                data: $existe);
+        }
+
+        if ($existe->n_registros <= 0) {
+            return $this->error->error(mensaje: 'Error el empleado no es un ejecutor autorizado',
+                data: $existe);
+        }
+
+        return $existe;
+    }
+
+
 
     public function alta_relacion_cotizacion_orden_compra(int $gt_cotizacion_id, int $gt_orden_compra_id): array|stdClass
     {
