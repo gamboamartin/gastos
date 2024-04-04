@@ -147,6 +147,7 @@ class controlador_gt_orden_compra extends _ctl_base {
         $columns["gt_orden_compra_id"]["titulo"] = "Id";
         $columns["gt_tipo_orden_compra_descripcion"]["titulo"] = "Tipo";
         $columns["gt_orden_compra_descripcion"]["titulo"] = "Descripción";
+        $columns["gt_orden_compra_etapa"]["titulo"] = "Etapa";
 
         $filtro = array("gt_orden_compra.id","gt_orden_compra.descripcion");
 
