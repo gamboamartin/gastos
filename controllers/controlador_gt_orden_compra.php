@@ -14,6 +14,7 @@ use gamboamartin\gastos\models\gt_cotizacion_producto;
 use gamboamartin\gastos\models\gt_ejecutores_compra;
 use gamboamartin\gastos\models\gt_orden_compra;
 use gamboamartin\gastos\models\gt_orden_compra_cotizacion;
+use gamboamartin\gastos\models\gt_orden_compra_etapa;
 use gamboamartin\gastos\models\gt_requisitores;
 use gamboamartin\gastos\models\gt_solicitantes;
 use gamboamartin\gastos\models\Stream;
@@ -142,6 +143,75 @@ class controlador_gt_orden_compra extends _ctl_base {
         }
 
         return $r_modifica;
+    }
+
+    public function rechaza_bd(bool $header, bool $ws = false): array|stdClass
+    {
+        $this->link->beginTransaction();
+
+        $siguiente_view = (new actions())->init_alta_bd();
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al obtener siguiente view', data: $siguiente_view,
+                header: $header, ws: $ws);
+        }
+
+        if (isset($_POST['btn_action_next'])) {
+            unset($_POST['btn_action_next']);
+        }
+
+        $etapa = constantes::PR_ETAPA_RECHAZADO->value;
+        $filtro['pr_etapa.descripcion'] = $etapa;
+        $etapa_proceso = (new pr_etapa_proceso($this->link))->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: "Error al filtrar etapa $etapa ", data: $etapa_proceso, header: $header, ws: $ws);
+        }
+
+        if ($etapa_proceso->n_registros <= 0){
+            return $this->retorno_error(mensaje: "Error la etapa '$etapa' no se encuentra registrada",
+                data: $etapa_proceso, header: $header, ws: $ws);
+        }
+        $filtro = array();
+        $filtro['gt_orden_compra_etapa.gt_orden_compra_id'] = $this->registro_id;
+        $filtro['gt_orden_compra_etapa.pr_etapa_proceso_id'] = $etapa_proceso->registros[0]['pr_etapa_proceso_id'];
+        $orden_compra_etapa = (new gt_orden_compra_etapa($this->link))->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: "Error al validar etapa $etapa ", data: $orden_compra_etapa,
+                header: $header, ws: $ws);
+        }
+
+        if($orden_compra_etapa->n_registros > 0){
+            return $this->retorno_error(mensaje: "Error la orden de compra ya se encuentra en la etapa '$etapa'",
+                data: $orden_compra_etapa, header: $header, ws: $ws);
+        }
+
+        $registro = $etapa_proceso->registros[0];
+
+        $registros['gt_orden_compra_id'] = $this->registro_id;
+        $registros['pr_etapa_proceso_id'] = $registro['pr_etapa_proceso_id'];
+        $registros['fecha'] = $_POST['fecha'];
+        $registros['observaciones'] = $_POST['observaciones'];
+        $alta = (new gt_orden_compra_etapa($this->link))->alta_registro(registro: $registros);
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al dar de alta orden de compra etapa', data: $alta,
+                header: $header, ws: $ws);
+        }
+
+        $this->link->commit();
+
+        if ($header) {
+            $this->retorno_base(registro_id: $this->registro_id, result: $alta,
+                siguiente_view: "lista", ws: $ws);
+        }
+        if ($ws) {
+            header('Content-Type: application/json');
+            echo json_encode($alta, JSON_THROW_ON_ERROR);
+            exit;
+        }
+        $alta->siguiente_view = "lista";
+
+        return $alta;
     }
 
     protected function campos_view(): array
