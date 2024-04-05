@@ -12,6 +12,7 @@ use base\controller\controler;
 use gamboamartin\errores\errores;
 use gamboamartin\gastos\models\gt_cotizacion_producto;
 use gamboamartin\gastos\models\gt_ejecutores_compra;
+use gamboamartin\gastos\models\gt_empleado_usuario;
 use gamboamartin\gastos\models\gt_orden_compra;
 use gamboamartin\gastos\models\gt_orden_compra_cotizacion;
 use gamboamartin\gastos\models\gt_orden_compra_etapa;
@@ -143,6 +144,75 @@ class controlador_gt_orden_compra extends _ctl_base {
         }
 
         return $r_modifica;
+    }
+
+    public function autoriza_bd(bool $header, bool $ws = false): array|stdClass
+    {
+        $this->link->beginTransaction();
+
+        $siguiente_view = (new actions())->init_alta_bd();
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al obtener siguiente view', data: $siguiente_view,
+                header: $header, ws: $ws);
+        }
+
+        if (isset($_POST['btn_action_next'])) {
+            unset($_POST['btn_action_next']);
+        }
+
+        $existe = Transaccion::of(new gt_empleado_usuario($this->link))
+            ->existe(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al comprobar si el usuario esta autorizado para hacer ordenes de compra',
+                data: $existe, header: $header, ws: $ws);
+        }
+
+        $permiso = (new gt_autorizante_ejecutores_compra($this->link))->valida_permisos(gt_autorizante_id: $existe->registros[0]['em_empleado_id'],
+            gt_ejecutar_compra_id: $_POST['gt_ejecutor_compra_id']);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al validar permisos', data: $permiso, header: $header, ws: $ws);
+        }
+
+        $etapa = constantes::PR_ETAPA_AUTORIZADO->value;
+        $filtro['pr_etapa.descripcion'] = $etapa;
+        $etapa_proceso = (new pr_etapa_proceso($this->link))->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al integrar base', data: $etapa_proceso, header: $header, ws: $ws);
+        }
+
+        if ($etapa_proceso->n_registros <= 0){
+            return $this->retorno_error(mensaje: "Error no existe la relacion de etapa proceso: $etapa",
+                data: $etapa_proceso, header: $header, ws: $ws);
+        }
+
+        $registro = $etapa_proceso->registros[0];
+
+        $registros['gt_orden_compra_id'] = $this->registro_id;
+        $registros['pr_etapa_proceso_id'] = $registro['pr_etapa_proceso_id'];
+        $registros['fecha'] = $_POST['fecha'];
+        $registros['observaciones'] = $_POST['observaciones'];
+        $alta = (new gt_orden_compra_etapa($this->link))->alta_registro(registro: $registros);
+        if (errores::$error) {
+            $this->link->rollBack();
+            return $this->retorno_error(mensaje: 'Error al dar de alta orden de compra etapa', data: $alta,
+                header: $header, ws: $ws);
+        }
+
+        $this->link->commit();
+
+        if ($header) {
+            $this->retorno_base(registro_id: $this->registro_id, result: $alta,
+                siguiente_view: "lista", ws: $ws);
+        }
+        if ($ws) {
+            header('Content-Type: application/json');
+            echo json_encode($alta, JSON_THROW_ON_ERROR);
+            exit;
+        }
+        $alta->siguiente_view = "lista";
+
+        return $alta;
     }
 
     public function rechaza_bd(bool $header, bool $ws = false): array|stdClass
