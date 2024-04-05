@@ -20,6 +20,7 @@ use gamboamartin\gastos\models\gt_requisitores;
 use gamboamartin\gastos\models\gt_solicitantes;
 use gamboamartin\gastos\models\Stream;
 use gamboamartin\gastos\models\Transaccion;
+use gamboamartin\proceso\models\pr_etapa_proceso;
 use gamboamartin\system\_ctl_base;
 use gamboamartin\system\actions;
 use gamboamartin\system\links_menu;
