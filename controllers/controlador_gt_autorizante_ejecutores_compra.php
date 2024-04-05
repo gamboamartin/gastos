@@ -10,6 +10,7 @@ namespace gamboamartin\gastos\controllers;
 
 use base\controller\controler;
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_autorizante_ejecutores_compra;
 use gamboamartin\gastos\models\gt_autorizante_requisitores;
 use gamboamartin\gastos\models\gt_autorizante_solicitantes;
 use gamboamartin\system\_ctl_base;

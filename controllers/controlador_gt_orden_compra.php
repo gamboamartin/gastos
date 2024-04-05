@@ -10,6 +10,7 @@ namespace gamboamartin\gastos\controllers;
 
 use base\controller\controler;
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_autorizante_ejecutores_compra;
 use gamboamartin\gastos\models\gt_cotizacion_producto;
 use gamboamartin\gastos\models\gt_ejecutores_compra;
 use gamboamartin\gastos\models\gt_empleado_usuario;
@@ -170,7 +171,7 @@ class controlador_gt_orden_compra extends _ctl_base {
         }
 
         $permiso = (new gt_autorizante_ejecutores_compra($this->link))->valida_permisos(gt_autorizante_id: $existe->registros[0]['em_empleado_id'],
-            gt_ejecutar_compra_id: $_POST['gt_ejecutor_compra_id']);
+            gt_ejecutor_compra_id: $_POST['gt_ejecutor_compra_id']);
         if (errores::$error) {
             return $this->retorno_error(mensaje: 'Error al validar permisos', data: $permiso, header: $header, ws: $ws);
         }

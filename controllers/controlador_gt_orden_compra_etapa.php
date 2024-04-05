@@ -110,14 +110,14 @@ class controlador_gt_orden_compra_etapa extends _ctl_base {
 
     protected function init_datatable(): stdClass
     {
-        $columns["gt_solicitud_etapa_id"]["titulo"] = "Id";
+        $columns["gt_orden_compra_etapa_id"]["titulo"] = "Id";
         $columns["gt_orden_compra_descripcion"]["titulo"] = "Orden Compra";
         $columns["pr_proceso_descripcion"]["titulo"] = "Proceso";
         $columns["pr_etapa_descripcion"]["titulo"] = "Etapa";
-        $columns["gt_solicitud_etapa_fecha"]["titulo"] = "Etapa";
+        $columns["gt_orden_compra_etapa_fecha"]["titulo"] = "Etapa";
 
-        $filtro = array("gt_solicitud_etapa.id","gt_orden_compra.descripcion","pr_proceso.descripcion",
-            "pr_etapa.descripcion", "gt_solicitud_etapa.fecha");
+        $filtro = array("gt_orden_compra_etapa.id","gt_orden_compra.descripcion","pr_proceso.descripcion",
+            "pr_etapa.descripcion", "gt_orden_compra_etapa.fecha");
 
         $datatables = new stdClass();
         $datatables->columns = $columns;

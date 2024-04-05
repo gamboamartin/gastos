@@ -32,6 +32,11 @@ class gt_orden_compra_etapa extends _base_transacciones
             return $this->error->error(mensaje: 'Error al insertar solicitud etapa', data: $r_alta_bd);
         }
 
+        $acciones = $this->acciones_orden_compra(registros: $this->registro);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al ejecutar acciones de la orden compra', data: $acciones);
+        }
+
         return $r_alta_bd;
     }
 
