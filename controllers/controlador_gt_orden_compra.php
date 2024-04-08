@@ -245,14 +245,14 @@ class controlador_gt_orden_compra extends _ctl_base {
         }
         $filtro = array();
         $filtro['gt_orden_compra_etapa.gt_orden_compra_id'] = $this->registro_id;
-        $filtro['gt_orden_compra_etapa.pr_etapa_proceso_id'] = $etapa_proceso->registros[0]['pr_etapa_proceso_id'];
-        $orden_compra_etapa = (new gt_orden_compra_etapa($this->link))->filtro_and(filtro: $filtro);
+        //$filtro['gt_orden_compra_etapa.pr_etapa_proceso_id'] = $etapa_proceso->registros[0]['pr_etapa_proceso_id'];
+        $orden_compra_etapa = (new gt_orden_compra_etapa($this->link))->obten_datos_ultimo_registro(filtro: $filtro);
         if (errores::$error) {
             return $this->retorno_error(mensaje: "Error al validar etapa $etapa ", data: $orden_compra_etapa,
                 header: $header, ws: $ws);
         }
 
-        if($orden_compra_etapa->n_registros > 0){
+        if($orden_compra_etapa['gt_orden_compra_etapa'] == $etapa_proceso->registros[0]['pr_etapa_proceso_descripcion']){
             return $this->retorno_error(mensaje: "Error la orden de compra ya se encuentra en la etapa '$etapa'",
                 data: $orden_compra_etapa, header: $header, ws: $ws);
         }
