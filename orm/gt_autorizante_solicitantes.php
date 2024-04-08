@@ -3,6 +3,7 @@
 namespace gamboamartin\gastos\models;
 
 use base\orm\_modelo_parent;
+use Exception;
 use gamboamartin\errores\errores;
 use PDO;
 use stdClass;
@@ -35,6 +36,14 @@ class gt_autorizante_solicitantes extends _base_auto_soli
         return $registros;
     }
 
+    /**
+     * Obtiene relaciones entre un autorizante y un solicitante.
+     *
+     * @param int $gt_autorizante_id El ID del autorizante.
+     * @param int $gt_solicitante_id El ID del solicitante.
+     * @return array|stdClass Devuelve un array o un objeto stdClass que representa las relaciones encontradas.
+     * @throws Exception Si ocurre un error al obtener las relaciones.
+     */
     public function get_relaciones(int $gt_autorizante_id, int $gt_solicitante_id): array|stdClass
     {
         $filtro['gt_autorizante_solicitantes.gt_autorizante_id'] = $gt_autorizante_id;
@@ -47,7 +56,15 @@ class gt_autorizante_solicitantes extends _base_auto_soli
         return $resultado;
     }
 
-    public function valida_permisos(int $gt_autorizante_id, int $gt_solicitante_id): array|stdClass|bool
+    /**
+     * Valida los permisos de un autorizante para aprobar la solicitud de un solicitante.
+     *
+     * @param int $gt_autorizante_id El ID del autorizante.
+     * @param int $gt_solicitante_id El ID del solicitante.
+     * @return array|stdClass Devuelve un array o un objeto stdClass que representa el resultado de la validación de permisos.
+     * @throws Exception Si ocurre un error al validar los permisos.
+     */
+    public function valida_permisos(int $gt_autorizante_id, int $gt_solicitante_id): array|stdClass
     {
         $registro = $this->get_relaciones(gt_autorizante_id: $gt_autorizante_id, gt_solicitante_id: $gt_solicitante_id);
         if (errores::$error) {
@@ -61,6 +78,5 @@ class gt_autorizante_solicitantes extends _base_auto_soli
 
         return $registro;
     }
-
 
 }
