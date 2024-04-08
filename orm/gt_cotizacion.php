@@ -4,6 +4,7 @@ namespace gamboamartin\gastos\models;
 
 use base\orm\_modelo_parent_sin_codigo;
 use base\orm\modelo;
+use Exception;
 use gamboamartin\errores\errores;
 use gamboamartin\system\_ctl_parent_sin_codigo;
 use PDO;
@@ -62,7 +63,15 @@ class gt_cotizacion extends _modelo_parent_sin_codigo
         return $r_alta_bd;
     }
 
-    public function alta_cotizadores(int $gt_cotizacion_id, int $gt_cotizador_id)
+    /**
+     * Da de alta una relación entre una cotización y un cotizador.
+     *
+     * @param int $gt_cotizacion_id El ID de la cotización.
+     * @param int $gt_cotizador_id El ID del cotizador.
+     * @return array|stdClass Devuelve un array o un objeto stdClass que representa el resultado del alta de la relación.
+     * @throws Exception Devuelve una excepción si ocurre un error al dar de alta la relación.
+     */
+    public function alta_cotizadores(int $gt_cotizacion_id, int $gt_cotizador_id): array|stdClass
     {
         $registros['codigo'] = $this->get_codigo_aleatorio();
         if (errores::$error) {
@@ -81,6 +90,14 @@ class gt_cotizacion extends _modelo_parent_sin_codigo
         return $alta;
     }
 
+    /**
+     * Da de alta una relación entre una requisición y una cotización.
+     *
+     * @param int $gt_requisicion_id El ID de la requisición.
+     * @param int $gt_cotizacion_id El ID de la cotización.
+     * @return array|stdClass Devuelve un array o un objeto stdClass que representa el resultado del alta de la relación.
+     * @throws Exception Devuelve una excepción si ocurre un error al dar de alta la relación.
+     */
     public function alta_relacion_requisicion_cotizacion(int $gt_requisicion_id, int $gt_cotizacion_id): array|stdClass
     {
         $registros = array();
@@ -94,7 +111,13 @@ class gt_cotizacion extends _modelo_parent_sin_codigo
         return $alta;
     }
 
-    public function acciones_requisicion(): array
+    /**
+     * Realiza acciones relacionadas con una requisición.
+     *
+     * @return array|stdClass Devuelve un array o un objeto stdClass que representa el resultado de las acciones realizadas.
+     * @throws Exception Devuelve una excepción si ocurre un error al realizar las acciones.
+     */
+    public function acciones_requisicion(): array|stdClass
     {
         $resultado = $this->verificar_estado_requisicion(registros: $this->registro);
         if (errores::$error) {
@@ -109,6 +132,12 @@ class gt_cotizacion extends _modelo_parent_sin_codigo
         return $this->registro;
     }
 
+    /**
+     * Realiza acciones relacionadas con un cotizador.
+     *
+     * @return array|stdClass Devuelve un array o un objeto stdClass que representa el resultado de las acciones realizadas.
+     * @throws Exception Devuelve una excepción si ocurre un error al realizar las acciones.
+     */
     public function acciones_cotizador() : array | stdClass
     {
         $existe_usuario = $this->validar_permiso_usuario();
@@ -125,6 +154,14 @@ class gt_cotizacion extends _modelo_parent_sin_codigo
         return $existe_solicitante;
     }
 
+    /**
+     * Realiza acciones relacionadas con la relación entre una cotización y un cotizador.
+     *
+     * @param int $gt_cotizacion_id El ID de la cotización.
+     * @param int $gt_cotizador_id El ID del cotizador.
+     * @return array|stdClass Devuelve un array o un objeto stdClass que representa el resultado de las acciones realizadas.
+     * @throws Exception Devuelve una excepción si ocurre un error al realizar las acciones.
+     */
     public function acciones_cotizadores(int $gt_cotizacion_id, int $gt_cotizador_id) : array | stdClass
     {
         $alta_cotizadores = $this->alta_cotizadores(gt_cotizacion_id: $gt_cotizacion_id, gt_cotizador_id: $gt_cotizador_id);
@@ -136,7 +173,13 @@ class gt_cotizacion extends _modelo_parent_sin_codigo
         return $alta_cotizadores;
     }
 
-    public function validar_permiso_usuario()
+    /**
+     * Valida si el usuario actual está autorizado para hacer cotizaciones.
+     *
+     * @return array|stdClass Devuelve un array o un objeto stdClass que representa el resultado de la validación.
+     * @throws Exception Devuelve una excepción si ocurre un error al validar si el usuario está autorizado para hacer cotizaciones.
+     */
+    public function validar_permiso_usuario() : array | stdClass
     {
         $existe = Transaccion::of(new gt_empleado_usuario($this->link))
             ->existe(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
@@ -153,7 +196,14 @@ class gt_cotizacion extends _modelo_parent_sin_codigo
         return $existe;
     }
 
-    public function validar_permiso_empleado(int $em_empleado_id)
+    /**
+     * Valida si un empleado específico está autorizado para hacer cotizaciones.
+     *
+     * @param int $em_empleado_id El ID del empleado a verificar.
+     * @return array|stdClass Devuelve un array o un objeto stdClass que representa el resultado de la validación.
+     * @throws Exception Devuelve una excepción si ocurre un error al validar si el empleado está autorizado para hacer cotizaciones.
+     */
+    public function validar_permiso_empleado(int $em_empleado_id) : array | stdClass
     {
         $existe = Transaccion::of(new gt_cotizador($this->link))
             ->existe(filtro: ['gt_cotizador.em_empleado_id' => $em_empleado_id]);
@@ -170,6 +220,13 @@ class gt_cotizacion extends _modelo_parent_sin_codigo
         return $existe;
     }
 
+    /**
+     * Verifica si una requisición específica se encuentra en la etapa de "AUTORIZADO".
+     *
+     * @param array $registros Un array que contiene información sobre la requisición.
+     * @return array|stdClass Devuelve un array o un objeto stdClass que representa el resultado de la verificación.
+     * @throws Exception Devuelve una excepción si ocurre un error al verificar si la requisición se encuentra en la etapa de "AUTORIZADO".
+     */
     public function verificar_estado_requisicion(array $registros): array|stdClass
     {
         $filtro['gt_requisicion_etapa.gt_requisicion_id'] = $registros['gt_requisicion_id'];
