@@ -2,6 +2,7 @@
 
 namespace gamboamartin\gastos\models;
 
+use Exception;
 use gamboamartin\errores\errores;
 use gamboamartin\proceso\models\pr_etapa_proceso;
 use PDO;
@@ -40,6 +41,14 @@ class gt_orden_compra_etapa extends _base_transacciones
         return $r_alta_bd;
     }
 
+    /**
+     * Realiza acciones relacionadas con la orden de compra, como modificar su etapa de proceso.
+     *
+     * @param array $registros Un array que contiene información relevante sobre la orden de compra.
+     *
+     * @return array|stdClass Devuelve el resultado de la operación de modificación de la orden de compra.
+     * @throws Exception Si ocurre un error al ejecutar acciones relacionadas con la orden de compra.
+     */
     public function acciones_orden_compra(array $registros): array|stdClass
     {
         $etapa_proceso = (new pr_etapa_proceso($this->link))->registro(registro_id: $registros['pr_etapa_proceso_id']);

@@ -2,6 +2,7 @@
 namespace gamboamartin\gastos\models;
 
 use base\orm\_modelo_parent_sin_codigo;
+use Exception;
 use gamboamartin\errores\errores;
 use PDO;
 use stdClass;
@@ -58,7 +59,16 @@ class gt_orden_compra extends _modelo_parent_sin_codigo {
         return $r_alta_bd;
     }
 
-    public function alta_ejecutores(int $gt_orden_compra_id, int $gt_ejecutor_compra_id)
+    /**
+     * Registra un nuevo ejecutor de compra asociado a una orden de compra en la base de datos.
+     *
+     * @param int $gt_orden_compra_id El ID de la orden de compra a la que se asociará el ejecutor de compra.
+     * @param int $gt_ejecutor_compra_id El ID del ejecutor de compra que se asociará a la orden de compra.
+     *
+     * @return array|stdClass Devuelve el resultado de la operación de registro.
+     * @throws Exception Si ocurre un error al registrar la relación entre el ejecutor de compra y la orden de compra.
+     */
+    public function alta_ejecutores(int $gt_orden_compra_id, int $gt_ejecutor_compra_id) : array|stdClass
     {
         $registros['codigo'] = $this->get_codigo_aleatorio();
         if (errores::$error) {
@@ -77,6 +87,12 @@ class gt_orden_compra extends _modelo_parent_sin_codigo {
         return $alta;
     }
 
+    /**
+     * Realiza acciones relacionadas con la cotización, como verificar el estado y limpiar campos adicionales.
+     *
+     * @return array Devuelve el registro de la cotización con las acciones realizadas, o un objeto de error en caso de fallo.
+     * @throws Exception Si ocurre un error al verificar el estado de la cotización o al limpiar campos adicionales.
+     */
     public function acciones_cotizacion(): array
     {
         $resultado = $this->verificar_estado_cotizacion(registros: $this->registro);
@@ -92,6 +108,12 @@ class gt_orden_compra extends _modelo_parent_sin_codigo {
         return $this->registro;
     }
 
+    /**
+     * Realiza acciones relacionadas con el ejecutor, como validar permisos de usuario y empleado.
+     *
+     * @return array|stdClass Devuelve el resultado de las acciones realizadas o un objeto de error en caso de fallo.
+     * @throws Exception Si ocurre un error al validar permisos de usuario o empleado.
+     */
     public function acciones_ejecutor() : array | stdClass
     {
         $existe_usuario = $this->validar_permiso_usuario();
@@ -108,6 +130,16 @@ class gt_orden_compra extends _modelo_parent_sin_codigo {
         return $existe_solicitante;
     }
 
+    /**
+     * Realiza acciones relacionadas con los ejecutores de compra,
+     * como registrar una nueva relación entre un ejecutor y una orden de compra.
+     *
+     * @param int $gt_orden_compra_id El ID de la orden de compra a la que se asociará el ejecutor de compra.
+     * @param int $gt_ejecutor_compra_id El ID del ejecutor de compra que se asociará a la orden de compra.
+     *
+     * @return array|stdClass Devuelve el resultado de la operación de registro de la relación entre el ejecutor y la orden de compra.
+     * @throws Exception Si ocurre un error al insertar la relación entre el ejecutor y la orden de compra.
+     */
     public function acciones_ejecutores(int $gt_orden_compra_id, int $gt_ejecutor_compra_id) : array | stdClass
     {
         $alta_ejecutores = $this->alta_ejecutores(gt_orden_compra_id: $gt_orden_compra_id, gt_ejecutor_compra_id: $gt_ejecutor_compra_id);
@@ -119,7 +151,13 @@ class gt_orden_compra extends _modelo_parent_sin_codigo {
         return $alta_ejecutores;
     }
 
-    public function validar_permiso_usuario()
+    /**
+     * Valida si el usuario actual tiene permisos para realizar órdenes de compra.
+     *
+     * @return array|stdClass Devuelve un array o un objeto que indica si el usuario tiene permisos.
+     * @throws Exception Si ocurre un error al comprobar los permisos del usuario para realizar órdenes de compra.
+     */
+    public function validar_permiso_usuario() : array|stdClass
     {
         $existe = Transaccion::of(new gt_empleado_usuario($this->link))
             ->existe(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
@@ -136,7 +174,15 @@ class gt_orden_compra extends _modelo_parent_sin_codigo {
         return $existe;
     }
 
-    public function validar_permiso_empleado(int $em_empleado_id)
+    /**
+     * Valida si un empleado específico está autorizado para realizar órdenes de compra.
+     *
+     * @param int $em_empleado_id El ID del empleado que se va a validar.
+     *
+     * @return array|stdClass Devuelve un array o un objeto que indica si el empleado está autorizado.
+     * @throws Exception Si ocurre un error al comprobar los permisos del empleado para realizar órdenes de compra.
+     */
+    public function validar_permiso_empleado(int $em_empleado_id) : array|stdClass
     {
         $existe = Transaccion::of(new gt_ejecutor_compra($this->link))
             ->existe(filtro: ['gt_ejecutor_compra.em_empleado_id' => $em_empleado_id]);
@@ -153,6 +199,14 @@ class gt_orden_compra extends _modelo_parent_sin_codigo {
         return $existe;
     }
 
+    /**
+     * Verifica el estado de una cotización en función de su etapa.
+     *
+     * @param array $registros Un array que contiene información relevante sobre la cotización.
+     *
+     * @return array|stdClass Devuelve un array o un objeto que indica el estado de la cotización.
+     * @throws Exception Si ocurre un error al verificar el estado de la cotización.
+     */
     public function verificar_estado_cotizacion(array $registros): array|stdClass
     {
         $filtro['gt_cotizacion_etapa.gt_cotizacion_id'] = $registros['gt_cotizacion_id'];

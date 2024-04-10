@@ -4,6 +4,7 @@ namespace gamboamartin\gastos\models;
 
 use base\orm\_modelo_parent_sin_codigo;
 use base\orm\modelo;
+use Exception;
 use gamboamartin\errores\errores;
 use gamboamartin\system\_ctl_parent_sin_codigo;
 use PDO;
@@ -62,7 +63,16 @@ class gt_requisicion extends _modelo_parent_sin_codigo
         return $r_alta_bd;
     }
 
-    public function alta_requisitores(int $gt_requisicion_id, int $gt_requisitor_id)
+    /**
+     * Registra un nuevo requisitor asociado a una requisición en la base de datos.
+     *
+     * @param int $gt_requisicion_id El ID de la requisición a la que se asociará el requisitor.
+     * @param int $gt_requisitor_id El ID del requisitor que se asociará a la requisición.
+     *
+     * @return array|stdClass Devuelve el resultado de la operación de registro en la base de datos.
+     * @throws Exception Si ocurre un error al registrar la relación entre la requisición y el requisitor.
+     */
+    public function alta_requisitores(int $gt_requisicion_id, int $gt_requisitor_id) : array | stdClass
     {
         $registros['codigo'] = $this->get_codigo_aleatorio();
         if (errores::$error) {
@@ -81,6 +91,15 @@ class gt_requisicion extends _modelo_parent_sin_codigo
         return $alta;
     }
 
+    /**
+     * Realiza acciones relacionadas con la asociación de requisiciones y requisitores en la base de datos.
+     *
+     * @param int $gt_requisicion_id El ID de la requisición relacionada.
+     * @param int $gt_requisitor_id El ID del requisitor relacionado.
+     *
+     * @return array|stdClass Devuelve el resultado de la acción realizada en la base de datos.
+     * @throws Exception Si ocurre un error durante la ejecución de la acción.
+     */
     public function acciones_requisitores(int $gt_requisicion_id, int $gt_requisitor_id) : array | stdClass
     {
         $alta_requisitores = $this->alta_requisitores(gt_requisicion_id: $gt_requisicion_id, gt_requisitor_id: $gt_requisitor_id);
@@ -92,6 +111,15 @@ class gt_requisicion extends _modelo_parent_sin_codigo
         return $alta_requisitores;
     }
 
+    /**
+     * Crea una nueva relación entre una solicitud y una requisición en la base de datos.
+     *
+     * @param int $gt_solicitud_id El ID de la solicitud a asociar.
+     * @param int $gt_requisicion_id El ID de la requisición a asociar.
+     *
+     * @return array|stdClass Devuelve el resultado de la operación de registro en la base de datos.
+     * @throws Exception Si ocurre un error al crear la relación entre la solicitud y la requisición.
+     */
     public function alta_relacion_solicitud_requisicion(int $gt_solicitud_id, int $gt_requisicion_id): array|stdClass
     {
         $registros = array();
@@ -105,6 +133,12 @@ class gt_requisicion extends _modelo_parent_sin_codigo
         return $alta;
     }
 
+    /**
+     * Realiza acciones relacionadas con una solicitud en particular.
+     *
+     * @return array Devuelve el resultado de las acciones realizadas en la solicitud.
+     * @throws Exception Si ocurre un error durante la ejecución de las acciones.
+     */
     public function acciones_solicitud(): array
     {
         $resultado = $this->verificar_estado_solicitud(registros: $this->registro);
@@ -120,6 +154,12 @@ class gt_requisicion extends _modelo_parent_sin_codigo
         return $this->registro;
     }
 
+    /**
+     * Realiza acciones relacionadas con un requisitor.
+     *
+     * @return array|stdClass Devuelve el resultado de las acciones realizadas en el requisitor.
+     * @throws Exception Si ocurre un error durante la ejecución de las acciones.
+     */
     public function acciones_requisitor() : array | stdClass
     {
         $existe_usuario = $this->validar_permiso_usuario();
@@ -136,7 +176,13 @@ class gt_requisicion extends _modelo_parent_sin_codigo
         return $existe_solicitante;
     }
 
-    public function validar_permiso_usuario()
+    /**
+     * Valida si el usuario actual tiene permisos para realizar requisiciones.
+     *
+     * @return array|stdClass Devuelve el resultado de la validación de permisos del usuario.
+     * @throws Exception Si ocurre un error durante la validación de permisos.
+     */
+    public function validar_permiso_usuario() : array | stdClass
     {
         $existe = Transaccion::of(new gt_empleado_usuario($this->link))
             ->existe(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
@@ -153,7 +199,13 @@ class gt_requisicion extends _modelo_parent_sin_codigo
         return $existe;
     }
 
-    public function validar_permiso_empleado(int $em_empleado_id)
+    /**
+     * Valida si el usuario actual tiene permisos para aprobar requisiciones.
+     *
+     * @return array|stdClass Devuelve el resultado de la validación de permisos del usuario.
+     * @throws Exception Si ocurre un error durante la validación de permisos.
+     */
+    public function validar_permiso_empleado(int $em_empleado_id) : array | stdClass
     {
         $existe = Transaccion::of(new gt_requisitor($this->link))
             ->existe(filtro: ['gt_requisitor.em_empleado_id' => $em_empleado_id]);
@@ -170,6 +222,14 @@ class gt_requisicion extends _modelo_parent_sin_codigo
         return $existe;
     }
 
+    /**
+     * Valida una solicitud de requisición.
+     *
+     * @param int $gt_solicitud_id El ID de la solicitud de requisición que se va a aprobar.
+     * @param int $em_empleado_id El ID del empleado que está realizando la aprobación.
+     * @return array|stdClass Devuelve el resultado de la operación de aprobación.
+     * @throws Exception Si ocurre un error durante la operación de aprobación.
+     */
     public function verificar_estado_solicitud(array $registros): array|stdClass
     {
         $filtro['gt_solicitud_etapa.gt_solicitud_id'] = $registros['gt_solicitud_id'];

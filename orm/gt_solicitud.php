@@ -4,6 +4,7 @@ namespace gamboamartin\gastos\models;
 
 use base\orm\_modelo_parent_sin_codigo;
 use base\orm\modelo;
+use Exception;
 use gamboamartin\errores\errores;
 use gamboamartin\system\_ctl_parent_sin_codigo;
 use PDO;
@@ -67,7 +68,13 @@ class gt_solicitud extends _modelo_parent_sin_codigo
         return $existe_solicitante;
     }
 
-    public function validar_permiso_usuario()
+    /**
+     * Valida si un usuario tiene permiso para realizar solicitudes.
+     *
+     * @return array|stdClass Devuelve el usuario si existe.
+     * @throws Exception Si ocurre un error durante la validacion.
+     */
+    public function validar_permiso_usuario() : array | stdClass
     {
         $existe = Transaccion::of(new gt_empleado_usuario($this->link))
             ->existe(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
@@ -84,6 +91,13 @@ class gt_solicitud extends _modelo_parent_sin_codigo
         return $existe;
     }
 
+    /**
+     * Valida si un empleado es un solicitante autorizado.
+     *
+     * @param int $em_empleado_id Identificador del empleado a validar.
+     * @return array|stdClass Devuelve el solicitante si existe.
+     * @throws Exception Si ocurre un error durante la validación.
+     */
     public function validar_permiso_empleado(int $em_empleado_id)
     {
         $existe = Transaccion::of(new gt_solicitante($this->link))

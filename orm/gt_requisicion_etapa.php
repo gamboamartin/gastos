@@ -2,6 +2,7 @@
 
 namespace gamboamartin\gastos\models;
 
+use Exception;
 use gamboamartin\errores\errores;
 use gamboamartin\proceso\models\pr_etapa_proceso;
 use PDO;
@@ -40,6 +41,13 @@ class gt_requisicion_etapa extends _base_transacciones
         return $r_alta_bd;
     }
 
+    /**
+     * Realiza acciones relacionadas con una requisición, como modificar la etapa del proceso.
+     *
+     * @param array $registros Un array que contiene los registros.
+     * @return array|stdClass Devuelve el resultado de las acciones realizadas en la requisición.
+     * @throws Exception Si ocurre un error durante las acciones.
+     */
     public function acciones_requisicion(array $registros): array|stdClass
     {
         $etapa_proceso = (new pr_etapa_proceso($this->link))->registro(registro_id: $registros['pr_etapa_proceso_id']);

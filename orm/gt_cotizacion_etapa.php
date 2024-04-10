@@ -2,6 +2,7 @@
 
 namespace gamboamartin\gastos\models;
 
+use Exception;
 use gamboamartin\errores\errores;
 use gamboamartin\proceso\models\pr_etapa_proceso;
 use PDO;
@@ -40,6 +41,14 @@ class gt_cotizacion_etapa extends _base_transacciones
         return $r_alta_bd;
     }
 
+    /**
+     * Realiza acciones relacionadas con la cotización, como actualizar la etapa del proceso.
+     *
+     * @param array $registros Un array que contiene información relevante sobre la cotización
+     *
+     * @return array|stdClass Devuelve el resultado de las acciones.
+     * @throws Exception Si ocurre un error al ejecutar las acciones.
+     */
     public function acciones_cotizacion(array $registros): array|stdClass
     {
         $etapa_proceso = (new pr_etapa_proceso($this->link))->registro(registro_id: $registros['pr_etapa_proceso_id']);

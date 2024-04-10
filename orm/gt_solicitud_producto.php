@@ -2,6 +2,7 @@
 
 namespace gamboamartin\gastos\models;
 
+use Exception;
 use gamboamartin\errores\errores;
 use PDO;
 use stdClass;
@@ -38,7 +39,14 @@ class gt_solicitud_producto extends _base_transacciones
         return $registros;
     }
 
-    public function get_precio_promedio(int $com_producto_id)
+    /**
+     * Obtiene el precio promedio de un producto específico.
+     *
+     * @param int $com_producto_id Identificador del producto a calcular su precio promedio.
+     * @return float|array Devuelve el precio promedio si es exitoso, o un error si ocurre un problema.
+     * @throws Exception Si ocurre un error durante la obtención de los productos o el cálculo del promedio.
+     */
+    public function get_precio_promedio(int $com_producto_id) : float|array
     {
         $productos = $this->get_productos(com_producto_id: $com_producto_id);
         if (errores::$error) {
@@ -53,6 +61,13 @@ class gt_solicitud_producto extends _base_transacciones
         return $promedio;
     }
 
+    /**
+     * Obtiene los productos basados en un identificador de producto específico.
+     *
+     * @param int $com_producto_id Identificador del producto a obtener.
+     * @return array Devuelve los productos si la operación es exitosa, o un error si ocurre un problema.
+     * @throws Exception Si ocurre un error durante la obtención de los productos.
+     */
     public function get_productos(int $com_producto_id)
     {
         $filtro['gt_solicitud_producto.com_producto_id'] = $com_producto_id;
@@ -65,6 +80,12 @@ class gt_solicitud_producto extends _base_transacciones
         return $datos;
     }
 
+    /**
+     * Calcula el precio promedio de un conjunto de productos.
+     *
+     * @param stdClass $productos Los productos para los cuales calcular el precio promedio.
+     * @return float Devuelve el precio promedio si la operación es exitosa, o 0.0 si no hay productos.
+     */
     public function promedio_precios_productos(stdClass $productos) : float
     {
         if ($productos->n_registros <= 0) {
