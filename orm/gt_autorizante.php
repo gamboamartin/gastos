@@ -4,6 +4,7 @@ namespace gamboamartin\gastos\models;
 
 use gamboamartin\errores\errores;
 use PDO;
+use stdClass;
 
 class gt_autorizante extends _base_transacciones
 {
@@ -21,6 +22,17 @@ class gt_autorizante extends _base_transacciones
             columnas: $columnas, columnas_extra: $columnas_extra, no_duplicados: $no_duplicados);
 
         $this->NAMESPACE = __NAMESPACE__;
+    }
+
+    public function alta_bd(array $keys_integra_ds = array('codigo', 'descripcion')): array|stdClass
+    {
+        print_r($_POST);exit();
+
+        $r_alta_bd = parent::alta_bd($keys_integra_ds);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al insertar autorizante', data: $r_alta_bd);
+        }
+        return $r_alta_bd;
     }
 
     protected function inicializa_campos(array $registros): array

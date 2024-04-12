@@ -6,5 +6,7 @@
         <table id="table-pr_proceso" class="table mb-0 table-striped table-sm "></table>
     </div>
 
+    <input type="hidden" id="pr_procesos" name="pr_procesos" required>
+
 
 <?php include (new views())->ruta_templates.'botons/submit/alta_bd.php';?>
