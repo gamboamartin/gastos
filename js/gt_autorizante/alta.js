@@ -18,6 +18,25 @@ $(document).ready(function () {
 
     const table_pr_proceso = table('pr_proceso', columns_pr_proceso, [], [], function () {}, true);
 
+
+    $("#table-pr_proceso").on('click', 'thead:first-child, tbody', function (e) {
+        let timer = null;
+
+        clearTimeout(timer);
+
+        timer = setTimeout(() => {
+            let selectedData = table_pr_proceso.rows({selected: true}).data();
+
+            procesos_seleccionados = [];
+
+            selectedData.each(function (value, index, data) {
+                procesos_seleccionados.push(value.pr_proceso_id);
+            });
+
+            $('#pr_procesos').val(procesos_seleccionados);
+        }, 500);
+    });
+
     $("#form_gt_autorizante_alta").on('submit', function (e) {
         if (procesos_seleccionados.length === 0) {
             e.preventDefault();
