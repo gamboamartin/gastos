@@ -26,7 +26,7 @@ class gt_autorizante extends _base_transacciones
 
     public function alta_bd(array $keys_integra_ds = array('codigo', 'descripcion')): array|stdClass
     {
-        print_r($_POST);exit();
+        $procesos_seleccionados = explode(",", $_POST['pr_procesos']);
 
         $r_alta_bd = parent::alta_bd($keys_integra_ds);
         if (errores::$error) {
