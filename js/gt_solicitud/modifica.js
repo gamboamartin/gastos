@@ -84,19 +84,7 @@ $(document).ready(function () {
             {
                 targets: 2,
                 render: function (data, type, row, meta) {
-                    let sec = getParameterByName('seccion');
-                    let acc = getParameterByName('accion');
-                    let registro_id = getParameterByName('registro_id');
 
-                    let url_elimina = $(location).attr('href');
-                    url_elimina = url_elimina.replace(acc, "elimina_bd");
-                    url_elimina = url_elimina.replace(sec, `gt_solicitud_requisicion`);
-                    url_elimina = url_elimina.replace(registro_id, row[`gt_solicitud_requisicion_id`]);
-
-                    let url_actualiza = $(location).attr('href');
-                    url_actualiza = url_actualiza.replace(acc, "modifica");
-                    url_actualiza = url_actualiza.replace(sec, "gt_requisicion");
-                    url_actualiza = url_actualiza.replace(registro_id, row[`gt_requisicion_id`]);
 
                     let btn_actualiza = `<a href="${url_actualiza}" class="btn btn-warning btn-sm" style="margin: 0 15px;">Actualiza</a>`
                     let btn_elimina = `<button  data-url="${url_elimina}" class="btn btn-danger btn-sm">Elimina</button>`;

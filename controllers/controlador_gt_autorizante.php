@@ -103,8 +103,12 @@ class controlador_gt_autorizante extends _ctl_base {
     protected function init_datatable(): stdClass
     {
         $columns["gt_autorizante_id"]["titulo"] = "Id";
-        $columns["em_empleado_nombre"]["titulo"] = "Empleado";
+        $columns["em_empleado_nombre"]["titulo"] = "Autorizante";
         $columns["em_empleado_nombre"]["campos"] = array("em_empleado_ap","em_empleado_am");
+        $columns["gt_autorizante_puede_hacer_solicitudes"]["titulo"] = "Autoriza solicitudes";
+        $columns["gt_autorizante_puede_hacer_requisiciones"]["titulo"] = "Autoriza requisiciones";
+        $columns["gt_autorizante_puede_hacer_cotizaciones"]["titulo"] = "Autoriza cotizaciones";
+        $columns["gt_autorizante_puede_hacer_ordenes"]["titulo"] = "Autoriza ordenes";
 
         $filtro = array("gt_autorizante.id","em_empleado.nombre","em_empleado.ap","em_empleado.am");
 
