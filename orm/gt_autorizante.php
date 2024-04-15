@@ -3,7 +3,9 @@
 namespace gamboamartin\gastos\models;
 
 use gamboamartin\errores\errores;
+use gamboamartin\proceso\models\pr_proceso;
 use PDO;
+use PhpParser\Node\Expr\Array_;
 use stdClass;
 
 class gt_autorizante extends _base_transacciones
@@ -28,6 +30,18 @@ class gt_autorizante extends _base_transacciones
     {
         $procesos_seleccionados = explode(",", $_POST['pr_procesos']);
 
+        $campos = $this->integra_procesos(procesos: $procesos_seleccionados);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener procesos', data: $campos);
+        }
+
+        $this->registro = $this->limpia_campos_extras(registro: $this->registro,campos_limpiar: array('pr_procesos'));
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al limpiar campos extras', data: $this->registro);
+        }
+
+        $this->registro = array_merge($this->registro, $campos);
+
         $r_alta_bd = parent::alta_bd($keys_integra_ds);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al insertar autorizante', data: $r_alta_bd);
@@ -37,7 +51,7 @@ class gt_autorizante extends _base_transacciones
 
     protected function inicializa_campos(array $registros): array
     {
-        if (!isset($registros['codigo'])){
+        if (!isset($registros['codigo'])) {
             $registros['codigo'] = $this->get_codigo_aleatorio();
             if (errores::$error) {
                 return $this->error->error(mensaje: 'Error generar codigo', data: $registros);
@@ -50,5 +64,61 @@ class gt_autorizante extends _base_transacciones
         }
 
         return $init;
+    }
+
+    private function integra_procesos(array $procesos): array
+    {
+        $procesos = $this->verifica_procesos(procesos: $procesos);
+        if (errores::$error) {
+            return $this->error->error(mensaje: "Eror al verificar procesos", data: $procesos);
+        }
+
+        $campos = $this->genera_campo(procesos: $procesos);
+        if (errores::$error) {
+            return $this->error->error(mensaje: "Eror al generar campos", data: $campos);
+        }
+
+        return $campos;
+    }
+
+    private function verifica_procesos(array $procesos): array|stdClass
+    {
+        $salida = array();
+        foreach ($procesos as $registro) {
+            $proceso = (new pr_proceso($this->link))->registro(registro_id: $registro);
+            if (errores::$error) {
+                return $this->error->error(mensaje: "Eror el id $registro de proceso no existe", data: $proceso);
+            }
+
+            if (count($proceso) <= 0) {
+                return $this->error->error(mensaje: "Error el id $registro de proceso no existe", data: $proceso);
+            }
+            array_push($salida, $proceso);
+        }
+
+        return $salida;
+    }
+
+    private function genera_campo(array $procesos)
+    {
+        $campos = array();
+        foreach ($procesos as $registro) {
+
+            switch ($registro['pr_proceso_descripcion']){
+                case "SOLICITUD":
+                    $campos['puede_hacer_solicitudes'] = 1;
+                    break;
+                case "REQUISICION":
+                    $campos['puede_hacer_requisiciones'] = 1;
+                    break;
+                case "COTIZACION":
+                    $campos['puede_hacer_cotizaciones'] = 1;
+                    break;
+                case "ORDEN COMPRA":
+                    $campos['puede_hacer_ordenes'] = 1;
+                    break;
+            }
+        }
+        return $campos;
     }
 }
