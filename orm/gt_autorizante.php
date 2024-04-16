@@ -121,4 +121,29 @@ class gt_autorizante extends _base_transacciones
         }
         return $campos;
     }
+
+    public function valida_permiso(int $gt_autorizante_id, ModeloConstantes $proceso): array|stdClass|bool
+    {
+        $pr_proceso = (new pr_proceso($this->link))->filtro_and(filtro: array('pr_proceso.descripcion' => $proceso->value));
+        if (errores::$error) {
+            return $this->error->error(mensaje: "Error al obtener proceso", data: $pr_proceso);
+        }
+
+        if ($pr_proceso->n_registros <= 0) {
+            return $this->error->error(mensaje: "Error el proceso {$proceso->value} no existe", data: $pr_proceso);
+        }
+
+        $autorizante = $this->registro(registro_id: $gt_autorizante_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: "Error al obtener autorizante", data: $autorizante);
+        }
+
+        return match ($proceso) {
+            ModeloConstantes::PR_PROCESO_SOLICITUD => $autorizante['gt_autorizante_puede_hacer_solicitudes'] == 1,
+            ModeloConstantes::PR_PROCESO_REQUISICION => $autorizante['gt_autorizante_puede_hacer_requisiciones'] == 1,
+            ModeloConstantes::PR_PROCESO_COTIZACION => $autorizante['gt_autorizante_puede_hacer_cotizaciones'] == 1,
+            ModeloConstantes::PR_PROCESO_ORDEN_COMPRA => $autorizante['gt_autorizante_puede_hacer_ordenes'] == 1,
+            default => $autorizante,
+        };
+    }
 }
