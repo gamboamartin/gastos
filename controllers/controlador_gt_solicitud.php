@@ -10,6 +10,7 @@ namespace gamboamartin\gastos\controllers;
 
 use base\controller\controler;
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_autorizante;
 use gamboamartin\gastos\models\gt_autorizante_solicitantes;
 use gamboamartin\gastos\models\gt_empleado_usuario;
 use gamboamartin\gastos\models\gt_requisicion;
@@ -20,6 +21,7 @@ use gamboamartin\gastos\models\gt_solicitud_etapa;
 use gamboamartin\gastos\models\gt_solicitud_producto;
 use gamboamartin\gastos\models\gt_solicitud_requisicion;
 use gamboamartin\gastos\models\gt_tipo_requisicion;
+use gamboamartin\gastos\models\ModeloConstantes;
 use gamboamartin\gastos\models\Stream;
 use gamboamartin\gastos\models\Transaccion;
 use gamboamartin\proceso\models\pr_etapa_proceso;
@@ -168,6 +170,38 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
 
     public function autoriza_bd(bool $header, bool $ws = false): array|stdClass
     {
+        if ($_POST['gt_solicitante_id'] == null ){
+            return $this->retorno_error(mensaje: 'Error no se ha seleccionado un solicitante', data: $_POST,
+                header: $header, ws: $ws);
+        }
+
+        $existe = (new gt_empleado_usuario($this->link))->filtro_and(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: "Error al filtrar el usuario del empleado", data: $existe,header: $header, ws: $ws);
+        }
+
+        if ($existe->n_registros <= 0) {
+            return $this->retorno_error(mensaje: 'Error el empleado no cuenta con un usuario relacionado para hacer solicitudes',
+                data: $existe, header: $header, ws: $ws);
+        }
+
+        $permiso_solicitud = (new gt_autorizante($this->link))->valida_permiso(gt_autorizante_id: $existe->registros[0]['em_empleado_id'],
+            proceso: ModeloConstantes::PR_PROCESO_SOLICITUD);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al validar permiso de solicitud', data: $permiso_solicitud, header: $header, ws: $ws);
+        }
+
+        if (!$permiso_solicitud) {
+            return $this->retorno_error(mensaje: 'Error el empleado no cuenta con permisos para hacer solicitudes',
+                data: $permiso_solicitud, header: $header, ws: $ws);
+        }
+
+        $permiso_solicitante = (new gt_autorizante_solicitantes($this->link))->valida_permisos(gt_autorizante_id: $existe->registros[0]['em_empleado_id'],
+            gt_solicitante_id: $_POST['gt_solicitante_id']);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al validar permisos', data: $permiso_solicitante, header: $header, ws: $ws);
+        }
+
         $this->link->beginTransaction();
 
         $siguiente_view = (new actions())->init_alta_bd();
@@ -179,19 +213,6 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
 
         if (isset($_POST['btn_action_next'])) {
             unset($_POST['btn_action_next']);
-        }
-
-        $existe = Transaccion::of(new gt_empleado_usuario($this->link))
-            ->existe(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
-        if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al comprobar si el usuario esta autorizado para hacer solicitudes',
-                data: $existe, header: $header, ws: $ws);
-        }
-
-        $permiso = (new gt_autorizante_solicitantes($this->link))->valida_permisos(gt_autorizante_id: $existe->registros[0]['em_empleado_id'],
-            gt_solicitante_id: $_POST['gt_solicitante_id']);
-        if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al validar permisos', data: $permiso, header: $header, ws: $ws);
         }
 
         $etapa = constantes::PR_ETAPA_AUTORIZADO->value;
@@ -218,43 +239,6 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
             return $this->retorno_error(mensaje: 'Error al dar de alta solicitud etapa', data: $alta,
                 header: $header, ws: $ws);
         }
-
-        /*$filtro = array();
-        $tipo = constantes::GT_TIPO_DEFAULT->value;
-        $filtro['gt_tipo_requisicion.descripcion'] = $tipo;
-        $tipo_requisicion = (new gt_tipo_requisicion($this->link))->filtro_and(filtro: $filtro);
-        if (errores::$error) {
-            $this->link->rollBack();
-            return $this->retorno_error(mensaje: 'Error al integrar base', data: $tipo_requisicion, header: $header, ws: $ws);
-        }
-
-        if ($tipo_requisicion->n_registros <= 0){
-            return $this->retorno_error(mensaje: "Error no existe EL tipo de requisicion: $tipo",
-                data: $etapa_proceso, header: $header, ws: $ws);
-        }
-
-        $registro = $tipo_requisicion->registros[0];
-
-        $solicitud = (new gt_solicitud($this->link))->registro(registro_id: $this->registro_id);
-        if (errores::$error) {
-            $this->link->rollBack();
-            return $this->retorno_error(mensaje: 'Error no se pudo obtener los datos de solicitud', data: $solicitud,
-                header: $header, ws: $ws);
-        }
-
-        $registros = array();
-        $registros['gt_solicitud_id'] = $this->registro_id;
-        $registros['gt_centro_costo_id'] = $solicitud['gt_centro_costo_id'];
-        $registros['gt_tipo_requisicion_id'] = $registro['gt_tipo_requisicion_id'];
-        $registros['etapa'] = 'ALTA';
-        $registros['codigo'] = $this->modelo->get_codigo_aleatorio(12);
-        $registros['descripcion'] = "Solicitud de requisición - ".$registros['codigo'];
-        $alta = (new gt_requisicion($this->link))->alta_registro(registro: $registros);
-        if (errores::$error) {
-            $this->link->rollBack();
-            return $this->retorno_error(mensaje: 'Error al dar de alta requisicion', data: $alta,
-                header: $header, ws: $ws);
-        }*/
 
         $this->link->commit();
 

@@ -2,7 +2,7 @@
 
 namespace gamboamartin\gastos\models;
 
-enum constantes: string
+enum ModeloConstantes: string
 {
     case PR_PROCESO_SOLICITUD = 'SOLICITUD';
     case PR_PROCESO_REQUISICION = 'REQUISICION';
