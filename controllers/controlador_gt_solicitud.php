@@ -271,7 +271,9 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
             unset($_POST['btn_action_next']);
         }
 
+        $proceso = ModeloConstantes::PR_PROCESO_SOLICITUD->value;
         $etapa = constantes::PR_ETAPA_RECHAZADO->value;
+        $filtro['pr_proceso.descripcion'] = $proceso;
         $filtro['pr_etapa.descripcion'] = $etapa;
         $etapa_proceso = (new pr_etapa_proceso($this->link))->filtro_and(filtro: $filtro);
         if (errores::$error) {
@@ -279,9 +281,10 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         }
 
         if ($etapa_proceso->n_registros <= 0){
-            return $this->retorno_error(mensaje: "Error la etapa '$etapa' no se encuentra registrada",
+            return $this->retorno_error(mensaje: "El proceso '$proceso' no está asociado con la etapa '$etapa'.",
                 data: $etapa_proceso, header: $header, ws: $ws);
         }
+
         $filtro = array();
         $filtro['gt_solicitud_etapa.gt_solicitud_id'] = $this->registro_id;
         $filtro['gt_solicitud_etapa.pr_etapa_proceso_id'] = $etapa_proceso->registros[0]['pr_etapa_proceso_id'];
