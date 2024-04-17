@@ -6,6 +6,7 @@ use base\orm\_modelo_parent_sin_codigo;
 use base\orm\modelo;
 use Exception;
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\controllers\constantes;
 use gamboamartin\system\_ctl_parent_sin_codigo;
 use PDO;
 use stdClass;
@@ -31,6 +32,15 @@ class gt_requisicion extends _modelo_parent_sin_codigo
     public function alta_bd(array $keys_integra_ds = array('codigo', 'descripcion')): array|stdClass
     {
         $gt_solicitud_id = $this->registro['gt_solicitud_id'];
+
+        $estado = (new gt_solicitud($this->link))->registro(registro_id: $gt_solicitud_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener solicitud', data: $estado);
+        }
+
+        if ($estado['gt_solicitud_etapa'] == constantes::PR_ETAPA_RECHAZADO->value) {
+            return $this->error->error(mensaje: 'Error la solicitud se encuentra rechazada', data: $estado);
+        }
 
         $acciones_requisitor = $this->acciones_requisitor();
         if (errores::$error) {
