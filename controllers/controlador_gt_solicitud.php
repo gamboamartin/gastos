@@ -181,7 +181,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         }
 
         if ($existe->n_registros <= 0) {
-            return $this->retorno_error(mensaje: 'Error el empleado no cuenta con un usuario relacionado para hacer solicitudes',
+            return $this->retorno_error(mensaje: 'Error el empleado no cuenta con un usuario relacionado para aprobar solicitudes',
                 data: $existe, header: $header, ws: $ws);
         }
 
@@ -192,7 +192,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         }
 
         if (!$permiso_solicitud) {
-            return $this->retorno_error(mensaje: 'Error el empleado no cuenta con permisos para hacer solicitudes',
+            return $this->retorno_error(mensaje: 'Error el empleado no cuenta con permisos para aprobar solicitudes',
                 data: $permiso_solicitud, header: $header, ws: $ws);
         }
 
@@ -215,15 +215,17 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
             unset($_POST['btn_action_next']);
         }
 
-        $etapa = constantes::PR_ETAPA_AUTORIZADO->value;
+        $proceso = ModeloConstantes::PR_PROCESO_SOLICITUD->value;
+        $etapa = constantes::PR_ETAPA_RECHAZADO->value;
+        $filtro['pr_proceso.descripcion'] = $proceso;
         $filtro['pr_etapa.descripcion'] = $etapa;
         $etapa_proceso = (new pr_etapa_proceso($this->link))->filtro_and(filtro: $filtro);
         if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al integrar base', data: $etapa_proceso, header: $header, ws: $ws);
+            return $this->retorno_error(mensaje: "Error al filtrar etapa $etapa ", data: $etapa_proceso, header: $header, ws: $ws);
         }
 
         if ($etapa_proceso->n_registros <= 0){
-            return $this->retorno_error(mensaje: "Error no existe la relacion de etapa proceso: $etapa",
+            return $this->retorno_error(mensaje: "El proceso '$proceso' no está asociado con la etapa '$etapa'.",
                 data: $etapa_proceso, header: $header, ws: $ws);
         }
 
