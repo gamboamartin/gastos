@@ -22,6 +22,7 @@ use gamboamartin\gastos\models\gt_requisitores;
 use gamboamartin\gastos\models\gt_solicitud;
 use gamboamartin\gastos\models\gt_solicitud_etapa;
 use gamboamartin\gastos\models\gt_tipo_cotizacion;
+use gamboamartin\gastos\models\ModeloConstantes;
 use gamboamartin\gastos\models\Stream;
 use gamboamartin\gastos\models\Transaccion;
 use gamboamartin\proceso\models\pr_etapa_proceso;
@@ -251,7 +252,9 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
             unset($_POST['btn_action_next']);
         }
 
+        $proceso = ModeloConstantes::PR_PROCESO_REQUISICION->value;
         $etapa = constantes::PR_ETAPA_RECHAZADO->value;
+        $filtro['pr_proceso.descripcion'] = $proceso;
         $filtro['pr_etapa.descripcion'] = $etapa;
         $etapa_proceso = (new pr_etapa_proceso($this->link))->filtro_and(filtro: $filtro);
         if (errores::$error) {
@@ -262,6 +265,7 @@ class controlador_gt_requisicion extends _ctl_parent_sin_codigo {
             return $this->retorno_error(mensaje: "Error la etapa '$etapa' no se encuentra registrada",
                 data: $etapa_proceso, header: $header, ws: $ws);
         }
+
         $filtro = array();
         $filtro['gt_requisicion_etapa.gt_requisicion_id'] = $this->registro_id;
         $filtro['gt_requisicion_etapa.pr_etapa_proceso_id'] = $etapa_proceso->registros[0]['pr_etapa_proceso_id'];
