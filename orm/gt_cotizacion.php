@@ -6,6 +6,7 @@ use base\orm\_modelo_parent_sin_codigo;
 use base\orm\modelo;
 use Exception;
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\controllers\constantes;
 use gamboamartin\system\_ctl_parent_sin_codigo;
 use PDO;
 use stdClass;
@@ -31,6 +32,15 @@ class gt_cotizacion extends _modelo_parent_sin_codigo
     public function alta_bd(array $keys_integra_ds = array('codigo', 'descripcion')): array|stdClass
     {
         $gt_requisicion_id = $this->registro['gt_requisicion_id'];
+
+        $estado = (new gt_requisicion($this->link))->registro(registro_id: $gt_requisicion_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener requisicion', data: $estado);
+        }
+
+        if ($estado['gt_requisicion_etapa'] != constantes::PR_ETAPA_AUTORIZADO->value) {
+            return $this->error->error(mensaje: "Error la requisicion no se encuentra AUTORIZADA, etapa actual: {$estado['gt_requisicion_etapa']}", data: $estado);
+        }
 
         $acciones_cotizador = $this->acciones_cotizador();
         if (errores::$error) {
