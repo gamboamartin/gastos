@@ -38,8 +38,8 @@ class gt_requisicion extends _modelo_parent_sin_codigo
             return $this->error->error(mensaje: 'Error al obtener solicitud', data: $estado);
         }
 
-        if ($estado['gt_solicitud_etapa'] == constantes::PR_ETAPA_RECHAZADO->value) {
-            return $this->error->error(mensaje: 'Error la solicitud se encuentra rechazada', data: $estado);
+        if ($estado['gt_solicitud_etapa'] != constantes::PR_ETAPA_AUTORIZADO->value) {
+            return $this->error->error(mensaje: "Error la solicitud no se encuentra AUTORIZADA, etapa actual: {$estado['gt_solicitud_etapa']}", data: $estado);
         }
 
         $acciones_requisitor = $this->acciones_requisitor();
