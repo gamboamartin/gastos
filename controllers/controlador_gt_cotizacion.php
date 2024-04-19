@@ -10,6 +10,7 @@ namespace gamboamartin\gastos\controllers;
 
 use base\controller\controler;
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_autorizante;
 use gamboamartin\gastos\models\gt_autorizante_cotizadores;
 use gamboamartin\gastos\models\gt_cotizacion;
 use gamboamartin\gastos\models\gt_cotizacion_etapa;
@@ -159,6 +160,39 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
 
     public function autoriza_bd(bool $header, bool $ws = false): array|stdClass
     {
+        if ($_POST['gt_cotizador_id'] == null ){
+            return $this->retorno_error(mensaje: 'Error no se ha seleccionado un cotizador', data: $_POST,
+                header: $header, ws: $ws);
+        }
+
+        $existe = (new gt_empleado_usuario($this->link))->filtro_and(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: "Error al filtrar el usuario del empleado", data: $existe,header: $header, ws: $ws);
+        }
+
+        if ($existe->n_registros <= 0) {
+            return $this->retorno_error(mensaje: 'Error el empleado no cuenta con un usuario relacionado para aprobar cotizaciones',
+                data: $existe, header: $header, ws: $ws);
+        }
+
+        $permiso_cotizacion = (new gt_autorizante($this->link))->valida_permiso(gt_autorizante_id: $existe->registros[0]['em_empleado_id'],
+        proceso: ModeloConstantes::PR_PROCESO_COTIZACION);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al validar permiso de cotizacion', data: $permiso_cotizacion,
+                header: $header, ws: $ws);
+        }
+
+        if (!$permiso_cotizacion) {
+            return $this->retorno_error(mensaje: 'Error el empleado no cuenta con permisos para aprobar cotizaciones',
+                data: $permiso_cotizacion, header: $header, ws: $ws);
+        }
+
+        $permiso_cotizador = (new gt_autorizante_cotizadores($this->link))->valida_permisos(gt_autorizante_id: $existe->registros[0]['em_empleado_id'],
+            gt_cotizador_id: $_POST['gt_cotizador_id']);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al validar permisos', data: $permiso_cotizador, header: $header, ws: $ws);
+        }
+
         $this->link->beginTransaction();
 
         $siguiente_view = (new actions())->init_alta_bd();
@@ -172,28 +206,17 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
             unset($_POST['btn_action_next']);
         }
 
-        $existe = Transaccion::of(new gt_empleado_usuario($this->link))
-            ->existe(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
-        if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al comprobar si el usuario esta autorizado para hacer cotizaciones',
-                data: $existe, header: $header, ws: $ws);
-        }
-
-        $permiso = (new gt_autorizante_cotizadores($this->link))->valida_permisos(gt_autorizante_id: $existe->registros[0]['em_empleado_id'],
-            gt_cotizador_id: $_POST['gt_cotizador_id']);
-        if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al validar permisos', data: $permiso, header: $header, ws: $ws);
-        }
-
+        $proceso = ModeloConstantes::PR_PROCESO_COTIZACION->value;
         $etapa = constantes::PR_ETAPA_AUTORIZADO->value;
+        $filtro['pr_proceso.descripcion'] = $proceso;
         $filtro['pr_etapa.descripcion'] = $etapa;
         $etapa_proceso = (new pr_etapa_proceso($this->link))->filtro_and(filtro: $filtro);
         if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al integrar base', data: $etapa_proceso, header: $header, ws: $ws);
+            return $this->retorno_error(mensaje: "Error al filtrar etapa $etapa ", data: $etapa_proceso, header: $header, ws: $ws);
         }
 
         if ($etapa_proceso->n_registros <= 0){
-            return $this->retorno_error(mensaje: "Error no existe la relacion de etapa proceso: $etapa",
+            return $this->retorno_error(mensaje: "Error la etapa '$etapa' no se encuentra registrada",
                 data: $etapa_proceso, header: $header, ws: $ws);
         }
 
