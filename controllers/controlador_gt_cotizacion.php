@@ -279,7 +279,7 @@ class controlador_gt_cotizacion extends _ctl_parent_sin_codigo {
         }
 
         $filtro = array();
-        $filtro['gt_cotizacion_etapa.gt_requisicion_id'] = $this->registro_id;
+        $filtro['gt_cotizacion_etapa.gt_cotizacion_id'] = $this->registro_id;
         $filtro['gt_cotizacion_etapa.pr_etapa_proceso_id'] = $etapa_proceso->registros[0]['pr_etapa_proceso_id'];
         $cotizacion_etapa = (new gt_cotizacion_etapa($this->link))->filtro_and(filtro: $filtro);
         if (errores::$error) {

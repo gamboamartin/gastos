@@ -19,6 +19,7 @@ use gamboamartin\gastos\models\gt_orden_compra_cotizacion;
 use gamboamartin\gastos\models\gt_orden_compra_etapa;
 use gamboamartin\gastos\models\gt_requisitores;
 use gamboamartin\gastos\models\gt_solicitantes;
+use gamboamartin\gastos\models\ModeloConstantes;
 use gamboamartin\gastos\models\Stream;
 use gamboamartin\gastos\models\Transaccion;
 use gamboamartin\proceso\models\pr_etapa_proceso;
@@ -232,7 +233,9 @@ class controlador_gt_orden_compra extends _ctl_base {
             unset($_POST['btn_action_next']);
         }
 
+        $proceso = ModeloConstantes::PR_PROCESO_ORDEN_COMPRA->value;
         $etapa = constantes::PR_ETAPA_RECHAZADO->value;
+        $filtro['pr_proceso.descripcion'] = $proceso;
         $filtro['pr_etapa.descripcion'] = $etapa;
         $etapa_proceso = (new pr_etapa_proceso($this->link))->filtro_and(filtro: $filtro);
         if (errores::$error) {
@@ -243,18 +246,19 @@ class controlador_gt_orden_compra extends _ctl_base {
             return $this->retorno_error(mensaje: "Error la etapa '$etapa' no se encuentra registrada",
                 data: $etapa_proceso, header: $header, ws: $ws);
         }
+
         $filtro = array();
         $filtro['gt_orden_compra_etapa.gt_orden_compra_id'] = $this->registro_id;
-        //$filtro['gt_orden_compra_etapa.pr_etapa_proceso_id'] = $etapa_proceso->registros[0]['pr_etapa_proceso_id'];
-        $orden_compra_etapa = (new gt_orden_compra_etapa($this->link))->obten_datos_ultimo_registro(filtro: $filtro);
+        $filtro['gt_orden_compra_etapa.pr_etapa_proceso_id'] = $etapa_proceso->registros[0]['pr_etapa_proceso_id'];
+        $cotizacion_etapa = (new gt_orden_compra_etapa($this->link))->filtro_and(filtro: $filtro);
         if (errores::$error) {
-            return $this->retorno_error(mensaje: "Error al validar etapa $etapa ", data: $orden_compra_etapa,
+            return $this->retorno_error(mensaje: "Error al validar etapa $etapa ", data: $cotizacion_etapa,
                 header: $header, ws: $ws);
         }
 
-        if($orden_compra_etapa['gt_orden_compra_etapa'] == $etapa_proceso->registros[0]['pr_etapa_proceso_descripcion']){
+        if($cotizacion_etapa->n_registros > 0){
             return $this->retorno_error(mensaje: "Error la orden de compra ya se encuentra en la etapa '$etapa'",
-                data: $orden_compra_etapa, header: $header, ws: $ws);
+                data: $cotizacion_etapa, header: $header, ws: $ws);
         }
 
         $registro = $etapa_proceso->registros[0];
