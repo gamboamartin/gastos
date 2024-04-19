@@ -27,6 +27,16 @@ class gt_orden_compra extends _modelo_parent_sin_codigo {
     {
         $gt_cotizacion_id = $this->registro['gt_cotizacion_id'];
 
+        $estado = (new gt_cotizacion($this->link))->registro(registro_id: $gt_cotizacion_id);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener cotización', data: $estado);
+        }
+
+        if ($estado['gt_cotizacion_etapa'] != constantes::PR_ETAPA_AUTORIZADO->value) {
+            return $this->error->error(mensaje: "Error la cotización no se encuentra AUTORIZADA, etapa actual: 
+            {$estado['gt_cotizacion_etapa']}", data: $estado);
+        }
+
         $acciones_ejecutor = $this->acciones_ejecutor();
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al ejecutar acciones para el ejecutor de la compra',
