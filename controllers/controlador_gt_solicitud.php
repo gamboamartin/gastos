@@ -216,7 +216,7 @@ class controlador_gt_solicitud extends _ctl_parent_sin_codigo {
         }
 
         $proceso = ModeloConstantes::PR_PROCESO_SOLICITUD->value;
-        $etapa = constantes::PR_ETAPA_RECHAZADO->value;
+        $etapa = constantes::PR_ETAPA_AUTORIZADO->value;
         $filtro['pr_proceso.descripcion'] = $proceso;
         $filtro['pr_etapa.descripcion'] = $etapa;
         $etapa_proceso = (new pr_etapa_proceso($this->link))->filtro_and(filtro: $filtro);
