@@ -10,6 +10,7 @@ namespace gamboamartin\gastos\controllers;
 
 use base\controller\controler;
 use gamboamartin\errores\errores;
+use gamboamartin\gastos\models\gt_autorizante;
 use gamboamartin\gastos\models\gt_autorizante_ejecutores_compra;
 use gamboamartin\gastos\models\gt_cotizacion_producto;
 use gamboamartin\gastos\models\gt_ejecutores_compra;
@@ -151,6 +152,39 @@ class controlador_gt_orden_compra extends _ctl_base {
 
     public function autoriza_bd(bool $header, bool $ws = false): array|stdClass
     {
+        if ($_POST['gt_ejecutor_compra_id'] == null ){
+            return $this->retorno_error(mensaje: 'Error no se ha seleccionado un ejecutor de la compra', data: $_POST,
+                header: $header, ws: $ws);
+        }
+
+        $existe = (new gt_empleado_usuario($this->link))->filtro_and(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: "Error al filtrar el usuario del empleado", data: $existe,header: $header, ws: $ws);
+        }
+
+        if ($existe->n_registros <= 0) {
+            return $this->retorno_error(mensaje: 'Error el empleado no cuenta con un usuario relacionado para aprobar ordenes de compra',
+                data: $existe, header: $header, ws: $ws);
+        }
+
+        $permiso_ejecutor = (new gt_autorizante($this->link))->valida_permiso(gt_autorizante_id: $existe->registros[0]['em_empleado_id'],
+            proceso: ModeloConstantes::PR_PROCESO_ORDEN_COMPRA);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al validar permiso de orden de compra', data: $permiso_ejecutor,
+                header: $header, ws: $ws);
+        }
+
+        if (!$permiso_ejecutor) {
+            return $this->retorno_error(mensaje: 'Error el empleado no cuenta con permisos para aprobar ordenes de compra',
+                data: $permiso_ejecutor, header: $header, ws: $ws);
+        }
+
+        $permiso_orden = (new gt_autorizante_ejecutores_compra($this->link))->valida_permisos(gt_autorizante_id: $existe->registros[0]['em_empleado_id'],
+           gt_ejecutor_compra_id: $_POST['gt_ejecutor_compra_id']);
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al validar permisos', data: $permiso_orden, header: $header, ws: $ws);
+        }
+
         $this->link->beginTransaction();
 
         $siguiente_view = (new actions())->init_alta_bd();
@@ -164,28 +198,17 @@ class controlador_gt_orden_compra extends _ctl_base {
             unset($_POST['btn_action_next']);
         }
 
-        $existe = Transaccion::of(new gt_empleado_usuario($this->link))
-            ->existe(filtro: ['gt_empleado_usuario.adm_usuario_id' => $_SESSION['usuario_id']]);
-        if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al comprobar si el usuario esta autorizado para hacer ordenes de compra',
-                data: $existe, header: $header, ws: $ws);
-        }
-
-        $permiso = (new gt_autorizante_ejecutores_compra($this->link))->valida_permisos(gt_autorizante_id: $existe->registros[0]['em_empleado_id'],
-            gt_ejecutor_compra_id: $_POST['gt_ejecutor_compra_id']);
-        if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al validar permisos', data: $permiso, header: $header, ws: $ws);
-        }
-
+        $proceso = ModeloConstantes::PR_PROCESO_ORDEN_COMPRA->value;
         $etapa = constantes::PR_ETAPA_AUTORIZADO->value;
+        $filtro['pr_proceso.descripcion'] = $proceso;
         $filtro['pr_etapa.descripcion'] = $etapa;
         $etapa_proceso = (new pr_etapa_proceso($this->link))->filtro_and(filtro: $filtro);
         if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al integrar base', data: $etapa_proceso, header: $header, ws: $ws);
+            return $this->retorno_error(mensaje: "Error al filtrar etapa $etapa ", data: $etapa_proceso, header: $header, ws: $ws);
         }
 
         if ($etapa_proceso->n_registros <= 0){
-            return $this->retorno_error(mensaje: "Error no existe la relacion de etapa proceso: $etapa",
+            return $this->retorno_error(mensaje: "Error la etapa '$etapa' no se encuentra registrada",
                 data: $etapa_proceso, header: $header, ws: $ws);
         }
 
