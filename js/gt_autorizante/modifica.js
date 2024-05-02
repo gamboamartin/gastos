@@ -44,6 +44,44 @@ $(document).ready(function () {
         }
     });
 
+    table_pr_proceso.on('init', function () {
+        let url = get_url("gt_autorizante", "get_autorizante", {gt_autorizante_id: registro_id}, 0);
+
+        get_data(url, (data) => {
+            let autorizante = data.registros[0];
+            let procesos = table_pr_proceso.rows().data().toArray();
+
+            if (autorizante.gt_autorizante_puede_hacer_cotizaciones == 1) {
+                let filaProceso = procesos.findIndex(proceso => proceso.pr_proceso_descripcion === "COTIZACION");
+                table_pr_proceso.row(`:eq(${filaProceso})`, { page: 'current' }).select();
+            }
+
+            if (autorizante.gt_autorizante_puede_hacer_ordenes == 1) {
+                let filaProceso = procesos.findIndex(proceso => proceso.pr_proceso_descripcion === "ORDEN COMPRA");
+                table_pr_proceso.row(`:eq(${filaProceso})`, { page: 'current' }).select();
+            }
+
+            if (autorizante.gt_autorizante_puede_hacer_requisiciones == 1) {
+                let filaProceso = procesos.findIndex(proceso => proceso.pr_proceso_descripcion === "REQUISICION");
+                table_pr_proceso.row(`:eq(${filaProceso})`, { page: 'current' }).select();
+            }
+
+            if (autorizante.gt_autorizante_puede_hacer_solicitudes == 1) {
+                let filaProceso = procesos.findIndex(proceso => proceso.pr_proceso_descripcion === "SOLICITUD");
+                table_pr_proceso.row(`:eq(${filaProceso})`, { page: 'current' }).select();
+            }
+
+        });
+    });
+
+
+
+
+
+
+
+
+
 });
 
 
