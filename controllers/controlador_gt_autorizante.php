@@ -218,4 +218,16 @@ class controlador_gt_autorizante extends _ctl_base {
         return $r_modifica;
     }
 
+    public function get_autorizante(bool $header, bool $ws = true): array|stdClass
+    {
+        $keys['gt_autorizante'] = array('id','descripcion','codigo','codigo_bis');
+
+        $salida = $this->get_out(header: $header,keys: $keys, ws: $ws);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al generar salida',data:  $salida,header: $header,ws: $ws);
+
+        }
+        return $salida;
+    }
+
 }
