@@ -49,6 +49,35 @@ class gt_autorizante extends _base_transacciones
         return $r_alta_bd;
     }
 
+    public function modifica_bd(array $registro, int $id, bool $reactiva = false,
+                                array $keys_integra_ds = array('codigo', 'descripcion')): array|stdClass
+    {
+        $procesos_seleccionados = explode(",", $_POST['pr_procesos']);
+
+        $campos = $this->integra_procesos(procesos: $procesos_seleccionados);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener procesos', data: $campos);
+        }
+
+        $registro = $this->limpia_campos_extras(registro: $registro,campos_limpiar: array('pr_procesos'));
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al limpiar campos extras', data: $registro);
+        }
+
+        $registro = array_merge($registro, $campos);
+
+        $registro = $this->inicializa_campos(registros: $registro);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al inicializar campo base', data: $registro);
+        }
+
+        $r_modifica_bd = parent::modifica_bd($registro, $id, $reactiva, $keys_integra_ds);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al modificar autorizante', data: $r_modifica_bd);
+        }
+        return $r_modifica_bd;
+    }
+
     protected function inicializa_campos(array $registros): array
     {
         if (!isset($registros['codigo'])) {
@@ -102,6 +131,11 @@ class gt_autorizante extends _base_transacciones
     private function genera_campo(array $procesos)
     {
         $campos = array();
+        $campos['puede_hacer_solicitudes'] = 0;
+        $campos['puede_hacer_requisiciones'] = 0;
+        $campos['puede_hacer_cotizaciones'] = 0;
+        $campos['puede_hacer_ordenes'] = 0;
+
         foreach ($procesos as $registro) {
 
             switch ($registro['pr_proceso_descripcion']){
